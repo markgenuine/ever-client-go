@@ -12,16 +12,16 @@ import goton "github.com/move-ton/go-ton-sdk"
 ```
 ## Supported methods
 ### Based
-[+]	version
-[+]	setup
+- [+]	version
+- [+]	setup
 
 ### Contracts
-[-]	contracts.run.local.msg
-[-]	contracts.run.local
-[-]	contracts.run.fee
-[-]	tvm.get
-[-]	contracts.deploy.address
-[-]	contracts.run.unknown.input
+- [-]	contracts.run.local.msg
+- [-]	contracts.run.local
+- [-]	contracts.run.fee
+- [-]	tvm.get
+- [-]	contracts.deploy.address
+- [-]	contracts.run.unknown.input
 [-]	contracts.run.unknown.output
 [-]	contracts.deploy.encode_unsigned_message
 [-]	contracts.resolve.error
