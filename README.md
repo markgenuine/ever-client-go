@@ -13,7 +13,7 @@ import goton "github.com/move-ton/go-ton-sdk"
 ## Supported methods
 ### Based
 - [+]	version
-- [+]	setup
+- [-]	setup
 
 ### Contracts
 - [-]	contracts.run.local.msg
@@ -47,37 +47,37 @@ import goton "github.com/move-ton/go-ton-sdk"
 
 ### Crypto
 - [+]	crypto.mnemonic.derive.sign.keys
-- [-]	crypto.hdkey.xprv.secret
-- [-]	crypto.hdkey.xprv.derive.path
-- [-]	crypto.sha256
-- [-]	crypto.hdkey.xprv.derive
-- [-]	crypto.nacl.sign.open
-- [-]	crypto.nacl.box.open
-- [-]	crypto.keystore.remove
-- [-]	crypto.nacl.secret.box
-- [-]	crypto.nacl.sign.detached
-- [-]	crypto.keystore.clear
-- [-]	crypto.keystore.add
-- [-]	crypto.nacl.sign.keypair.fromSecretKey
-- [-]	crypto.ton_public_key_string
-- [-]	crypto.nacl.secret.box.open
-- [-]	crypto.nacl.sign.keypair
-- [-]	crypto.nacl.sign
-- [-]	crypto.math.modularPower
+- [+]	crypto.hdkey.xprv.secret
+- [+]	crypto.hdkey.xprv.derive.path
+- [+]	crypto.sha256
+- [+]	crypto.hdkey.xprv.derive
+- [+]	crypto.nacl.sign.open
+- [+]	crypto.nacl.box.open
+- [+]	crypto.keystore.remove
+- [+]	crypto.nacl.secret.box
+- [+]	crypto.nacl.sign.detached
+- [+]	crypto.keystore.clear
+- [+]	crypto.keystore.add
+- [+]	crypto.nacl.sign.keypair.fromSecretKey
+- [+]	crypto.ton_public_key_string
+- [+]	crypto.nacl.secret.box.open
+- [+]	crypto.nacl.sign.keypair
+- [+]	crypto.nacl.sign
+- [+]	crypto.math.modularPower
 - [+]	crypto.ed25519.keypair
-- [-]	crypto.random.generateBytes
+- [+]	crypto.random.generateBytes
 - [+]	crypto.nacl.box.keypair
-- [-]	crypto.sha512
+- [+]	crypto.sha512
 - [+]	crypto.mnemonic.from.random
-- [-]	crypto.math.factorize
-- [-]	crypto.nacl.box.keypair.fromSecretKey
+- [+]	crypto.math.factorize
+- [+]	crypto.nacl.box.keypair.fromSecretKey
 - [+]	crypto.mnemonic.verify
 - [+]	crypto.ton_crc16
 - [+]	crypto.mnemonic.from.entropy
-- [-]	crypto.hdkey.xprv.from.mnemonic
-- [-]	crypto.nacl.box
-- [-]	crypto.hdkey.xprv.public
-- [-]	crypto.scrypt
+- [+]	crypto.hdkey.xprv.from.mnemonic
+- [+]	crypto.nacl.box
+- [+]	crypto.hdkey.xprv.public
+- [+]	crypto.scrypt
 - [+]	crypto.mnemonic.words
 
 ### Queries
