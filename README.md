@@ -13,7 +13,7 @@ import goton "github.com/move-ton/go-ton-sdk"
 ## Supported methods
 ### Based
 - [+]	version
-- [-]	setup
+- [+]	setup
 
 ### Contracts
 - [-]	contracts.run.local.msg
