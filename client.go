@@ -13,6 +13,11 @@ import (
 	"unsafe"
 )
 
+const (
+	//VersionLibSDK ...
+	VersionLibSDK = `"0.25.3"`
+)
+
 //Client struct with client date, connect and etc.
 type Client struct {
 	client C.uint32_t
@@ -43,11 +48,12 @@ func InitClient(config *TomlConfig) (*Client, error) {
 //NewClient create connect node
 func NewClient() (*Client, error) {
 
+	
 	client := Client{
 		client: C.tc_create_context(),
 	}
 
-	if client.client != C.uint32_t(1) {
+	if client.client == C.uint32_t(0) {
 		return &client, errors.New("Context don't connect")
 	}
 
@@ -94,7 +100,7 @@ func (client *Client) Version() (result string, err error) {
 func (client *Client) setup(config *TomlConfig) (result string, err error) {
 	req, err := json.Marshal(&config)
 	if err != nil {
-		err = errors.New("Error conver to config in json!")
+		err = errors.New("Error conver to config in json")
 		return
 	}
 	result, err = client.request("setup", string(req))
