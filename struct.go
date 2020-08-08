@@ -21,7 +21,7 @@ type TomlConfig struct {
 }
 
 //NewConfig create new config for connect client
-//chanID 0-mainnet, 1-devnet
+//chanID 0-devnet, 1-mainnet,
 func NewConfig(chanID int) *TomlConfig {
 	config := TomlConfig{}
 	config.BaseURL = chains[chanID]
