@@ -2,6 +2,7 @@ package goton
 
 var chains = map[int]string{0: "net.ton.dev", 1: "main.ton.dev"}
 
+//TONKey struct with public and secret keys
 type TONKey struct {
 	Public string `json:"public"`
 	Secret string `json:"secret"`

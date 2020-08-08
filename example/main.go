@@ -9,21 +9,32 @@ import (
 
 func main() {
 
-	config, err := goton.ParseConfigFile("./config.toml")
+	config, err := goton.ParseConfigFile("config.toml")
 	if err != nil {
-		log.Fatal("Error read config file, err: ", err)
+		log.Println("Error read config file, err: . Settings setup on default.", err)
 	}
 
-	client, err := goton.InitClient(*config)
+	config = goton.NewConfig(1)
+
+	client, err := goton.InitClient(config)
 	if err != nil {
 		log.Fatal("Init client error", err)
 	}
 	defer client.Destroy()
 
-	value, err := client.version()
+	value, err := client.Version()
 	if err != nil {
 		log.Fatal("Error get version, err: ", err)
 	}
 
 	fmt.Println(value)
+
+	value, err = client.MnemonicWords()
+
+	if err != nil {
+		log.Fatal("Error get mnemonic words, err: ", err)
+	}
+
+	fmt.Println(value)
+
 }

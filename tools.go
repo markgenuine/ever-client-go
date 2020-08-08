@@ -5,10 +5,9 @@ import (
 )
 
 //ParseConfigFile parse TOML config file
-func ParseConfigFile(path string, chainID int) (*TomlConfig, error) {
+func ParseConfigFile(path string) (*TomlConfig, error) {
 	var config TomlConfig
 	if _, err := toml.DecodeFile(path, &config); err != nil {
-		//log.Fatal("Error read config file", err)
 		return nil, err
 	}
 
