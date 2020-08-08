@@ -1,6 +1,7 @@
 .PHONY: clean build
 
 export GOBIN := ${PWD}/bin
+export GO111MODULE=on #work or not
 export CGO_ENABLED=1
 
 NAME := goton
