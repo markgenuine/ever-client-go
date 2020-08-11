@@ -10,17 +10,19 @@ import "C"
 import (
 	"encoding/json"
 	"errors"
+	"strings"
 	"unsafe"
 )
 
 const (
 	//VersionLibSDK ...
-	VersionLibSDK = `"0.25.3"`
+	VersionLibSDK = "0.25.3"
 )
 
 //Client struct with client date, connect and etc.
 type Client struct {
 	client C.uint32_t
+	config *TomlConfig
 }
 
 //TCStringT struct for conver struct between C and Go
@@ -35,6 +37,8 @@ func InitClient(config *TomlConfig) (*Client, error) {
 		return nil, err
 	}
 
+	client.config = config
+
 	_, err = client.setup(config)
 	if err != nil {
 		client.Destroy()
@@ -48,7 +52,6 @@ func InitClient(config *TomlConfig) (*Client, error) {
 //NewClient create connect node
 func NewClient() (*Client, error) {
 
-	
 	client := Client{
 		client: C.tc_create_context(),
 	}
@@ -85,10 +88,18 @@ func (client *Client) request(method, params string) (string, error) {
 	errorJSON := tcResponse.error_json
 
 	if errorJSON.len > 0 {
-		return "", errors.New(C.GoString(errorJSON.content))
+		return "", errors.New(converToStringGo(errorJSON.content, C.int(errorJSON.len)))
 	}
 
-	return C.GoString(resultJSON.content), nil
+	return converToStringGo(resultJSON.content, C.int(resultJSON.len)), nil
+}
+
+func converToStringGo(valueString *C.char, valueLen C.int) string {
+	return deleteQuotesLR(C.GoStringN(valueString, valueLen))
+}
+
+func deleteQuotesLR(val string) string {
+	return strings.TrimRight(strings.TrimLeft(val, `"`), `"`)
 }
 
 //Version ...
