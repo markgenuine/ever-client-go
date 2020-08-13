@@ -356,11 +356,4 @@ func TestCrypto(t *testing.T) {
 			t.Errorf("test Failed - HDKey Xprv Public")
 		}
 	})
-
-	t.Run("TestKeyStore", func(t *testing.T) {
-		value, _ := client.KeystoreAdd(&TONKey{"1123fd8e34a7ec75c15121a3ca455e0b3788f28847f1e69eefe1c2c0aa08adbe", "d2c30f8cb43ec5a8074f0085c7219103b97e0857802df1dc08b45469ae7c4f35"})
-		if value != "1" {
-			t.Errorf("test Failed - Keys don't add to store")
-		}
-	})
 }

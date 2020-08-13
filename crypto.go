@@ -343,25 +343,3 @@ func (client *Client) HdkeyXprvDerivePath(hdPD *HDPathDerivery) (string, error) 
 	}
 	return client.request("crypto.hdkey.xprv.derive.path", string(request))
 }
-
-//KeyStore
-
-// KeystoreAdd method crypto.keystore.add
-func (client *Client) KeystoreAdd(keyStore *TONKey) (handle string, err error) {
-	req, err := json.Marshal(&keyStore)
-	if err != nil {
-		return handle, errors.New("Error conver to TONKey")
-	}
-
-	return client.request("crypto.keystore.add", string(req))
-}
-
-//KeystoreClear method crypto.keystore.clear
-func (client *Client) KeystoreClear() (string, error) {
-	return client.request("crypto.keystore.clear", "")
-}
-
-//KeystoreRemove method crypto.keystore.remove
-func (client *Client) KeystoreRemove(handle string) (string, error) {
-	return client.request("crypto.keystore.remove", stringWithQuer(handle))
-}
