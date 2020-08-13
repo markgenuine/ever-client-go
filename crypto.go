@@ -7,194 +7,366 @@ import (
 	"strings"
 )
 
-//MnemonicDeriveSignKeys method crypto.mnemonic.derive.sign.keys
-func (client *Client) MnemonicDeriveSignKeys(mnemonic string) (TONKey, error) {
-	result1, err := client.request("crypto.mnemonic.derive.sign.keys", `{"phrase":"`+mnemonic+`"}`)
-	var result TONKey
+func FixInputMessage(value string, format string) *InputMessage {
+	inpMess := &InputMessage{}
+	switch format {
+	case "text":
+		inpMess.Text = value
+	case "hex":
+		inpMess.Hex = value
+	case "base64":
+		inpMess.Base64 = value
+	}
+
+	return inpMess
+}
+
+//MathFactorize method crypto.math.factorize
+func (client *Client) MathFactorize(value string) (*MaxFactorizeResult, error) {
+	mathFact := &MaxFactorizeResult{}
+	value, err := client.request("crypto.math.factorize", stringWithQuer(value))
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal([]byte(value), mathFact)
+	if err != nil {
+		return nil, err
+	}
+
+	return mathFact, nil
+}
+
+//MathModularPower method crypto.math.modularPower
+func (client *Client) MathModularPower(modularPower *ModularPowerRequest) (string, error) {
+	request, err := json.Marshal(modularPower)
+	if err != nil {
+		return "", err
+	}
+	return client.request("crypto.math.modularPower", string(request))
+}
+
+//TonCrc16 method crypto.ton_crc16
+func (client *Client) TonCrc16(inpMess *InputMessage) (string, error) {
+	request, err := json.Marshal(inpMess)
+	if err != nil {
+		return "", err
+	}
+	return client.request("crypto.ton_crc16", string(request))
+}
+
+//RandomGenerateBytes method crypto.random.generateBytes
+//Generate string of the specified lenght length int, outputEncoding string
+func (client *Client) RandomGenerateBytes(ranBytes *RandomGenerateBytesRequest) (string, error) {
+	request, err := json.Marshal(ranBytes)
+	if err != nil {
+		return "", err
+	}
+	return client.request("crypto.random.generateBytes", string(request))
+}
+
+//Ed25519Keypair method crypto.ed25519.keypair
+func (client *Client) Ed25519Keypair() (*TONKey, error) {
+	result := &TONKey{}
+	result1, err := client.request("crypto.ed25519.keypair", "{}")
+	if err != nil {
+		return nil, err
+	}
 	err = json.Unmarshal([]byte(result1), &result)
 	return result, err
 }
 
-//HdkeyXprvSecret method crypto.hdkey.xprv.secret
-func (client *Client) HdkeyXprvSecret(secret string) (string, error) {
-	return client.request("crypto.hdkey.xprv.secret", `{"serialized":"`+secret+`"}`)
+//TonPublicKeyString method crypto.ton_public_key_string
+func (client *Client) TonPublicKeyString(publicKey string) (string, error) {
+	return client.request("crypto.ton_public_key_string", stringWithQuer(publicKey))
 }
 
-//HdkeyXprvDerivePath method crypto.hdkey.xprv.derive.path
-func (client *Client) HdkeyXprvDerivePath(key, path string) (string, error) {
-	return client.request("crypto.hdkey.xprv.derive.path", `{"serialized":"`+key+`", "path":"`+path+`"}`)
-}
-
-//HdkeyXprvDerive method crypto.hdkey.xprv.derive
-func (client *Client) HdkeyXprvDerive(key, childIndex string) (string, error) {
-	return client.request("crypto.hdkey.xprv.derive", `{"serialized":"`+key+`", "index":"`+childIndex+`"}`)
-}
-
-//HdkeyXprvFromMnemonic method crypto.hdkey.xprv.from.mnemonic
-func (client *Client) HdkeyXprvFromMnemonic(mnemonic string) (string, error) {
-	return client.request("crypto.hdkey.xprv.from.mnemonic", `{"phrase":"`+mnemonic+`"}`)
-}
-
-//NaclSignOpen method crypto.nacl.sign.open
-func (client *Client) NaclSignOpen(key, value, valueType string) (string, error) {
-	return client.request("crypto.nacl.sign.open", `{"message":`+fixInputMessage(value, valueType)+`,"key":"`+key+`"}`)
-}
-
-//NaclBoxOpen method crypto.nacl.box.open
-func (client *Client) NaclBoxOpen(value, valueType, nonce, theirPublic, secret string) (string, error) {
-	return client.request("crypto.nacl.sign.open", `{"message":`+fixInputMessage(value, valueType)+`,"nonce":"`+nonce+`,"theirPublic":"`+theirPublic+`,"secret":"`+secret+`"}`)
-}
-
-//KeystoreRemove method crypto.keystore.remove
-func (client *Client) KeystoreRemove(handle string) (string, error) {
-	return client.request("crypto.keystore.remove", `"`+handle+`"`)
-}
-
-//NaclSecretBox method crypto.nacl.secret.box
-func (client *Client) NaclSecretBox(value, valueType, nonce, secret string) (string, error) {
-	return client.request("crypto.nacl.secret.box", `{"message":`+fixInputMessage(value, valueType)+`,"nonce":"`+nonce+`,"key":"`+secret+`"}`)
-}
-
-//NaclSignDetached method crypto.nacl.sign.detached
-func (client *Client) NaclSignDetached(value, valueType, secret string) (string, error) {
-	return client.request("crypto.nacl.sign.detached", `{"message":`+fixInputMessage(value, valueType)+`,"key":"`+secret+`"}`)
-}
-
-//KeystoreClear method crypto.keystore.clear
-func (client *Client) KeystoreClear(handle string) (string, error) {
-	return client.request("crypto.keystore.clear", "{}")
-}
-
-//KeystoreAdd method crypto.keystore.add
-func (client *Client) KeystoreAdd(keyStore *TONKey) (string, error) {
-	req, err := json.Marshal(&keyStore)
+// Sha512 method crypto.sha512
+// Get string sha2512 format
+func (client *Client) Sha512(minpMess *MessageInputMessage) (string, error) {
+	request, err := json.Marshal(minpMess)
 	if err != nil {
-		return "", errors.New("Error conver to TONKey")
+		return "", err
+	}
+	return client.request("crypto.sha512", string(request))
+}
+
+//Sha256 method crypto.sha256
+//Get string sha256 format
+func (client *Client) Sha256(minpMess *MessageInputMessage) (string, error) {
+	request, err := json.Marshal(minpMess)
+	if err != nil {
+		return "", err
+	}
+	return client.request("crypto.sha256", string(request))
+}
+
+//Scrypt method crypto.scrypt
+func (client *Client) Scrypt(sD *ScryptDate) (string, error) {
+	request, err := json.Marshal(sD)
+	if err != nil {
+		return "", err
 	}
 
-	return client.request("crypto.keystore.add", string(req))
-}
-
-//NaclSignKeypairFromSecretKey method crypto.nacl.sign.keypair.fromSecretKey
-func (client *Client) NaclSignKeypairFromSecretKey(secretKey string) (string, error) {
-	return client.request("crypto.nacl.sign.keypair.fromSecretKey", `"`+secretKey+`"`)
-}
-
-//NaclSecretBoxOpen method crypto.nacl.secret.box.open
-func (client *Client) NaclSecretBoxOpen(value, valueType, nonce, theirPublic string) (string, error) {
-	return client.request("crypto.nacl.secret.box.open", `{"message":`+fixInputMessage(value, valueType)+`,"nonce":"`+nonce+`,"key":"`+theirPublic+`"}`)
+	return client.request("crypto.scrypt", string(request))
 }
 
 //NaclSignKeypair method crypto.nacl.sign.keypair
-func (client *Client) NaclSignKeypair(handle string) (string, error) {
-	return client.request("rypto.nacl.sign.keypair", "{}")
+func (client *Client) NaclSignKeypair() (*TONKey, error) {
+	result := &TONKey{}
+	result1, err := client.request("crypto.nacl.sign.keypair", "{}")
+	if err != nil {
+		return nil, err
+	}
+	err = json.Unmarshal([]byte(result1), &result)
+	return result, err
+}
+
+//NaclSignKeypairFromSecretKey method crypto.nacl.sign.keypair.fromSecretKey
+func (client *Client) NaclSignKeypairFromSecretKey(secretKey string) (*TONKey, error) {
+	result := &TONKey{}
+	result1, err := client.request("crypto.nacl.sign.keypair.fromSecretKey", stringWithQuer(secretKey))
+	if err != nil {
+		return nil, err
+	}
+	err = json.Unmarshal([]byte(result1), &result)
+	return result, err
+}
+
+//NaclBoxKeypair method crypto.nacl.box.keypair
+func (client *Client) NaclBoxKeypair() (*TONKey, error) {
+	result := &TONKey{}
+	result1, err := client.request("crypto.nacl.box.keypair", "{}")
+	if err != nil {
+		return nil, err
+	}
+	err = json.Unmarshal([]byte(result1), &result)
+	return result, err
+}
+
+//NaclBoxKeypairFromSecretKey method crypto.nacl.box.keypair.fromSecretKey
+func (client *Client) NaclBoxKeypairFromSecretKey(secretKey string) (*TONKey, error) {
+	result := &TONKey{}
+	result1, err := client.request("crypto.nacl.box.keypair.fromSecretKey", stringWithQuer(secretKey))
+	if err != nil {
+		return nil, err
+	}
+	err = json.Unmarshal([]byte(result1), &result)
+	return result, err
+}
+
+//NaclBox method crypto.nacl.box
+func (client *Client) NaclBox(nBS *NaclBoxIn) (string, error) {
+	request, err := json.Marshal(nBS)
+	if err != nil {
+		return "", err
+	}
+	return client.request("crypto.nacl.box", string(request))
+}
+
+//NaclBoxOpen method crypto.nacl.box.open
+func (client *Client) NaclBoxOpen(nBS *NaclBoxIn) (string, error) {
+	request, err := json.Marshal(nBS)
+	if err != nil {
+		return "", err
+	}
+	return client.request("crypto.nacl.box.open", string(request))
+}
+
+//NaclSecretBox method crypto.nacl.secret.box
+func (client *Client) NaclSecretBox(nSB *NaclSecretBox) (string, error) {
+	request, err := json.Marshal(nSB)
+	if err != nil {
+		return "", err
+	}
+	return client.request("crypto.nacl.secret.box", string(request))
+}
+
+//NaclSecretBoxOpen method crypto.nacl.secret.box.open
+func (client *Client) NaclSecretBoxOpen(nSB *NaclSecretBox) (string, error) {
+	request, err := json.Marshal(nSB)
+	if err != nil {
+		return "", err
+	}
+	return client.request("crypto.nacl.secret.box.open", string(request))
 }
 
 //NaclSign method crypto.nacl.sign
-func (client *Client) NaclSign(secretKey string) (string, error) {
-	return client.request("crypto.nacl.sign", `"`+secretKey+`"`)
+func (client *Client) NaclSign(nS *NaclSign) (string, error) {
+	request, err := json.Marshal(nS)
+	if err != nil {
+		return "", err
+	}
+	return client.request("crypto.nacl.sign", string(request))
 }
 
-//MathModularPower method crypto.math.modularPower
-func (client *Client) MathModularPower(base, exponent, modulus string) (string, error) {
-	return client.request("crypto.math.modularPower", `{"base":"`+base+`", "exponent":"`+exponent+`", "modulus":"`+modulus+`"}`)
+//NaclSignOpen method crypto.nacl.sign.open
+func (client *Client) NaclSignOpen(nS *NaclSign) (string, error) {
+	request, err := json.Marshal(nS)
+	if err != nil {
+		return "", err
+	}
+	return client.request("crypto.nacl.sign.open", string(request))
+}
+
+//NaclSignDetached method crypto.nacl.sign.detached
+func (client *Client) NaclSignDetached(nS *NaclSign) (string, error) {
+	request, err := json.Marshal(nS)
+	if err != nil {
+		return "", err
+	}
+	return client.request("crypto.nacl.sign.detached", string(request))
+}
+
+//Mnemonic
+
+//MnemonicWords method crypto.mnemonic.words
+//Get all words from mnemonic phrases
+func (client *Client) MnemonicWords() ([]string, error) {
+	result, err := client.request("crypto.mnemonic.words", "{}")
+	return strings.Fields(result), err
 }
 
 //MnemonicFromRandom method crypto.mnemonic.from.random
-func (client *Client) MnemonicFromRandom() (string, error) {
-	return client.request("crypto.mnemonic.from.random", "{}")
+//Generate mnemonic phrase of the specified length
+func (client *Client) MnemonicFromRandom(mFRR *MnemonicStructRequest) (string, error) {
+	if _, ok := lensMnemonic[mFRR.WordCount]; !ok {
+		mFRR.WordCount = 24
+	}
+	request, err := json.Marshal(mFRR)
+	if err != nil {
+		return "", err
+	}
+	return client.request("crypto.mnemonic.from.random", string(request))
 }
 
-//MnemonicVerify method crypto.mnemonic.verify !!!CHECKED!!!
-func (client *Client) MnemonicVerify(mnemonic string) (result bool, err error) {
-	resultO, err := client.request("crypto.mnemonic.verify", `{"phrase":"`+mnemonic+`"}`)
+//MnemonicFromEntropy method crypto.mnemonic.from.entropy
+func (client *Client) MnemonicFromEntropy(mFRR *MnemonicStructRequest) (string, error) {
+	request, err := json.Marshal(mFRR)
+	if err != nil {
+		return "", err
+	}
+	return client.request("crypto.mnemonic.from.entropy", string(request))
+}
+
+//MnemonicVerify method crypto.mnemonic.verify
+//Checked mnemonic phrase to correct
+func (client *Client) MnemonicVerify(mFRR *MnemonicStructRequest) (result bool, err error) {
+	request, err := json.Marshal(mFRR)
+	if err != nil {
+		return false, err
+	}
+	resultO, err := client.request("crypto.mnemonic.verify", string(request))
 	if resultO != "false" {
 		result = true
 	}
 	return result, err
 }
 
-//RandomGenerateBytes method crypto.random.generateBytes
-func (client *Client) RandomGenerateBytes(length int) (string, error) {
-	result, err := client.request("crypto.random.generateBytes", `{"length":`+strconv.Itoa(length)+`}`)
-	result = strings.ReplaceAll(result,`"`,"")
+//MnemonicDeriveSignKeys method crypto.mnemonic.derive.sign.keys
+//Convert mnemonic phrase to public and secret key
+func (client *Client) MnemonicDeriveSignKeys(mnemonic string) (*TONKey, error) {
+	result := &TONKey{}
+	lenMnemonic := len(strings.Fields(mnemonic))
+	if _, ok := lensMnemonic[lenMnemonic]; !ok {
+		return nil, errors.New("Length mnemonic phrase not allowed")
+	}
+
+	type reqStr struct {
+		Phrase string `json:"phrase"`
+	}
+	strtt := &reqStr{mnemonic}
+	request, err := json.Marshal(strtt)
+	if err != nil {
+		return nil, err
+	}
+
+	result1, err := client.request("crypto.mnemonic.derive.sign.keys", string(request))
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal([]byte(result1), &result)
 	return result, err
 }
 
-//MathFactorize method crypto.math.factorize
-func (client *Client) MathFactorize(hex string) (string, error) {
-	return client.request("crypto.math.factorize", `"`+hex+`"`)
+//HDKeys
+
+//HdkeyXprvFromMnemonic method crypto.hdkey.xprv.from.mnemonic
+//Get bip32 key from mnemonic phrase
+func (client *Client) HdkeyXprvFromMnemonic(mSR *MnemonicStructRequest) (string, error) {
+	lenMnemonic := len(strings.Fields(mSR.Phrase))
+	if _, ok := lensMnemonic[lenMnemonic]; !ok {
+		return "", errors.New("Length mnemonic phrase not allowed")
+	}
+
+	request, err := json.Marshal(mSR)
+	if err != nil {
+		return "", err
+	}
+	return client.request("crypto.hdkey.xprv.from.mnemonic", string(request))
 }
 
-//NaclBoxKeypairFromSecretKey method crypto.nacl.box.keypair.fromSecretKey
-func (client *Client) NaclBoxKeypairFromSecretKey(secretKey string) (string, error) {
-	return client.request("crypto.nacl.box.keypair.fromSecretKey", `"`+secretKey+`"`)
-}
-
-//NaclBox method crypto.nacl.box
-func (client *Client) NaclBox(nonce, theirPublicKey, value, valueType string) (string, error) {
-	return client.request("crypto.nacl.box", `{"nonce":"`+nonce+`", "theirPublicKey":"`+theirPublicKey+`", "message":"`+fixInputMessage(value, valueType)+`"}`)
+//HdkeyXprvSecret method crypto.hdkey.xprv.secret
+//Get secret key bip32 from bip32 key
+func (client *Client) HdkeyXprvSecret(hdS *HDSerialized) (string, error) {
+	request, err := json.Marshal(hdS)
+	if err != nil {
+		return "", err
+	}
+	return client.request("crypto.hdkey.xprv.secret", string(request))
 }
 
 //HdkeyXprvPublic method crypto.hdkey.xprv.public
-func (client *Client) HdkeyXprvPublic(publicKey string) (string, error) {
-	return client.request("crypto.hdkey.xprv.public", `{"serialized":"`+publicKey+`"}`)
+//Get private key bip32 from bip32 key
+func (client *Client) HdkeyXprvPublic(hdS *HDSerialized) (string, error) {
+	request, err := json.Marshal(hdS)
+	if err != nil {
+		return "", err
+	}
+	return client.request("crypto.hdkey.xprv.public", string(request))
 }
 
-//Scrypt method crypto.scrypt
-func (client *Client) Scrypt(data, password, passwordType, salt, saltType, logN, r, p, dkLen string) (string, error) {
-	return client.request("crypto.scrypt", `{"data":"`+data+`", "salt":"`+fixInputMessage(salt, saltType)+`", "password":"`+fixInputMessage(password, passwordType)+`", "logN":"`+logN+`", "r":"`+r+`", "p":"`+p+`", "dkLen":"`+dkLen+`"}`)
+// HdkeyXprvDerive method crypto.hdkey.xprv.derive
+func (client *Client) HdkeyXprvDerive(hdP *HDDerivery) (string, error) {
+	request, err := json.Marshal(hdP)
+	if err != nil {
+		return "", err
+	}
+	return client.request("crypto.hdkey.xprv.derive", string(request))
 }
 
-//Ed25519Keypair method crypto.ed25519.keypair
-func (client *Client) Ed25519Keypair() (string, error) {
-	return client.request("crypto.ed25519.keypair", "{}")
+//HdkeyXprvDerivePath method crypto.hdkey.xprv.derive.path
+func (client *Client) HdkeyXprvDerivePath(hdPD *HDPathDerivery) (string, error) {
+	request, err := json.Marshal(hdPD)
+	if err != nil {
+		return "", err
+	}
+	return client.request("crypto.hdkey.xprv.derive.path", string(request))
 }
 
-//MnemonicWords method crypto.mnemonic.words return slice byte!!!!!
-func (client *Client) MnemonicWords() (string, error) {
-	return client.request("crypto.mnemonic.words", "{}")
-}
+//KeyStore
 
-//NaclBoxKeypair method crypto.nacl.box.keypair
-func (client *Client) NaclBoxKeypair() (string, error) {
-	return client.request("crypto.nacl.box.keypair", "{}")
-}
-
-//MnemonicFromEntropy method crypto.mnemonic.from.entropy (text, base64) !!!
-func (client *Client) MnemonicFromEntropy(hex string) (string, error) {
-	return client.request("crypto.mnemonic.from.entropy", `{"entropy":{"text":"`+hex+`"}}`)
-}
-
-//TonCrc16 method crypto.ton_crc16(еще добавить параметры text и base64, может быть сделат структурой и в байты???)!!!
-func (client *Client) TonCrc16(hex string) (string, error) {
-	return client.request("crypto.ton_crc16", `{"hex":"`+hex+`"}`)
-}
-
-//TonPublicKeyString method crypto.ton_public_key_string
-func (client *Client) TonPublicKeyString(publicKey string) (string, error) {
-	return client.request("crypto.ton_public_key_string", `"`+publicKey+`"`)
-}
-
-//Sha256 method crypto.sha256
-func (client *Client) Sha256(value, valueType string) (string, error) {
-	return client.request("crypto.sha256", `{"message":`+fixInputMessage(value, valueType)+`}`)
-}
-
-//Sha512 method crypto.sha512
-func (client *Client) Sha512(value, valueType string) (string, error) {
-	return client.request("crypto.sha512", `{"message":`+fixInputMessage(value, valueType)+`}`)
-}
-
-func fixInputMessage(value string, format string) (message string) {
-	switch value {
-	case "text":
-		message = `{"text":"` + value + `"}`
-	case "hex":
-		message = `{"hex":"` + value + `"}`
-	case "base64":
-		message = `{"base64":"` + value + `"}`
+// KeystoreAdd method crypto.keystore.add
+func (client *Client) KeystoreAdd(keyStore *TONKey) (resbool bool, err error) {
+	req, err := json.Marshal(&keyStore)
+	if err != nil {
+		return resbool, errors.New("Error conver to TONKey")
 	}
 
-	return message
+	result, err := client.request("crypto.keystore.add", string(req))
+	if err != nil {
+		return resbool, err
+	}
+	return strconv.ParseBool(result)
+}
+
+//KeystoreClear method crypto.keystore.clear
+func (client *Client) KeystoreClear() (string, error) {
+	return client.request("crypto.keystore.clear", "")
+}
+
+//KeystoreRemove method crypto.keystore.remove
+func (client *Client) KeystoreRemove(handle string) (string, error) {
+	return client.request("crypto.keystore.remove", stringWithQuer(handle))
 }
