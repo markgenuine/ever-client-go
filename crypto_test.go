@@ -40,7 +40,7 @@ func TestCrypto(t *testing.T) {
 	//random
 
 	t.Run("TestRandomGenerateBytesHex", func(t *testing.T) {
-		value, _ := client.RandomGenerateBytes(&RandomGenerateBytesRequest{32, TONOutputEncoding_Hex})
+		value, _ := client.RandomGenerateBytes(&RandomGenerateBytesRequest{32, TONOutputEncodingHex})
 
 		if len(value) != (64) {
 			t.Errorf("test Failed - value don't correct")
@@ -48,7 +48,7 @@ func TestCrypto(t *testing.T) {
 	})
 
 	t.Run("TestRandomGenerateBytesHexUppercase", func(t *testing.T) {
-		value, _ := client.RandomGenerateBytes(&RandomGenerateBytesRequest{32, TONOutputEncoding_HexUppercase})
+		value, _ := client.RandomGenerateBytes(&RandomGenerateBytesRequest{32, TONOutputEncodingHexUppercase})
 
 		if len(value) != (64) {
 			t.Errorf("test Failed - value don't correct")
@@ -56,7 +56,7 @@ func TestCrypto(t *testing.T) {
 	})
 
 	t.Run("TestRandomGenerateBytesBase64", func(t *testing.T) {
-		value, _ := client.RandomGenerateBytes(&RandomGenerateBytesRequest{32, TONOutputEncoding_Base64})
+		value, _ := client.RandomGenerateBytes(&RandomGenerateBytesRequest{32, TONOutputEncodingBase64})
 
 		if len(value) != (44) {
 			t.Errorf("test Failed - value don't correct")
@@ -89,21 +89,21 @@ func TestCrypto(t *testing.T) {
 	//sha
 
 	t.Run("TestSha512", func(t *testing.T) {
-		value, _ := client.Sha512(&MessageInputMessage{FixInputMessage("Message to hash with sha 512", TONInputEncoding_text)})
+		value, _ := client.Sha512(&MessageInputMessage{FixInputMessage("Message to hash with sha 512", TONInputEncodingText)})
 		if value != "2616a44e0da827f0244e93c2b0b914223737a6129bc938b8edf2780ac9482960baa9b7c7cdb11457c1cebd5ae77e295ed94577f32d4c963dc35482991442daa5" {
 			t.Errorf("test Failed - value difference to sha512 value")
 		}
 	})
 
 	t.Run("TestSha256_1", func(t *testing.T) {
-		value, _ := client.Sha256(&MessageInputMessage{FixInputMessage("4d65737361676520746f206861736820776974682073686120323536", TONInputEncoding_hex)})
+		value, _ := client.Sha256(&MessageInputMessage{FixInputMessage("4d65737361676520746f206861736820776974682073686120323536", TONInputEncodingHex)})
 		if value != "16fd057308dd358d5a9b3ba2de766b2dfd5e308478fc1f7ba5988db2493852f5" {
 			t.Errorf("test Failed - value difference to sha256 value")
 		}
 	})
 
 	t.Run("TestSha256_2", func(t *testing.T) {
-		value, _ := client.Sha256(&MessageInputMessage{FixInputMessage("TWVzc2FnZSB0byBoYXNoIHdpdGggc2hhIDI1Ng==", TONInputEncoding_base64)})
+		value, _ := client.Sha256(&MessageInputMessage{FixInputMessage("TWVzc2FnZSB0byBoYXNoIHdpdGggc2hhIDI1Ng==", TONInputEncodingBase64)})
 		if value != "16fd057308dd358d5a9b3ba2de766b2dfd5e308478fc1f7ba5988db2493852f5" {
 			t.Errorf("test Failed - value difference to sha256 value")
 		}
@@ -112,7 +112,7 @@ func TestCrypto(t *testing.T) {
 	// scrypt
 
 	t.Run("TestScrypt", func(t *testing.T) {
-		value, _ := client.Scrypt(&ScryptDate{FixInputMessage("password", TONInputEncoding_text), FixInputMessage("salt", TONInputEncoding_text), 10, 8, 16, 64, ""})
+		value, _ := client.Scrypt(&ScryptDate{FixInputMessage("password", TONInputEncodingText), FixInputMessage("salt", TONInputEncodingText), 10, 8, 16, 64, ""})
 		if value != "1effd93afcf2b28964026631bf4362b0e5ed83cbd5f326b72eb687bfbc7ac56756f8d92337963b22c53ecab5e8de24f3b24053bfb5341c28f162aca6b0898a6e" {
 			t.Errorf("test Failed - error exc scrypt value different example")
 		}
@@ -160,7 +160,7 @@ func TestCrypto(t *testing.T) {
 	//nacl box
 
 	t.Run("TestNaclBox", func(t *testing.T) {
-		value, _ := client.NaclBox(&NaclBoxIn{FixInputMessage("Test Message", TONInputEncoding_text),
+		value, _ := client.NaclBox(&NaclBoxIn{FixInputMessage("Test Message", TONInputEncodingText),
 			"cd7f99924bf422544046e83595dd5803f17536f5c9a11746",
 			"c4e2d9fe6a6baf8d1812b799856ef2a306291be7a7024837ad33a8530db79c6b",
 			"d9b9dc5033fb416134e5d2107fdbacab5aadb297cb82dbdcd137d663bac59f7f",
@@ -173,11 +173,11 @@ func TestCrypto(t *testing.T) {
 
 	//nacl box open
 	t.Run("TestNaclBoxOpen", func(t *testing.T) {
-		value, _ := client.NaclBoxOpen(&NaclBoxIn{FixInputMessage("962e17103e24c7fa63436a9d3f4791d9dfcadf4b8df78be83400f1c0", TONInputEncoding_hex),
+		value, _ := client.NaclBoxOpen(&NaclBoxIn{FixInputMessage("962e17103e24c7fa63436a9d3f4791d9dfcadf4b8df78be83400f1c0", TONInputEncodingHex),
 			"cd7f99924bf422544046e83595dd5803f17536f5c9a11746",
 			"c4e2d9fe6a6baf8d1812b799856ef2a306291be7a7024837ad33a8530db79c6b",
 			"d9b9dc5033fb416134e5d2107fdbacab5aadb297cb82dbdcd137d663bac59f7f",
-			TONOutputEncoding_Text,
+			TONOutputEncodingText,
 		})
 		if value != "Test Message" {
 			t.Errorf("test Failed - error Nacl Box Open don't correct")
@@ -186,7 +186,7 @@ func TestCrypto(t *testing.T) {
 
 	//nacl Secret box
 	t.Run("TestNaclSecretBox", func(t *testing.T) {
-		value, _ := client.NaclSecretBox(&NaclSecretBox{FixInputMessage("Test Message", TONInputEncoding_text),
+		value, _ := client.NaclSecretBox(&NaclSecretBox{FixInputMessage("Test Message", TONInputEncodingText),
 			"2a33564717595ebe53d91a785b9e068aba625c8453a76e45",
 			"8f68445b4e78c000fe4d6b7fc826879c1e63e3118379219a754ae66327764bd8",
 			"",
@@ -198,10 +198,10 @@ func TestCrypto(t *testing.T) {
 
 	// nacl Secret box open
 	t.Run("TestNaclSecretBoxOpen", func(t *testing.T) {
-		value, _ := client.NaclSecretBoxOpen(&NaclSecretBox{FixInputMessage("24bede8ca59ed8a5e6aec9ece35c9f5e8405d2dfc2d50f111b2cd0d8", TONInputEncoding_hex),
+		value, _ := client.NaclSecretBoxOpen(&NaclSecretBox{FixInputMessage("24bede8ca59ed8a5e6aec9ece35c9f5e8405d2dfc2d50f111b2cd0d8", TONInputEncodingHex),
 			"2a33564717595ebe53d91a785b9e068aba625c8453a76e45",
 			"8f68445b4e78c000fe4d6b7fc826879c1e63e3118379219a754ae66327764bd8",
-			TONOutputEncoding_Text})
+			TONOutputEncodingText})
 
 		if value != "Test Message" {
 			t.Errorf("test Failed - error Nacl Secret Box Open don't correct")
@@ -210,15 +210,15 @@ func TestCrypto(t *testing.T) {
 
 	//nacl Secret box + nacl Secret box open
 	t.Run("TestNaclSecretBox+NaclSecretBoxOpen", func(t *testing.T) {
-		value1, _ := client.NaclSecretBox(&NaclSecretBox{FixInputMessage(`Text with \' and \" and : {}`, TONInputEncoding_text),
+		value1, _ := client.NaclSecretBox(&NaclSecretBox{FixInputMessage(`Text with \' and \" and : {}`, TONInputEncodingText),
 			"2a33564717595ebe53d91a785b9e068aba625c8453a76e45",
 			"8f68445b4e78c000fe4d6b7fc826879c1e63e3118379219a754ae66327764bd8",
-			TONOutputEncoding_Base64})
+			TONOutputEncodingBase64})
 
-		_, err = client.NaclSecretBoxOpen(&NaclSecretBox{FixInputMessage(value1, TONInputEncoding_base64),
+		_, err = client.NaclSecretBoxOpen(&NaclSecretBox{FixInputMessage(value1, TONInputEncodingBase64),
 			"2a33564717595ebe53d91a785b9e068aba625c8453a76e45",
 			"8f68445b4e78c000fe4d6b7fc826879c1e63e3118379219a754ae66327764bd8",
-			TONOutputEncoding_Text})
+			TONOutputEncodingText})
 
 		if err != nil {
 			t.Errorf("test Failed - error Nacl Secret Box + Nacl Secret Box Open don't correct")
@@ -227,7 +227,7 @@ func TestCrypto(t *testing.T) {
 
 	// nacl sign
 	t.Run("TestNaclSign", func(t *testing.T) {
-		value, _ := client.NaclSign(&NaclSign{FixInputMessage("Test Message", TONInputEncoding_text),
+		value, _ := client.NaclSign(&NaclSign{FixInputMessage("Test Message", TONInputEncodingText),
 			"56b6a77093d6fdf14e593f36275d872d75de5b341942376b2a08759f3cbae78f1869b7ef29d58026217e9cf163cbfbd0de889bdf1bf4daebf5433a312f5b8d6e",
 			""})
 		if value != "fb0cfe40eea5d6c960652e6ceb904da8a72ee2fcf6e05089cf835203179ff65bb48c57ecf31dcfcd26510bea67e64f3e6898b7c58300dc14338254268cade10354657374204d657373616765" {
@@ -237,9 +237,9 @@ func TestCrypto(t *testing.T) {
 
 	//naclSignOpen
 	t.Run("TestNaclSignOpen", func(t *testing.T) {
-		value, _ := client.NaclSignOpen(&NaclSign{FixInputMessage("fb0cfe40eea5d6c960652e6ceb904da8a72ee2fcf6e05089cf835203179ff65bb48c57ecf31dcfcd26510bea67e64f3e6898b7c58300dc14338254268cade10354657374204d657373616765", TONInputEncoding_hex),
+		value, _ := client.NaclSignOpen(&NaclSign{FixInputMessage("fb0cfe40eea5d6c960652e6ceb904da8a72ee2fcf6e05089cf835203179ff65bb48c57ecf31dcfcd26510bea67e64f3e6898b7c58300dc14338254268cade10354657374204d657373616765", TONInputEncodingHex),
 			"1869b7ef29d58026217e9cf163cbfbd0de889bdf1bf4daebf5433a312f5b8d6e",
-			TONOutputEncoding_Text})
+			TONOutputEncodingText})
 		if value != "Test Message" {
 			t.Errorf("test Failed - error Nacl Sign Open don't correct")
 		}
@@ -247,7 +247,7 @@ func TestCrypto(t *testing.T) {
 
 	//naclSignDetached
 	t.Run("TestNaclSignDetached", func(t *testing.T) {
-		value, _ := client.NaclSignDetached(&NaclSign{FixInputMessage("Test Message", TONInputEncoding_text),
+		value, _ := client.NaclSignDetached(&NaclSign{FixInputMessage("Test Message", TONInputEncodingText),
 			"56b6a77093d6fdf14e593f36275d872d75de5b341942376b2a08759f3cbae78f1869b7ef29d58026217e9cf163cbfbd0de889bdf1bf4daebf5433a312f5b8d6e",
 			"",
 		})
@@ -276,7 +276,7 @@ func TestCrypto(t *testing.T) {
 	})
 
 	t.Run("TestMnemonicFromEntropy", func(t *testing.T) {
-		value, _ := client.MnemonicFromEntropy(&MnemonicStructRequest{FixInputMessage("00112233445566778899AABBCCDDEEFF", TONInputEncoding_hex),
+		value, _ := client.MnemonicFromEntropy(&MnemonicStructRequest{FixInputMessage("00112233445566778899AABBCCDDEEFF", TONInputEncodingHex),
 			TONMnemonicDictionary["ENGLISH"],
 			12, ""})
 		if value != "abandon math mimic master filter design carbon crystal rookie group knife young" {

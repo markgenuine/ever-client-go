@@ -1,49 +1,69 @@
 package goton
 
 const (
-	TONInputEncoding_text          = "text"
-	TONInputEncoding_hex           = "hex"
-	TONInputEncoding_base64        = "base64"
-	TONOutputEncoding_Text         = "Text"
-	TONOutputEncoding_Hex          = "Hex"
-	TONOutputEncoding_HexUppercase = "HexUppercase"
-	TONOutputEncoding_Base64       = "Base64"
+	//TONInputEncodingText value string text
+	TONInputEncodingText = "text"
+
+	//TONInputEncodingHex value string hex
+	TONInputEncodingHex = "hex"
+
+	//TONInputEncodingBase64 value string base64
+	TONInputEncodingBase64 = "base64"
+
+	//TONOutputEncodingText value string Text
+	TONOutputEncodingText = "Text"
+
+	//TONOutputEncodingHex value string Hex
+	TONOutputEncodingHex = "Hex"
+
+	//TONOutputEncodingHexUppercase value string HexUppercase
+	TONOutputEncodingHexUppercase = "HexUppercase"
+
+	// TONOutputEncodingBase64 value string Base64
+	TONOutputEncodingBase64 = "Base64"
 )
 
 var (
-	chains                = getChains()
-	lensMnemonic          = getlengthCounWordsInMnemonic()
+	chains       = getChains()
+	lensMnemonic = getlengthCounWordsInMnemonic()
+
+	//TONMnemonicDictionary map with dictionary
 	TONMnemonicDictionary = getTONMnemonicDictionary()
 )
 
-//TONKey...
+//TONKey struct with keys
 type TONKey struct {
 	Public string `json:"public"`
 	Secret string `json:"secret"`
 }
 
+//InputMessage struct for generate message
 type InputMessage struct {
 	Text   string `json:"text,omitempty"`
 	Hex    string `json:"hex,omitempty"`
 	Base64 string `json:"base64,omitempty"`
 }
 
+//MaxFactorizeResult method crypto MaxFactorizeResult
 type MaxFactorizeResult struct {
 	A string `json:"a"`
 	B string `json:"b"`
 }
 
+//ModularPowerRequest method crypto ModularPowerRequest
 type ModularPowerRequest struct {
 	Base     string `json:"base"`
 	Exponent string `json:"exponent"`
 	Modulus  string `json:"modulus"`
 }
 
+//RandomGenerateBytesRequest method crypto RandomGenerateBytesRequest
 type RandomGenerateBytesRequest struct {
 	Length         int    `json:"length"`
 	OutputEncoding string `json:"outputEncoding,omitempty"`
 }
 
+//MnemonicStructRequest method crypto MnemonicStructRequest
 type MnemonicStructRequest struct {
 	*InputMessage `json:"entropy,omitempty"`
 	Dictionary    int    `json:"dictionary,omitempty"`
@@ -51,10 +71,12 @@ type MnemonicStructRequest struct {
 	Phrase        string `json:"phrase,omitempty"`
 }
 
+// MessageInputMessage generate message->input message struct
 type MessageInputMessage struct {
 	*InputMessage `json:"message"`
 }
 
+//ScryptDate method crypto ScryptDate
 type ScryptDate struct {
 	Password       *InputMessage `json:"password"`
 	Salt           *InputMessage `json:"salt"`
@@ -65,6 +87,7 @@ type ScryptDate struct {
 	OutputEncoding string        `json:"outputEncoding,omitempty"`
 }
 
+//NaclBoxIn for method crypto nalc box
 type NaclBoxIn struct {
 	*InputMessage  `json:"message"`
 	Nonce          string `json:"nonce"`
@@ -73,6 +96,7 @@ type NaclBoxIn struct {
 	OutputEncoding string `json:"outputEncoding,omitempty"`
 }
 
+//NaclSecretBox for method crypto nalc box secret
 type NaclSecretBox struct {
 	*InputMessage  `json:"message"`
 	Nonce          string `json:"nonce"`
@@ -80,16 +104,19 @@ type NaclSecretBox struct {
 	OutputEncoding string `json:"outputEncoding,omitempty"`
 }
 
+//NaclSign for method crypto NaclSign
 type NaclSign struct {
 	*InputMessage  `json:"message"`
 	Key            string `json:"key"`
 	OutputEncoding string `json:"outputEncoding,omitempty"`
 }
 
+//HDSerialized for method crypto HDKeys
 type HDSerialized struct {
 	Serialized string `json:"serialized"`
 }
 
+//HDDerivery for method HDKeysDerivery
 type HDDerivery struct {
 	Serialized string `json:"serialized"`
 	Index      int    `json:"index"`
@@ -97,6 +124,7 @@ type HDDerivery struct {
 	Compliant  bool   `json:"compliant"`
 }
 
+//HDPathDerivery for methods HDKeysDeriveryPath
 type HDPathDerivery struct {
 	Serialized string `json:"serialized"`
 	Path       string `json:"path"`

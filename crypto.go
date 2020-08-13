@@ -6,6 +6,7 @@ import (
 	"strings"
 )
 
+//FixInputMessage make InputMessage struct
 func FixInputMessage(value string, format string) *InputMessage {
 	inpMess := &InputMessage{}
 	switch format {

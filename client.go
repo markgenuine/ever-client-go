@@ -16,7 +16,7 @@ import (
 
 const (
 	//VersionLibSDK ...
-	VersionLibSDK = "0.25.3"
+	VersionLibSDK = "0.25.4"
 )
 
 //Client struct with client date, connect and etc.
