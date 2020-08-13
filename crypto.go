@@ -3,7 +3,6 @@ package goton
 import (
 	"encoding/json"
 	"errors"
-	"strconv"
 	"strings"
 )
 
@@ -348,17 +347,13 @@ func (client *Client) HdkeyXprvDerivePath(hdPD *HDPathDerivery) (string, error) 
 //KeyStore
 
 // KeystoreAdd method crypto.keystore.add
-func (client *Client) KeystoreAdd(keyStore *TONKey) (resbool bool, err error) {
+func (client *Client) KeystoreAdd(keyStore *TONKey) (handle string, err error) {
 	req, err := json.Marshal(&keyStore)
 	if err != nil {
-		return resbool, errors.New("Error conver to TONKey")
+		return handle, errors.New("Error conver to TONKey")
 	}
 
-	result, err := client.request("crypto.keystore.add", string(req))
-	if err != nil {
-		return resbool, err
-	}
-	return strconv.ParseBool(result)
+	return client.request("crypto.keystore.add", string(req))
 }
 
 //KeystoreClear method crypto.keystore.clear
