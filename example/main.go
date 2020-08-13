@@ -12,9 +12,8 @@ func main() {
 	config, err := goton.ParseConfigFile("config.toml")
 	if err != nil {
 		log.Println("Error read config file, err: . Settings setup on default.", err)
+		config = goton.NewConfig(0)
 	}
-
-	config = goton.NewConfig(1)
 
 	client, err := goton.InitClient(config)
 	if err != nil {
@@ -26,15 +25,5 @@ func main() {
 	if err != nil {
 		log.Fatal("Error get version, err: ", err)
 	}
-
-	fmt.Println(value)
-
-	value, err = client.MnemonicWords()
-
-	if err != nil {
-		log.Fatal("Error get mnemonic words, err: ", err)
-	}
-
-	fmt.Println(value)
-
+	fmt.Println("version: ", value)
 }
