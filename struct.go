@@ -24,9 +24,9 @@ const (
 )
 
 var (
-	chains       = getChains()
-	lensMnemonic = getlengthCounWordsInMnemonic()
-
+	chains        = getChains()
+	lensMnemonic  = getlengthCounWordsInMnemonic()
+	SortDirection = getSortDirection()
 	//TONMnemonicDictionary map with dictionary
 	TONMnemonicDictionary = getTONMnemonicDictionary()
 )
@@ -133,14 +133,15 @@ type HDPathDerivery struct {
 
 //TomlConfig struct with config data
 type TomlConfig struct {
-	BaseURL                            string  `toml:"base_URL" json:"base_URL"`
-	MessageRetriesCount                int     `toml:"message_retries_count" json:"message_retries_count"`
-	MessageExpirationTimeout           int     `toml:"message_expiration_timeout" json:"message_expiration_timeout"`
-	MessageExpirationTimeoutGrowFactor float32 `toml:"message_expiration_timeout_grow_factor" json:"message_expiration_timeout_grow_factor"`
-	MessageProcessingTimeout           int     `toml:"message_processing_timeout" json:"message_processing_timeout"`
-	WaitForTimeout                     int     `toml:"wait_for_timeout" json:"wait_for_timeout"`
-	AccessKey                          string  `toml:"access_key" json:"access_key"`
-	OutOfSyncThreshold                 int     `toml:"out_of_sync_threshold" json:"out_of_sync_threshold"`
+	BaseURL                            string   `toml:"base_URL" json:"baseURL"`
+	Servers                            []string `toml:"servers" json:"servers"`
+	MessageRetriesCount                int      `toml:"message_retries_count" json:"messageRetriesCount"`
+	MessageExpirationTimeout           int      `toml:"message_expiration_timeout" json:"messageExpirationTimeout"`
+	MessageExpirationTimeoutGrowFactor float32  `toml:"message_expiration_timeout_grow_factor" json:"messageExpirationTimeoutGrowFactor"`
+	MessageProcessingTimeout           int      `toml:"message_processing_timeout" json:"messageProcessingTimeout"`
+	WaitForTimeout                     int      `toml:"wait_for_timeout" json:"waitForTimeout"`
+	AccessKey                          string   `toml:"access_key" json:"accessKey"`
+	OutOfSyncThreshold                 int      `toml:"out_of_sync_threshold" json:"outOfSyncThreshold"`
 }
 
 //NewConfig create new config for connect client
@@ -148,6 +149,7 @@ type TomlConfig struct {
 func NewConfig(chanID int) *TomlConfig {
 	config := TomlConfig{}
 	config.BaseURL = chains[chanID]
+	config.Servers = append(config.Servers, config.BaseURL)
 	config.MessageRetriesCount = 10
 	config.MessageExpirationTimeout = 10000 //ms
 	config.MessageExpirationTimeoutGrowFactor = 1.5
@@ -177,6 +179,13 @@ func getTONMnemonicDictionary() map[string]int {
 		"JAPANESE":            6,
 		"KOREAN":              7,
 		"SPANISH":             8,
+	}
+}
+
+func getSortDirection() map[int]string {
+	return map[int]string{
+		0: "ASC",
+		1: "DESC",
 	}
 }
 

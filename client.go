@@ -5,12 +5,16 @@ package goton
 #cgo linux LDFLAGS: -L./lib/linux -lton_client
 #cgo windows LDFLAGS: -L./lib/windows -lton_client
 #include "./lib/client_method.h"
+
+void callB(int request_id, tc_string_t result_json, tc_string_t error_json, int flags);
 */
 import "C"
 import (
 	"encoding/json"
 	"errors"
+	"strconv"
 	"strings"
+	"sync"
 	"unsafe"
 )
 
@@ -21,14 +25,22 @@ const (
 
 //Client struct with client date, connect and etc.
 type Client struct {
-	client C.uint32_t
-	config *TomlConfig
+	mutx           sync.Mutex
+	client         C.uint32_t
+	config         *TomlConfig
+	RequestType    int //0:Sync; 1:Async
+	AsyncRequestID int
 }
 
-//TCStringT struct for conver struct between C and Go
-type TCStringT struct {
-	Field C.tc_string_t
+//AsyncResponse ...
+type AsyncResponse struct {
+	ReqID      int
+	ResultJSON string
+	ErrorJSON  string
+	Flags      int
 }
+
+var MapStore = make(map[int]*AsyncResponse)
 
 //InitClient create context and setup settings from file or default settings
 func InitClient(config *TomlConfig) (*Client, error) {
@@ -38,6 +50,7 @@ func InitClient(config *TomlConfig) (*Client, error) {
 	}
 
 	client.config = config
+	client.AsyncRequestID = 0
 
 	_, err = client.setup(config)
 	if err != nil {
@@ -46,7 +59,20 @@ func InitClient(config *TomlConfig) (*Client, error) {
 	}
 
 	return client, nil
+}
 
+func (client *Client) GetResp(resp int) *AsyncResponse {
+
+	var mapReq *AsyncResponse
+	for {
+		if MapStore[resp].Flags != 1 {
+			continue
+		} else {
+			mapReq = MapStore[resp]
+			break
+		}
+	}
+	return mapReq
 }
 
 //NewClient create connect node
@@ -61,25 +87,25 @@ func NewClient() (*Client, error) {
 	}
 
 	return &client, nil
-
 }
 
 //Destroy disconnect node
 func (client *Client) Destroy() {
+	client.mutx.Lock()
+	defer client.mutx.Unlock()
 	C.tc_destroy_context(client.client)
 }
 
 func (client *Client) request(method, params string) (string, error) {
+	methodsCS := C.CString(method)
+	defer C.free(unsafe.Pointer(methodsCS))
+	param1 := C.tc_string_t{content: methodsCS, len: C.uint32_t(len(method))}
 
-	methodR := C.CString(method)
-	defer C.free(unsafe.Pointer(methodR))
-	param1 := TCStringT{Field: C.tc_string_t{content: methodR, len: C.uint32_t(len(method))}}
+	paramsCS := C.CString(params)
+	defer C.free(unsafe.Pointer(paramsCS))
+	param2 := C.tc_string_t{content: paramsCS, len: C.uint32_t(len(params))}
 
-	paramsR := C.CString(params)
-	defer C.free(unsafe.Pointer(paramsR))
-	param2 := TCStringT{Field: C.tc_string_t{content: paramsR, len: C.uint32_t(len(params))}}
-
-	tcResponseHandle := C.tc_json_request(client.client, param1.Field, param2.Field)
+	tcResponseHandle := C.tc_json_request(client.client, param1, param2)
 	defer C.tc_destroy_json_response(tcResponseHandle)
 
 	tcResponse := C.tc_read_json_response(tcResponseHandle)
@@ -94,6 +120,33 @@ func (client *Client) request(method, params string) (string, error) {
 	return converToStringGo(resultJSON.content, C.int(resultJSON.len)), nil
 }
 
+func (client *Client) requestAsync(method, params string) int {
+	methodsCS := C.CString(method)
+	defer C.free(unsafe.Pointer(methodsCS))
+	param1 := C.tc_string_t{content: methodsCS, len: C.uint32_t(len(method))}
+
+	paramsCS := C.CString(params)
+	defer C.free(unsafe.Pointer(paramsCS))
+	param2 := C.tc_string_t{content: paramsCS, len: C.uint32_t(len(params))}
+
+	res := &AsyncResponse{}
+	client.mutx.Lock()
+	client.AsyncRequestID++
+	res.ReqID = client.AsyncRequestID
+	client.mutx.Unlock()
+	MapStore[res.ReqID] = res
+	go C.tc_json_request_async(client.client, param1, param2, C.int(res.ReqID), C.OnResult(C.callB))
+	return res.ReqID
+}
+
+//export callB
+func callB(requestID C.int, resultJSON C.tc_string_t, errorJSON C.tc_string_t, flags C.int) {
+	reg := MapStore[int(requestID)]
+	reg.ResultJSON = converToStringGo(resultJSON.content, C.int(resultJSON.len))
+	reg.ErrorJSON = converToStringGo(errorJSON.content, C.int(errorJSON.len))
+	reg.Flags = int(flags)
+}
+
 func converToStringGo(valueString *C.char, valueLen C.int) string {
 	return deleteQuotesLR(C.GoStringN(valueString, valueLen))
 }
@@ -104,7 +157,17 @@ func deleteQuotesLR(val string) string {
 
 //Version ...
 func (client *Client) Version() (result string, err error) {
-	return client.request("version", "")
+	client.mutx.Lock()
+	typeRequest := client.RequestType
+	client.mutx.Unlock()
+	if typeRequest != 1 {
+		result, err = client.request("version", "")
+	} else {
+		reqID := client.requestAsync("version", "")
+		result, err = strconv.Itoa(reqID), nil
+	}
+
+	return
 }
 
 //setup
