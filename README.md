@@ -78,8 +78,8 @@ import goton "github.com/move-ton/go-ton-sdk"
 - [+]	crypto.mnemonic.words
 
 ### Queries
-- [-]	queries.unsubscribe
-- [-]	queries.subscribe
-- [-]	queries.query
-- [-]	queries.get.next
-- [-]	queries.wait.for
+- [+]	queries.unsubscribe
+- [+]	queries.subscribe
+- [+]	queries.query
+- [+]	queries.get.next
+- [+]	queries.wait.for
