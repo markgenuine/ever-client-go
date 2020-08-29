@@ -12,7 +12,6 @@ import "C"
 import (
 	"encoding/json"
 	"errors"
-	"strconv"
 	"strings"
 	"sync"
 	"unsafe"
@@ -20,7 +19,7 @@ import (
 
 const (
 	//VersionLibSDK ...
-	VersionLibSDK = "0.25.4"
+	VersionLibSDK = "0.26.0"
 )
 
 //Client struct with client date, connect and etc.
@@ -28,7 +27,6 @@ type Client struct {
 	mutx           sync.Mutex
 	client         C.uint32_t
 	config         *TomlConfig
-	RequestType    int //0:Sync; 1:Async
 	AsyncRequestID int
 }
 
@@ -52,7 +50,7 @@ func InitClient(config *TomlConfig) (*Client, error) {
 	client.config = config
 	client.AsyncRequestID = 0
 
-	_, err = client.setup(config)
+	_, err = client.Request(Setup(config))
 	if err != nil {
 		client.Destroy()
 		return nil, err
@@ -96,7 +94,7 @@ func (client *Client) Destroy() {
 	C.tc_destroy_context(client.client)
 }
 
-func (client *Client) request(method, params string) (string, error) {
+func (client *Client) Request(method, params string) (string, error) {
 	methodsCS := C.CString(method)
 	defer C.free(unsafe.Pointer(methodsCS))
 	param1 := C.tc_string_t{content: methodsCS, len: C.uint32_t(len(method))}
@@ -120,7 +118,7 @@ func (client *Client) request(method, params string) (string, error) {
 	return converToStringGo(resultJSON.content, C.int(resultJSON.len)), nil
 }
 
-func (client *Client) requestAsync(method, params string) int {
+func (client *Client) RequestAsync(method, params string) int {
 	methodsCS := C.CString(method)
 	defer C.free(unsafe.Pointer(methodsCS))
 	param1 := C.tc_string_t{content: methodsCS, len: C.uint32_t(len(method))}
@@ -156,27 +154,17 @@ func deleteQuotesLR(val string) string {
 }
 
 //Version ...
-func (client *Client) Version() (result string, err error) {
-	client.mutx.Lock()
-	typeRequest := client.RequestType
-	client.mutx.Unlock()
-	if typeRequest != 1 {
-		result, err = client.request("version", "")
-	} else {
-		reqID := client.requestAsync("version", "")
-		result, err = strconv.Itoa(reqID), nil
-	}
-
-	return
+func Version() (string, string) {
+	return "version", ""
 }
 
-//setup
-func (client *Client) setup(config *TomlConfig) (result string, err error) {
+//Setup
+func Setup(config *TomlConfig) (string, string) {
 	req, err := json.Marshal(&config)
 	if err != nil {
 		err = errors.New("Error conver to config in json")
-		return
+		return "", ""
 	}
-	result, err = client.request("setup", string(req))
-	return
+
+	return "setup", string(req)
 }

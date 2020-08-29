@@ -25,7 +25,7 @@ const (
 
 var (
 	chains        = getChains()
-	lensMnemonic  = getlengthCounWordsInMnemonic()
+	LensMnemonic  = getlengthCounWordsInMnemonic()
 	SortDirection = getSortDirection()
 	//TONMnemonicDictionary map with dictionary
 	TONMnemonicDictionary = getTONMnemonicDictionary()
@@ -189,6 +189,48 @@ func getSortDirection() map[int]string {
 	}
 }
 
-func stringWithQuer(inStr string) string {
-	return `"` + inStr + `"`
+//FixInputMessage make InputMessage struct
+func FixInputMessage(value string, format string) *InputMessage {
+	inpMess := &InputMessage{}
+	switch format {
+	case "text":
+		inpMess.Text = value
+	case "hex":
+		inpMess.Hex = value
+	case "base64":
+		inpMess.Base64 = value
+	}
+
+	return inpMess
+}
+
+//Queries
+type ParamsOfQuery struct {
+	Table   string  `json:"table"`
+	Filter  string  `json:"filter"`
+	Result  string  `json:"result"`
+	OrderBy OrderBy `json:"order_by,omitempty"`
+	Limit   int     `json:"limit,omitempty"` //max:50
+}
+
+type ParamsOfSubscribe struct {
+	Table  string `json:"table"`
+	Filter string `json:"filter"`
+	Result string `json:"result"`
+}
+
+type ParamsOfWaitFor struct {
+	Table   string `json:"table"`
+	Filter  string `json:"filter"`
+	Result  string `json:"result"`
+	Timeout int    `json:"timeout"`
+}
+
+type OrderBy struct {
+	Path      string `json:"path"`
+	Direction string `json:"direction"`
+}
+
+type HandleStruct struct {
+	Handle int `json:"handle"`
 }

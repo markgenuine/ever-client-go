@@ -31,7 +31,7 @@ func TestClientMethods(t *testing.T) {
 		}
 		defer client.Destroy()
 
-		value, err := client.Version()
+		value, err := client.Request(Version())
 		if err != nil {
 			t.Errorf("test Failed - Error get version, err: %s", err)
 		}

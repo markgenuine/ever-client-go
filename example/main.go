@@ -21,7 +21,7 @@ func main() {
 	}
 	defer client.Destroy()
 
-	value, err := client.Version()
+	value, err := client.Request(goton.Version())
 	if err != nil {
 		log.Fatal("Error get version, err: ", err)
 	}
