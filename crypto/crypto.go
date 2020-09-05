@@ -11,12 +11,12 @@ func stringWithQuer(inStr string) string {
 	return `"` + inStr + `"`
 }
 
-//MathFactorize method crypto.math.factorize
+// MathFactorize method crypto.math.factorize
 func MathFactorize(value string) (string, string) {
 	return "crypto.math.factorize", stringWithQuer(value)
 }
 
-//MathFactorizeResp response method crypto.math.factorize
+// MathFactorizeResp response method crypto.math.factorize
 func MathFactorizeResp(resp string, err error) (*goton.MaxFactorizeResult, error) {
 	if err != nil {
 		return nil, err
@@ -31,7 +31,7 @@ func MathFactorizeResp(resp string, err error) (*goton.MaxFactorizeResult, error
 	return strT, nil
 }
 
-//MathModularPower method crypto.math.modularPower
+// MathModularPower method crypto.math.modularPower
 func MathModularPower(modularPower *goton.ModularPowerRequest) (string, string) {
 	request, err := json.Marshal(modularPower)
 	if err != nil {
@@ -40,7 +40,7 @@ func MathModularPower(modularPower *goton.ModularPowerRequest) (string, string) 
 	return "crypto.math.modularPower", string(request)
 }
 
-//TonCrc16 method crypto.ton_crc16
+// TonCrc16 method crypto.ton_crc16
 func TonCrc16(inpMess *goton.InputMessage) (string, string) {
 	request, err := json.Marshal(inpMess)
 	if err != nil {
@@ -49,8 +49,7 @@ func TonCrc16(inpMess *goton.InputMessage) (string, string) {
 	return "crypto.ton_crc16", string(request)
 }
 
-//RandomGenerateBytes method crypto.random.generateBytes
-//Generate string of the specified lenght length int, outputEncoding string
+// RandomGenerateBytes method crypto.random.generateBytes
 func RandomGenerateBytes(ranBytes *goton.RandomGenerateBytesRequest) (string, string) {
 	request, err := json.Marshal(ranBytes)
 	if err != nil {
@@ -59,12 +58,12 @@ func RandomGenerateBytes(ranBytes *goton.RandomGenerateBytesRequest) (string, st
 	return "crypto.random.generateBytes", string(request)
 }
 
-//Ed25519Keypair method crypto.ed25519.keypair
+// Ed25519Keypair method crypto.ed25519.keypair
 func Ed25519Keypair() (string, string) {
 	return "crypto.ed25519.keypair", "{}"
 }
 
-//Ed25519KeypairResp response method crypto.ed25519.keypair
+// Ed25519KeypairResp response method crypto.ed25519.keypair
 func Ed25519KeypairResp(resp string, err error) (*goton.TONKey, error) {
 	if err != nil {
 		return nil, err
@@ -93,7 +92,7 @@ func Sha512(minpMess *goton.MessageInputMessage) (string, string) {
 	return "crypto.sha512", string(request)
 }
 
-//Sha256 method crypto.sha256
+// Sha256 method crypto.sha256
 func Sha256(minpMess *goton.MessageInputMessage) (string, string) {
 	request, err := json.Marshal(minpMess)
 	if err != nil {
@@ -102,7 +101,7 @@ func Sha256(minpMess *goton.MessageInputMessage) (string, string) {
 	return "crypto.sha256", string(request)
 }
 
-//Scrypt method crypto.scrypt
+// Scrypt method crypto.scrypt
 func Scrypt(sD *goton.ScryptDate) (string, string) {
 	request, err := json.Marshal(sD)
 	if err != nil {
@@ -112,12 +111,12 @@ func Scrypt(sD *goton.ScryptDate) (string, string) {
 	return "crypto.scrypt", string(request)
 }
 
-//NaclSignKeypair method crypto.nacl.sign.keypair
+// NaclSignKeypair method crypto.nacl.sign.keypair
 func NaclSignKeypair() (string, string) {
 	return "crypto.nacl.sign.keypair", "{}"
 }
 
-//NaclSignKeypairResp method crypto.nacl.sign.keypair
+// NaclSignKeypairResp method crypto.nacl.sign.keypair
 func NaclSignKeypairResp(resp string, err error) (*goton.TONKey, error) {
 	if err != nil {
 		return nil, err
@@ -132,12 +131,12 @@ func NaclSignKeypairResp(resp string, err error) (*goton.TONKey, error) {
 	return result, nil
 }
 
-//NaclSignKeypairFromSecretKey method crypto.nacl.sign.keypair.fromSecretKey
+// NaclSignKeypairFromSecretKey method crypto.nacl.sign.keypair.fromSecretKey
 func NaclSignKeypairFromSecretKey(secretKey string) (string, string) {
 	return "crypto.nacl.sign.keypair.fromSecretKey", stringWithQuer(secretKey)
 }
 
-//NaclSignKeypairFromSecretKeyResp method crypto.nacl.sign.keypair.fromSecretKey
+// NaclSignKeypairFromSecretKeyResp method crypto.nacl.sign.keypair.fromSecretKey
 func NaclSignKeypairFromSecretKeyResp(resp string, err error) (*goton.TONKey, error) {
 	if err != nil {
 		return nil, err
@@ -151,12 +150,12 @@ func NaclSignKeypairFromSecretKeyResp(resp string, err error) (*goton.TONKey, er
 	return result, nil
 }
 
-//NaclBoxKeypair method crypto.nacl.box.keypair
+// NaclBoxKeypair method crypto.nacl.box.keypair
 func NaclBoxKeypair() (string, string) {
 	return "crypto.nacl.box.keypair", "{}"
 }
 
-//NaclBoxKeypairResp method crypto.nacl.box.keypair
+// NaclBoxKeypairResp method crypto.nacl.box.keypair
 func NaclBoxKeypairResp(resp string, err error) (*goton.TONKey, error) {
 	if err != nil {
 		return nil, err
@@ -171,12 +170,12 @@ func NaclBoxKeypairResp(resp string, err error) (*goton.TONKey, error) {
 	return result, nil
 }
 
-//NaclBoxKeypairFromSecretKey method crypto.nacl.box.keypair.fromSecretKey
+// NaclBoxKeypairFromSecretKey method crypto.nacl.box.keypair.fromSecretKey
 func NaclBoxKeypairFromSecretKey(secretKey string) (string, string) {
 	return "crypto.nacl.box.keypair.fromSecretKey", stringWithQuer(secretKey)
 }
 
-//NaclBoxKeypairFromSecretKeyResp method crypto.nacl.box.keypair.fromSecretKey
+// NaclBoxKeypairFromSecretKeyResp method crypto.nacl.box.keypair.fromSecretKey
 func NaclBoxKeypairFromSecretKeyResp(resp string, err error) (*goton.TONKey, error) {
 	if err != nil {
 		return nil, err
@@ -188,7 +187,7 @@ func NaclBoxKeypairFromSecretKeyResp(resp string, err error) (*goton.TONKey, err
 	return result, err
 }
 
-//NaclBox method crypto.nacl.box
+// NaclBox method crypto.nacl.box
 func NaclBox(nBS *goton.NaclBoxIn) (string, string) {
 	request, err := json.Marshal(nBS)
 	if err != nil {
@@ -197,7 +196,7 @@ func NaclBox(nBS *goton.NaclBoxIn) (string, string) {
 	return "crypto.nacl.box", string(request)
 }
 
-//NaclBoxOpen method crypto.nacl.box.open
+// NaclBoxOpen method crypto.nacl.box.open
 func NaclBoxOpen(nBS *goton.NaclBoxIn) (string, string) {
 	request, err := json.Marshal(nBS)
 	if err != nil {
@@ -206,7 +205,7 @@ func NaclBoxOpen(nBS *goton.NaclBoxIn) (string, string) {
 	return "crypto.nacl.box.open", string(request)
 }
 
-//NaclSecretBox method crypto.nacl.secret.box
+// NaclSecretBox method crypto.nacl.secret.box
 func NaclSecretBox(nSB *goton.NaclSecretBox) (string, string) {
 	request, err := json.Marshal(nSB)
 	if err != nil {
@@ -215,7 +214,7 @@ func NaclSecretBox(nSB *goton.NaclSecretBox) (string, string) {
 	return "crypto.nacl.secret.box", string(request)
 }
 
-//NaclSecretBoxOpen method crypto.nacl.secret.box.open
+// NaclSecretBoxOpen method crypto.nacl.secret.box.open
 func NaclSecretBoxOpen(nSB *goton.NaclSecretBox) (string, string) {
 	request, err := json.Marshal(nSB)
 	if err != nil {
@@ -224,7 +223,7 @@ func NaclSecretBoxOpen(nSB *goton.NaclSecretBox) (string, string) {
 	return "crypto.nacl.secret.box.open", string(request)
 }
 
-//NaclSign method crypto.nacl.sign
+// NaclSign method crypto.nacl.sign
 func NaclSign(nS *goton.NaclSign) (string, string) {
 	request, err := json.Marshal(nS)
 	if err != nil {
@@ -234,7 +233,7 @@ func NaclSign(nS *goton.NaclSign) (string, string) {
 	return "crypto.nacl.sign", string(request)
 }
 
-//NaclSignOpen method crypto.nacl.sign.open
+// NaclSignOpen method crypto.nacl.sign.open
 func NaclSignOpen(nS *goton.NaclSign) (string, string) {
 	request, err := json.Marshal(nS)
 	if err != nil {
@@ -243,7 +242,7 @@ func NaclSignOpen(nS *goton.NaclSign) (string, string) {
 	return "crypto.nacl.sign.open", string(request)
 }
 
-//NaclSignDetached method crypto.nacl.sign.detached
+// NaclSignDetached method crypto.nacl.sign.detached
 func NaclSignDetached(nS *goton.NaclSign) (string, string) {
 	request, err := json.Marshal(nS)
 	if err != nil {
@@ -252,14 +251,14 @@ func NaclSignDetached(nS *goton.NaclSign) (string, string) {
 	return "crypto.nacl.sign.detached", string(request)
 }
 
-//Mnemonic
+// Mnemonic
 
-//MnemonicWords method crypto.mnemonic.words
+// MnemonicWords method crypto.mnemonic.words
 func MnemonicWords() (string, string) {
 	return "crypto.mnemonic.words", "{}"
 }
 
-//MnemonicWordsResp method crypto.mnemonic.words
+// MnemonicWordsResp method crypto.mnemonic.words
 func MnemonicWordsResp(resp string, err error) ([]string, error) {
 	if err != nil {
 		return nil, err
@@ -267,7 +266,7 @@ func MnemonicWordsResp(resp string, err error) ([]string, error) {
 	return strings.Fields(resp), nil
 }
 
-//MnemonicFromRandom method crypto.mnemonic.from.random
+// MnemonicFromRandom method crypto.mnemonic.from.random
 func MnemonicFromRandom(mFRR *goton.MnemonicStructRequest) (string, string) {
 	if _, ok := goton.LensMnemonic[mFRR.WordCount]; !ok {
 		mFRR.WordCount = 24
@@ -279,7 +278,7 @@ func MnemonicFromRandom(mFRR *goton.MnemonicStructRequest) (string, string) {
 	return "crypto.mnemonic.from.random", string(request)
 }
 
-//MnemonicFromEntropy method crypto.mnemonic.from.entropy
+// MnemonicFromEntropy method crypto.mnemonic.from.entropy
 func MnemonicFromEntropy(mFRR *goton.MnemonicStructRequest) (string, string) {
 	request, err := json.Marshal(mFRR)
 	if err != nil {
@@ -288,7 +287,7 @@ func MnemonicFromEntropy(mFRR *goton.MnemonicStructRequest) (string, string) {
 	return "crypto.mnemonic.from.entropy", string(request)
 }
 
-//MnemonicVerify method crypto.mnemonic.verify
+// MnemonicVerify method crypto.mnemonic.verify
 func MnemonicVerify(mFRR *goton.MnemonicStructRequest) (string, string) {
 	request, err := json.Marshal(mFRR)
 	if err != nil {
@@ -298,7 +297,7 @@ func MnemonicVerify(mFRR *goton.MnemonicStructRequest) (string, string) {
 	return "crypto.mnemonic.verify", string(request)
 }
 
-//MnemonicVerifyResp method crypto.mnemonic.verify
+// MnemonicVerifyResp method crypto.mnemonic.verify
 func MnemonicVerifyResp(resp string, err error) (bool, error) {
 	result := false
 	if err != nil {
@@ -311,7 +310,7 @@ func MnemonicVerifyResp(resp string, err error) (bool, error) {
 	return result, nil
 }
 
-//MnemonicDeriveSignKeys method crypto.mnemonic.derive.sign.keys
+// MnemonicDeriveSignKeys method crypto.mnemonic.derive.sign.keys
 func MnemonicDeriveSignKeys(mnemonic string) (string, string) {
 	type reqStr struct {
 		Phrase string `json:"phrase"`
@@ -325,7 +324,7 @@ func MnemonicDeriveSignKeys(mnemonic string) (string, string) {
 	return "crypto.mnemonic.derive.sign.keys", string(request)
 }
 
-//MnemonicDeriveSignKeysResp method crypto.mnemonic.derive.sign.keys
+// MnemonicDeriveSignKeysResp method crypto.mnemonic.derive.sign.keys
 func MnemonicDeriveSignKeysResp(resp string, err error) (*goton.TONKey, error) {
 	if err != nil {
 		return nil, err
@@ -340,9 +339,9 @@ func MnemonicDeriveSignKeysResp(resp string, err error) (*goton.TONKey, error) {
 	return result, nil
 }
 
-//HDKeys
+// HDKeys
 
-//HdkeyXprvFromMnemonic method crypto.hdkey.xprv.from.mnemonic
+// HdkeyXprvFromMnemonic method crypto.hdkey.xprv.from.mnemonic
 func HdkeyXprvFromMnemonic(mSR *goton.MnemonicStructRequest) (string, string) {
 	lenMnemonic := len(strings.Fields(mSR.Phrase))
 	if _, ok := goton.LensMnemonic[lenMnemonic]; !ok {
@@ -356,7 +355,7 @@ func HdkeyXprvFromMnemonic(mSR *goton.MnemonicStructRequest) (string, string) {
 	return "crypto.hdkey.xprv.from.mnemonic", string(request)
 }
 
-//HdkeyXprvSecret method crypto.hdkey.xprv.secret
+// HdkeyXprvSecret method crypto.hdkey.xprv.secret
 func HdkeyXprvSecret(hdS *goton.HDSerialized) (string, string) {
 	request, err := json.Marshal(hdS)
 	if err != nil {
@@ -365,7 +364,7 @@ func HdkeyXprvSecret(hdS *goton.HDSerialized) (string, string) {
 	return "crypto.hdkey.xprv.secret", string(request)
 }
 
-//HdkeyXprvPublic method crypto.hdkey.xprv.public
+// HdkeyXprvPublic method crypto.hdkey.xprv.public
 func HdkeyXprvPublic(hdS *goton.HDSerialized) (string, string) {
 	request, err := json.Marshal(hdS)
 	if err != nil {
@@ -383,7 +382,7 @@ func HdkeyXprvDerive(hdP *goton.HDDerivery) (string, string) {
 	return "crypto.hdkey.xprv.derive", string(request)
 }
 
-//HdkeyXprvDerivePath method crypto.hdkey.xprv.derive.path
+// HdkeyXprvDerivePath method crypto.hdkey.xprv.derive.path
 func HdkeyXprvDerivePath(hdPD *goton.HDPathDerivery) (string, string) {
 	request, err := json.Marshal(hdPD)
 	if err != nil {

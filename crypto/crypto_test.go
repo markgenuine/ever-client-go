@@ -39,7 +39,7 @@ func TestCrypto(t *testing.T) {
 		}
 	})
 
-	//random
+	// Random
 
 	t.Run("TestRandomGenerateBytesHex", func(t *testing.T) {
 		value, _ := client.Request(RandomGenerateBytes(&goton.RandomGenerateBytesRequest{32, goton.TONOutputEncodingHex}))
@@ -65,7 +65,7 @@ func TestCrypto(t *testing.T) {
 		}
 	})
 
-	//ed25519
+	// ed25519
 
 	t.Run("TestEd25519Keypair", func(t *testing.T) {
 		value, _ := Ed25519KeypairResp(client.Request(Ed25519Keypair()))
@@ -80,7 +80,7 @@ func TestCrypto(t *testing.T) {
 		}
 	})
 
-	//TON
+	// TON
 	t.Run("TestTonPublicKeyString", func(t *testing.T) {
 		value, _ := client.Request(TonPublicKeyString("1123fd8e34a7ec75c15121a3ca455e0b3788f28847f1e69eefe1c2c0aa08adbe"))
 		if value != "PuYRI_2ONKfsdcFRIaPKRV4LN4jyiEfx5p7v4cLAqgitvmpx" {
@@ -88,7 +88,7 @@ func TestCrypto(t *testing.T) {
 		}
 	})
 
-	//sha
+	// sha
 
 	t.Run("TestSha512", func(t *testing.T) {
 		value, _ := client.Request(Sha512(&goton.MessageInputMessage{goton.FixInputMessage("Message to hash with sha 512", goton.TONInputEncodingText)}))
@@ -120,7 +120,7 @@ func TestCrypto(t *testing.T) {
 		}
 	})
 
-	//nacl keys
+	// nacl keys
 
 	t.Run("TestNaclBoxKeypair", func(t *testing.T) {
 		value, _ := NaclBoxKeypairResp(client.Request(NaclBoxKeypair()))
@@ -159,7 +159,7 @@ func TestCrypto(t *testing.T) {
 		}
 	})
 
-	//nacl box
+	// nacl box
 
 	t.Run("TestNaclBox", func(t *testing.T) {
 		value, _ := client.Request(NaclBox(&goton.NaclBoxIn{goton.FixInputMessage("Test Message", goton.TONInputEncodingText),
@@ -173,7 +173,7 @@ func TestCrypto(t *testing.T) {
 		}
 	})
 
-	//nacl box open
+	// nacl box open
 	t.Run("TestNaclBoxOpen", func(t *testing.T) {
 		value, _ := client.Request(NaclBoxOpen(&goton.NaclBoxIn{goton.FixInputMessage("962e17103e24c7fa63436a9d3f4791d9dfcadf4b8df78be83400f1c0", goton.TONInputEncodingHex),
 			"cd7f99924bf422544046e83595dd5803f17536f5c9a11746",
@@ -186,7 +186,7 @@ func TestCrypto(t *testing.T) {
 		}
 	})
 
-	//nacl Secret box
+	// nacl Secret box
 	t.Run("TestNaclSecretBox", func(t *testing.T) {
 		value, _ := client.Request(NaclSecretBox(&goton.NaclSecretBox{goton.FixInputMessage("Test Message", goton.TONInputEncodingText),
 			"2a33564717595ebe53d91a785b9e068aba625c8453a76e45",
@@ -210,7 +210,7 @@ func TestCrypto(t *testing.T) {
 		}
 	})
 
-	//nacl Secret box + nacl Secret box open
+	// nacl Secret box + nacl Secret box open
 	t.Run("TestNaclSecretBox+NaclSecretBoxOpen", func(t *testing.T) {
 		value1, _ := client.Request(NaclSecretBox(&goton.NaclSecretBox{goton.FixInputMessage(`Text with \' and \" and : {}`, goton.TONInputEncodingText),
 			"2a33564717595ebe53d91a785b9e068aba625c8453a76e45",
@@ -237,7 +237,7 @@ func TestCrypto(t *testing.T) {
 		}
 	})
 
-	//naclSignOpen
+	// naclSignOpen
 	t.Run("TestNaclSignOpen", func(t *testing.T) {
 		value, _ := client.Request(NaclSignOpen(&goton.NaclSign{goton.FixInputMessage("fb0cfe40eea5d6c960652e6ceb904da8a72ee2fcf6e05089cf835203179ff65bb48c57ecf31dcfcd26510bea67e64f3e6898b7c58300dc14338254268cade10354657374204d657373616765", goton.TONInputEncodingHex),
 			"1869b7ef29d58026217e9cf163cbfbd0de889bdf1bf4daebf5433a312f5b8d6e",
@@ -247,7 +247,7 @@ func TestCrypto(t *testing.T) {
 		}
 	})
 
-	//naclSignDetached
+	// naclSignDetached
 	t.Run("TestNaclSignDetached", func(t *testing.T) {
 		value, _ := client.Request(NaclSignDetached(&goton.NaclSign{goton.FixInputMessage("Test Message", goton.TONInputEncodingText),
 			"56b6a77093d6fdf14e593f36275d872d75de5b341942376b2a08759f3cbae78f1869b7ef29d58026217e9cf163cbfbd0de889bdf1bf4daebf5433a312f5b8d6e",
@@ -310,7 +310,7 @@ func TestCrypto(t *testing.T) {
 		}
 	})
 
-	//HDKeys
+	// HDKeys
 
 	t.Run("TestHDkeyXprv", func(t *testing.T) {
 		master, _ := client.Request(HdkeyXprvFromMnemonic(&goton.MnemonicStructRequest{nil, goton.TONMnemonicDictionary["ENGLISH"], 12, "abuse boss fly battle rubber wasp afraid hamster guide essence vibrant tattoo"}))

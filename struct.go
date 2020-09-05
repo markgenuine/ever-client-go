@@ -1,22 +1,22 @@
 package goton
 
 const (
-	//TONInputEncodingText value string text
+	// TONInputEncodingText value string text
 	TONInputEncodingText = "text"
 
-	//TONInputEncodingHex value string hex
+	// TONInputEncodingHex value string hex
 	TONInputEncodingHex = "hex"
 
-	//TONInputEncodingBase64 value string base64
+	// TONInputEncodingBase64 value string base64
 	TONInputEncodingBase64 = "base64"
 
-	//TONOutputEncodingText value string Text
+	// TONOutputEncodingText value string Text
 	TONOutputEncodingText = "Text"
 
-	//TONOutputEncodingHex value string Hex
+	// TONOutputEncodingHex value string Hex
 	TONOutputEncodingHex = "Hex"
 
-	//TONOutputEncodingHexUppercase value string HexUppercase
+	// TONOutputEncodingHexUppercase value string HexUppercase
 	TONOutputEncodingHexUppercase = "HexUppercase"
 
 	// TONOutputEncodingBase64 value string Base64
@@ -27,43 +27,43 @@ var (
 	chains        = getChains()
 	LensMnemonic  = getlengthCounWordsInMnemonic()
 	SortDirection = getSortDirection()
-	//TONMnemonicDictionary map with dictionary
+	// TONMnemonicDictionary map with dictionary
 	TONMnemonicDictionary = getTONMnemonicDictionary()
 )
 
-//TONKey struct with keys
+// TONKey struct with keys
 type TONKey struct {
 	Public string `json:"public"`
 	Secret string `json:"secret"`
 }
 
-//InputMessage struct for generate message
+// InputMessage struct for generate message
 type InputMessage struct {
 	Text   string `json:"text,omitempty"`
 	Hex    string `json:"hex,omitempty"`
 	Base64 string `json:"base64,omitempty"`
 }
 
-//MaxFactorizeResult method crypto MaxFactorizeResult
+// MaxFactorizeResult method crypto MaxFactorizeResult
 type MaxFactorizeResult struct {
 	A string `json:"a"`
 	B string `json:"b"`
 }
 
-//ModularPowerRequest method crypto ModularPowerRequest
+// ModularPowerRequest method crypto ModularPowerRequest
 type ModularPowerRequest struct {
 	Base     string `json:"base"`
 	Exponent string `json:"exponent"`
 	Modulus  string `json:"modulus"`
 }
 
-//RandomGenerateBytesRequest method crypto RandomGenerateBytesRequest
+// RandomGenerateBytesRequest method crypto RandomGenerateBytesRequest
 type RandomGenerateBytesRequest struct {
 	Length         int    `json:"length"`
 	OutputEncoding string `json:"outputEncoding,omitempty"`
 }
 
-//MnemonicStructRequest method crypto MnemonicStructRequest
+// MnemonicStructRequest method crypto MnemonicStructRequest
 type MnemonicStructRequest struct {
 	*InputMessage `json:"entropy,omitempty"`
 	Dictionary    int    `json:"dictionary,omitempty"`
@@ -76,7 +76,7 @@ type MessageInputMessage struct {
 	*InputMessage `json:"message"`
 }
 
-//ScryptDate method crypto ScryptDate
+// ScryptDate method crypto ScryptDate
 type ScryptDate struct {
 	Password       *InputMessage `json:"password"`
 	Salt           *InputMessage `json:"salt"`
@@ -87,7 +87,7 @@ type ScryptDate struct {
 	OutputEncoding string        `json:"outputEncoding,omitempty"`
 }
 
-//NaclBoxIn for method crypto nalc box
+// NaclBoxIn for method crypto nalc box
 type NaclBoxIn struct {
 	*InputMessage  `json:"message"`
 	Nonce          string `json:"nonce"`
@@ -96,7 +96,7 @@ type NaclBoxIn struct {
 	OutputEncoding string `json:"outputEncoding,omitempty"`
 }
 
-//NaclSecretBox for method crypto nalc box secret
+// NaclSecretBox for method crypto nalc box secret
 type NaclSecretBox struct {
 	*InputMessage  `json:"message"`
 	Nonce          string `json:"nonce"`
@@ -104,19 +104,19 @@ type NaclSecretBox struct {
 	OutputEncoding string `json:"outputEncoding,omitempty"`
 }
 
-//NaclSign for method crypto NaclSign
+// NaclSign for method crypto NaclSign
 type NaclSign struct {
 	*InputMessage  `json:"message"`
 	Key            string `json:"key"`
 	OutputEncoding string `json:"outputEncoding,omitempty"`
 }
 
-//HDSerialized for method crypto HDKeys
+// HDSerialized for method crypto HDKeys
 type HDSerialized struct {
 	Serialized string `json:"serialized"`
 }
 
-//HDDerivery for method HDKeysDerivery
+// HDDerivery for method HDKeysDerivery
 type HDDerivery struct {
 	Serialized string `json:"serialized"`
 	Index      int    `json:"index"`
@@ -124,14 +124,14 @@ type HDDerivery struct {
 	Compliant  bool   `json:"compliant"`
 }
 
-//HDPathDerivery for methods HDKeysDeriveryPath
+// HDPathDerivery for methods HDKeysDeriveryPath
 type HDPathDerivery struct {
 	Serialized string `json:"serialized"`
 	Path       string `json:"path"`
 	Compliant  bool   `json:"compliant"`
 }
 
-//TomlConfig struct with config data
+// TomlConfig struct with config data
 type TomlConfig struct {
 	BaseURL                            string   `toml:"base_URL" json:"baseURL"`
 	Servers                            []string `toml:"servers" json:"servers"`
@@ -144,8 +144,8 @@ type TomlConfig struct {
 	OutOfSyncThreshold                 int      `toml:"out_of_sync_threshold" json:"outOfSyncThreshold"`
 }
 
-//NewConfig create new config for connect client
-//chanID 0-devnet, 1-mainnet,
+// NewConfig create new config for connect client
+// chanID 0-devnet, 1-mainnet,
 func NewConfig(chanID int) *TomlConfig {
 	config := TomlConfig{}
 	config.BaseURL = chains[chanID]
@@ -189,7 +189,7 @@ func getSortDirection() map[int]string {
 	}
 }
 
-//FixInputMessage make InputMessage struct
+// FixInputMessage make InputMessage struct
 func FixInputMessage(value string, format string) *InputMessage {
 	inpMess := &InputMessage{}
 	switch format {
@@ -204,7 +204,9 @@ func FixInputMessage(value string, format string) *InputMessage {
 	return inpMess
 }
 
-//Queries
+// Queries structs
+
+// ParamsOfQuery ...
 type ParamsOfQuery struct {
 	Table   string  `json:"table"`
 	Filter  string  `json:"filter"`
@@ -213,12 +215,14 @@ type ParamsOfQuery struct {
 	Limit   int     `json:"limit,omitempty"` //max:50
 }
 
+// ParamsOfSubscribe ...
 type ParamsOfSubscribe struct {
 	Table  string `json:"table"`
 	Filter string `json:"filter"`
 	Result string `json:"result"`
 }
 
+// ParamsOfWaitFor ...
 type ParamsOfWaitFor struct {
 	Table   string `json:"table"`
 	Filter  string `json:"filter"`
@@ -226,11 +230,13 @@ type ParamsOfWaitFor struct {
 	Timeout int    `json:"timeout"`
 }
 
+// OrderBy ...
 type OrderBy struct {
 	Path      string `json:"path"`
 	Direction string `json:"direction"`
 }
 
+// HandleStruct ...
 type HandleStruct struct {
 	Handle int `json:"handle"`
 }

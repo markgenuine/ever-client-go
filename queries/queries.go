@@ -6,7 +6,7 @@ import (
 	goton "github.com/move-ton/go-ton-sdk"
 )
 
-//Query queries.query
+// Query queries.query
 func Query(sq *goton.ParamsOfQuery) (string, string) {
 	request, err := json.Marshal(sq)
 	if err != nil {
@@ -16,7 +16,7 @@ func Query(sq *goton.ParamsOfQuery) (string, string) {
 	return "queries.query", string(request)
 }
 
-//GetNext queries.get.next
+// GetNext queries.get.next
 func GetNext(handle int) (string, string) {
 	hndl := &goton.HandleStruct{}
 	hndl.Handle = handle
@@ -27,7 +27,7 @@ func GetNext(handle int) (string, string) {
 	return "queries.get.next", string(request)
 }
 
-//WaitFor queries.wait.for
+// WaitFor queries.wait.for
 func WaitFor(powf *goton.ParamsOfWaitFor) (string, string) {
 	request, err := json.Marshal(powf)
 	if err != nil {
@@ -36,7 +36,7 @@ func WaitFor(powf *goton.ParamsOfWaitFor) (string, string) {
 	return "queries.wait.for", string(request)
 }
 
-//Unsubscribe queries.unsubscribe
+// Unsubscribe queries.unsubscribe
 func Unsubscribe(handle int) (string, string) {
 	hndl := &goton.HandleStruct{}
 	hndl.Handle = handle
@@ -47,7 +47,7 @@ func Unsubscribe(handle int) (string, string) {
 	return "queries.unsubscribe", string(request)
 }
 
-//Subscribe queries.subscribe
+// Subscribe queries.subscribe
 func Subscribe(sq *goton.ParamsOfSubscribe) (string, string) {
 
 	request, err := json.Marshal(sq)
@@ -59,7 +59,7 @@ func Subscribe(sq *goton.ParamsOfSubscribe) (string, string) {
 
 }
 
-//SubscribeResp response queries.subscribe method
+// SubscribeResp response queries.subscribe method
 func SubscribeResp(resp string, err error) (*goton.HandleStruct, error) {
 	if err != nil {
 		return nil, err

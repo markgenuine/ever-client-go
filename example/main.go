@@ -1,10 +1,9 @@
 package main
 
 import (
-	"fmt"
-	"log"
-
 	goton "github.com/move-ton/go-ton-sdk"
+	"log"
+	"fmt"
 )
 
 func main() {

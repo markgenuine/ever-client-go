@@ -18,11 +18,11 @@ import (
 )
 
 const (
-	//VersionLibSDK ...
+	// VersionLibSDK ...
 	VersionLibSDK = "0.26.0"
 )
 
-//Client struct with client date, connect and etc.
+// Client struct with client date, connect and etc.
 type Client struct {
 	mutx           sync.Mutex
 	client         C.uint32_t
@@ -30,7 +30,7 @@ type Client struct {
 	AsyncRequestID int
 }
 
-//AsyncResponse ...
+// AsyncResponse ...
 type AsyncResponse struct {
 	ReqID      int
 	ResultJSON string
@@ -40,7 +40,7 @@ type AsyncResponse struct {
 
 var MapStore = make(map[int]*AsyncResponse)
 
-//InitClient create context and setup settings from file or default settings
+// InitClient create context and setup settings from file or default settings
 func InitClient(config *TomlConfig) (*Client, error) {
 	client, err := NewClient()
 	if err != nil {
@@ -73,7 +73,7 @@ func (client *Client) GetResp(resp int) *AsyncResponse {
 	return mapReq
 }
 
-//NewClient create connect node
+// NewClient create connect node
 func NewClient() (*Client, error) {
 
 	client := Client{
@@ -87,7 +87,7 @@ func NewClient() (*Client, error) {
 	return &client, nil
 }
 
-//Destroy disconnect node
+// Destroy disconnect node
 func (client *Client) Destroy() {
 	client.mutx.Lock()
 	defer client.mutx.Unlock()
@@ -118,24 +118,24 @@ func (client *Client) Request(method, params string) (string, error) {
 	return converToStringGo(resultJSON.content, C.int(resultJSON.len)), nil
 }
 
-func (client *Client) RequestAsync(method, params string) int {
-	methodsCS := C.CString(method)
-	defer C.free(unsafe.Pointer(methodsCS))
-	param1 := C.tc_string_t{content: methodsCS, len: C.uint32_t(len(method))}
+// func (client *Client) RequestAsync(method, params string) int {
+// 	methodsCS := C.CString(method)
+// 	defer C.free(unsafe.Pointer(methodsCS))
+// 	param1 := C.tc_string_t{content: methodsCS, len: C.uint32_t(len(method))}
 
-	paramsCS := C.CString(params)
-	defer C.free(unsafe.Pointer(paramsCS))
-	param2 := C.tc_string_t{content: paramsCS, len: C.uint32_t(len(params))}
+// 	paramsCS := C.CString(params)
+// 	defer C.free(unsafe.Pointer(paramsCS))
+// 	param2 := C.tc_string_t{content: paramsCS, len: C.uint32_t(len(params))}
 
-	res := &AsyncResponse{}
-	client.mutx.Lock()
-	client.AsyncRequestID++
-	res.ReqID = client.AsyncRequestID
-	client.mutx.Unlock()
-	MapStore[res.ReqID] = res
-	go C.tc_json_request_async(client.client, param1, param2, C.int(res.ReqID), C.OnResult(C.callB))
-	return res.ReqID
-}
+// 	res := &AsyncResponse{}
+// 	client.mutx.Lock()
+// 	client.AsyncRequestID++
+// 	res.ReqID = client.AsyncRequestID
+// 	client.mutx.Unlock()
+// 	MapStore[res.ReqID] = res
+// 	go C.tc_json_request_async(client.client, param1, param2, C.int(res.ReqID), C.OnResult(C.callB))
+// 	return res.ReqID
+// }
 
 //export callB
 func callB(requestID C.int, resultJSON C.tc_string_t, errorJSON C.tc_string_t, flags C.int) {
@@ -153,12 +153,12 @@ func deleteQuotesLR(val string) string {
 	return strings.TrimRight(strings.TrimLeft(val, `"`), `"`)
 }
 
-//Version ...
+// Version ...
 func Version() (string, string) {
 	return "version", ""
 }
 
-//Setup
+// Setup
 func Setup(config *TomlConfig) (string, string) {
 	req, err := json.Marshal(&config)
 	if err != nil {
