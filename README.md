@@ -1,14 +1,14 @@
-# go-ton-sdk
+# ton-client-go
 
-FreeTON SDK Golang language based itself on [TON-SDK](https://github.com/tonlabs/TON-SDK).
+FreeTON client interface for SDK Golang language based itself on [TON-SDK](https://github.com/tonlabs/TON-SDK).
 
 ## Install
 ```sh
-$ go get -u github.com/move-ton/go-ton-sdk
+$ go get -u github.com/move-ton/ton-client-go
 ```
 ## Usage
 ```go
-import goton "github.com/move-ton/go-ton-sdk"
+import goton "github.com/move-ton/ton-client-go"
 ```
 ## Supported methods
 ### Based
@@ -16,34 +16,34 @@ import goton "github.com/move-ton/go-ton-sdk"
 - [+]	setup
 
 ### Contracts
-- [-]	contracts.run.local.msg
-- [-]	contracts.run.local
-- [-]	contracts.run.fee
-- [-]	tvm.get
-- [-]	contracts.deploy.address
-- [-]	contracts.run.unknown.input
-- [-]	contracts.run.unknown.output
-- [-]	contracts.deploy.encode_unsigned_message
-- [-]	contracts.resolve.error
-- [-]	contracts.parse.message
-- [-]	contracts.run.fee.msg
-- [-]	contracts.deploy.data
-- [-]	contracts.deploy.message
-- [-]	contracts.encode_message_with_sign
-- [-]	contracts.send.message
-- [-]	contracts.run.message
-- [-]	contracts.function.id
-- [-]	contracts.process.message
-- [-]	contracts.run
-- [-]	contracts.process.transaction
-- [-]	contracts.run.output
-- [-]	contracts.run.encode_unsigned_message
-- [-]	contracts.run.body
-- [-]	contracts.address.convert
-- [-]	contracts.deploy
-- [-]	contracts.wait.transaction
-- [-]	contracts.load
-- [-]	contracts.find.shard
+- [+]	contracts.run.local.msg
+- [+]	contracts.run.local
+- [+]	contracts.run.fee
+- [+]	tvm.get
+- [+]	contracts.deploy.address
+- [+]	contracts.run.unknown.input
+- [+]	contracts.run.unknown.output
+- [+]	contracts.deploy.encode_unsigned_message
+- [+]	contracts.resolve.error
+- [+]	contracts.parse.message
+- [+]	contracts.run.fee.msg
+- [+]	contracts.deploy.data
+- [+]	contracts.deploy.message
+- [+]	contracts.encode_message_with_sign
+- [+]	contracts.send.message
+- [+]	contracts.run.message
+- [+]	contracts.function.id
+- [+]	contracts.process.message
+- [+]	contracts.run
+- [+]	contracts.process.transaction
+- [+]	contracts.run.output
+- [+]	contracts.run.encode_unsigned_message
+- [+]	contracts.run.body
+- [+]	contracts.address.convert
+- [+]	contracts.deploy
+- [+]	contracts.wait.transaction
+- [+]	contracts.load
+- [+]	contracts.find.shard
 
 ### Crypto
 - [+]	crypto.mnemonic.derive.sign.keys
@@ -81,8 +81,8 @@ import goton "github.com/move-ton/go-ton-sdk"
 - [+]	crypto.mnemonic.words
 
 ### Queries
-- [-]	queries.unsubscribe
-- [-]	queries.subscribe
-- [-]	queries.query
-- [-]	queries.get.next
-- [-]	queries.wait.for
+- [+]	queries.unsubscribe
+- [+]	queries.subscribe
+- [+]	queries.query
+- [+]	queries.get.next
+- [+]	queries.wait.for
