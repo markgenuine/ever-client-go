@@ -305,6 +305,6 @@ type ParamsOfWaitTransaction struct {
 }
 
 type MessageProcessingState struct {
-	LastBlockID string `json:"lastBlockID"`
+	LastBlockID string `json:"lastBlockId"`
 	SendingTime int    `json:"sendingTime"`
 }
