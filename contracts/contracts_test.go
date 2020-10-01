@@ -5,11 +5,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	goton "github.com/move-ton/go-ton-sdk"
-	"github.com/move-ton/go-ton-sdk/crypto"
 	"io/ioutil"
 	"os"
 	"testing"
+
+	goton "github.com/move-ton/ton-client-go"
+	crypto "github.com/move-ton/ton-client-go/crypto"
 )
 
 func TestContracts(t *testing.T) {

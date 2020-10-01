@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	goton "github.com/move-ton/go-ton-sdk"
+	goton "github.com/move-ton/ton-client-go"
 )
 
 func TestQueriesMethod(t *testing.T) {
