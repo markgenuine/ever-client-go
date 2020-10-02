@@ -1,4 +1,4 @@
-package queries
+package net
 
 import (
 	"encoding/json"
@@ -73,13 +73,13 @@ func TestQueriesMethod(t *testing.T) {
 				t.Errorf("test subscribe in Sunbsrcibe and Event is Failed")
 			}
 
-			//get next
-			for i := 0; i < 10; i++ {
-				result, err = client.Request(GetNext(subscr.Handle))
-				if err != nil {
-					t.Errorf("test get next in Sunbscribe and Event is Failed")
-				}
-			}
+			//get next change to callback???
+			// for i := 0; i < 10; i++ {
+			// 	result, err = client.Request(GetNext(subscr.Handle))
+			// 	if err != nil {
+			// 		t.Errorf("test get next in Sunbscribe and Event is Failed")
+			// 	}
+			// }
 
 			// unsubscribe
 			_, err = client.Request(Unsubscribe(subscr.Handle))

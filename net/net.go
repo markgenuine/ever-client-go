@@ -1,4 +1,4 @@
-package queries
+package net
 
 import (
 	"encoding/json"
@@ -16,24 +16,13 @@ func Query(sq *goton.ParamsOfQuery) (string, string) {
 	return "queries.query", string(request)
 }
 
-// GetNext queries.get.next
-func GetNext(handle int) (string, string) {
-	hndl := &goton.HandleStruct{}
-	hndl.Handle = handle
-	request, err := json.Marshal(hndl)
-	if err != nil {
-		return "", ""
-	}
-	return "queries.get.next", string(request)
-}
-
-// WaitFor queries.wait.for
+// WaitFor queries.wait_for
 func WaitFor(powf *goton.ParamsOfWaitFor) (string, string) {
 	request, err := json.Marshal(powf)
 	if err != nil {
 		return "", ""
 	}
-	return "queries.wait.for", string(request)
+	return "queries.wait_for", string(request)
 }
 
 // Unsubscribe queries.unsubscribe
@@ -49,14 +38,12 @@ func Unsubscribe(handle int) (string, string) {
 
 // Subscribe queries.subscribe
 func Subscribe(sq *goton.ParamsOfSubscribe) (string, string) {
-
 	request, err := json.Marshal(sq)
 	if err != nil {
 		return "", ""
 	}
 
 	return "queries.subscribe", string(request)
-
 }
 
 // SubscribeResp response queries.subscribe method

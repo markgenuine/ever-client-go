@@ -67,7 +67,6 @@ type RandomGenerateBytesRequest struct {
 type MnemonicStructRequest struct {
 	*InputMessage `json:"entropy,omitempty"`
 	Dictionary    int    `json:"dictionary,omitempty"`
-	WordCount     int    `json:"wordCount,omitempty"`
 	Phrase        string `json:"phrase,omitempty"`
 }
 
@@ -121,14 +120,12 @@ type HDDerivery struct {
 	Serialized string `json:"serialized"`
 	Index      int    `json:"index"`
 	Hardened   bool   `json:"hardened"`
-	Compliant  bool   `json:"compliant"`
 }
 
 // HDPathDerivery for methods HDKeysDeriveryPath
 type HDPathDerivery struct {
 	Serialized string `json:"serialized"`
 	Path       string `json:"path"`
-	Compliant  bool   `json:"compliant"`
 }
 
 // TomlConfig struct with config data

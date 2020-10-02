@@ -68,7 +68,7 @@ func TestCrypto(t *testing.T) {
 	// ed25519
 
 	t.Run("TestEd25519Keypair", func(t *testing.T) {
-		value, _ := Ed25519KeypairResp(client.Request(Ed25519Keypair()))
+		value, _ := GenerateRandomSignKeysResp(client.Request(Ed25519Keypair()))
 		if len(value.Public) != 64 {
 			t.Errorf("test Failed - value public don't correct")
 		}
@@ -123,7 +123,7 @@ func TestCrypto(t *testing.T) {
 	// nacl keys
 
 	t.Run("TestNaclBoxKeypair", func(t *testing.T) {
-		value, _ := NaclBoxKeypairResp(client.Request(NaclBoxKeypair()))
+		value, _ := GenerateRandomSignKeysResp(client.Request(NaclBoxKeypair()))
 		if len(value.Public) != 64 {
 			t.Errorf("test Failed - value public don't correct")
 		}
@@ -136,14 +136,14 @@ func TestCrypto(t *testing.T) {
 	})
 
 	t.Run("TestNaclBoxKeypairFromSecretKey", func(t *testing.T) {
-		value, _ := NaclBoxKeypairFromSecretKeyResp(client.Request(NaclBoxKeypairFromSecretKey("e207b5966fb2c5be1b71ed94ea813202706ab84253bdf4dc55232f82a1caf0d4")))
+		value, _ := GenerateRandomSignKeysResp(client.Request(NaclBoxKeypairFromSecretKey("e207b5966fb2c5be1b71ed94ea813202706ab84253bdf4dc55232f82a1caf0d4")))
 		if value.Public != "a53b003d3ffc1e159355cb37332d67fc235a7feb6381e36c803274074dc3933a" {
 			t.Errorf("test Failed - error Nacl Box public key don't correct")
 		}
 	})
 
 	t.Run("TestNaclSignKeypair", func(t *testing.T) {
-		value, _ := NaclSignKeypairResp(client.Request(NaclSignKeypair()))
+		value, _ := GenerateRandomSignKeysResp(client.Request(NaclSignKeypair()))
 		if len(value.Public) != 64 {
 			t.Errorf("test Failed - value public don't correct")
 		}
@@ -153,7 +153,7 @@ func TestCrypto(t *testing.T) {
 	})
 
 	t.Run("TestNaclSignKeypairFromSecretKey", func(t *testing.T) {
-		value, _ := NaclSignKeypairFromSecretKeyResp(client.Request(NaclSignKeypairFromSecretKey("8fb4f2d256e57138fb310b0a6dac5bbc4bee09eb4821223a720e5b8e1f3dd674")))
+		value, _ := GenerateRandomSignKeysResp(client.Request(NaclSignKeypairFromSecretKey("8fb4f2d256e57138fb310b0a6dac5bbc4bee09eb4821223a720e5b8e1f3dd674")))
 		if value.Public != "aa5533618573860a7e1bf19f34bd292871710ed5b2eafa0dcdbb33405f2231c6" {
 			t.Errorf("test Failed - error Nacl public key don't correct")
 		}
@@ -266,12 +266,12 @@ func TestCrypto(t *testing.T) {
 	})
 
 	t.Run("TestMnemonicFromRandom", func(t *testing.T) {
-		value, _ := client.Request(MnemonicFromRandom(&goton.MnemonicStructRequest{nil, goton.TONMnemonicDictionary["ENGLISH"], 24, ""}))
+		value, _ := client.Request(MnemonicFromRandom(&goton.MnemonicStructRequest{nil, goton.TONMnemonicDictionary["ENGLISH"], ""}))
 		if len(strings.Fields(value)) != 24 {
 			t.Errorf("test Failed - length must be 24 words")
 		}
 
-		value, _ = client.Request(MnemonicFromRandom(&goton.MnemonicStructRequest{nil, goton.TONMnemonicDictionary["ENGLISH"], 24, ""}))
+		value, _ = client.Request(MnemonicFromRandom(&goton.MnemonicStructRequest{nil, goton.TONMnemonicDictionary["ENGLISH"], ""}))
 		if len(strings.Fields(value)) != 24 {
 			t.Errorf("test Failed - length must be 24 words")
 		}
@@ -279,29 +279,28 @@ func TestCrypto(t *testing.T) {
 
 	t.Run("TestMnemonicFromEntropy", func(t *testing.T) {
 		value, _ := client.Request(MnemonicFromEntropy(&goton.MnemonicStructRequest{goton.FixInputMessage("00112233445566778899AABBCCDDEEFF", goton.TONInputEncodingHex),
-			goton.TONMnemonicDictionary["ENGLISH"],
-			12, ""}))
+			goton.TONMnemonicDictionary["ENGLISH"], ""}))
 		if value != "abandon math mimic master filter design carbon crystal rookie group knife young" {
 			t.Errorf("test Failed - error get mnemonic from entropy value different with constants")
 		}
 	})
 
 	t.Run("TestMnemonicVerify", func(t *testing.T) {
-		value, _ := MnemonicVerifyResp(client.Request(MnemonicVerify(&goton.MnemonicStructRequest{nil, goton.TONMnemonicDictionary["ENGLISH"], 12, "abandon math mimic master filter design carbon crystal rookie group knife young"})))
+		value, _ := MnemonicVerifyResp(client.Request(MnemonicVerify(&goton.MnemonicStructRequest{nil, goton.TONMnemonicDictionary["ENGLISH"], "abandon math mimic master filter design carbon crystal rookie group knife young"})))
 		if !value {
 			t.Errorf("test Failed - mnemonic phrase don't check")
 		}
 	})
 
 	t.Run("TestMnemonicVerify2", func(t *testing.T) {
-		value, _ := MnemonicVerifyResp(client.Request(MnemonicVerify(&goton.MnemonicStructRequest{nil, goton.TONMnemonicDictionary["ENGLISH"], 0, "abandon math mimic"})))
+		value, _ := MnemonicVerifyResp(client.Request(MnemonicVerify(&goton.MnemonicStructRequest{nil, goton.TONMnemonicDictionary["ENGLISH"], "abandon math mimic"})))
 		if value {
 			t.Errorf("test Failed - mnemonic phrase don't check")
 		}
 	})
 
 	t.Run("TestMnemonicDeriveSignKeys", func(t *testing.T) {
-		value, _ := MnemonicDeriveSignKeysResp(client.Request(MnemonicDeriveSignKeys("unit follow zone decline glare flower crisp vocal adapt magic much mesh cherry teach mechanic rain float vicious solution assume hedgehog rail sort chuckle")))
+		value, _ := GenerateRandomSignKeysResp(client.Request(MnemonicDeriveSignKeys("unit follow zone decline glare flower crisp vocal adapt magic much mesh cherry teach mechanic rain float vicious solution assume hedgehog rail sort chuckle")))
 		if value.Public != "c374990ccacb36a87cb016e54fd6fcf0c344e9b0bc6744d9db89f4c272ef9712" {
 			t.Errorf("test Failed - public key different")
 		}
@@ -313,7 +312,7 @@ func TestCrypto(t *testing.T) {
 	// HDKeys
 
 	t.Run("TestHDkeyXprv", func(t *testing.T) {
-		master, _ := client.Request(HdkeyXprvFromMnemonic(&goton.MnemonicStructRequest{nil, goton.TONMnemonicDictionary["ENGLISH"], 12, "abuse boss fly battle rubber wasp afraid hamster guide essence vibrant tattoo"}))
+		master, _ := client.Request(HdkeyXprvFromMnemonic(&goton.MnemonicStructRequest{nil, goton.TONMnemonicDictionary["ENGLISH"], "abuse boss fly battle rubber wasp afraid hamster guide essence vibrant tattoo"}))
 		if master != "xprv9s21ZrQH143K25JhKqEwvJW7QAiVvkmi4WRenBZanA6kxHKtKAQQKwZG65kCyW5jWJ8NY9e3GkRoistUjjcpHNsGBUv94istDPXvqGNuWpC" {
 			t.Errorf("test Failed - HDKey Xprv from mnemonic")
 		}
@@ -328,7 +327,7 @@ func TestCrypto(t *testing.T) {
 			t.Errorf("test Failed - HDKey Xprv Public")
 		}
 
-		valueDerive, _ := client.Request(HdkeyXprvDerive(&goton.HDDerivery{master, goton.TONMnemonicDictionary["ENGLISH"], false, false}))
+		valueDerive, _ := client.Request(HdkeyXprvDerive(&goton.HDDerivery{master, goton.TONMnemonicDictionary["ENGLISH"], false}))
 		if valueDerive != "xprv9uZwtSeoKf1syu4qHcHUviGu86r8btERk8ZXy8aQNyNXd2REUH266qPqW5k4rAiyU8UTnJKqsfZgT95i2oSpro7hqK5wUem9FXVEZzKvYKD" {
 			t.Errorf("test Failed - HDKey Xprv Derive")
 		}
@@ -343,7 +342,7 @@ func TestCrypto(t *testing.T) {
 			t.Errorf("test Failed - HDKey Xprv Secret")
 		}
 
-		valuePathDerivery, _ := client.Request(HdkeyXprvDerivePath(&goton.HDPathDerivery{master, "m/44'/60'/0'/0'", false}))
+		valuePathDerivery, _ := client.Request(HdkeyXprvDerivePath(&goton.HDPathDerivery{master, "m/44'/60'/0'/0'"}))
 		if valuePathDerivery != "xprvA1KNMo63UcGjmDF1bX39Cw2BXGUwrwMjeD5qvQ3tA3qS3mZQkGtpf4DHq8FDLKAvAjXsYGLHDP2dVzLu9ycta8PXLuSYib2T3vzLf3brVgZ" {
 			t.Errorf("test Failed - HDKey Xprv Path Derive")
 		}
