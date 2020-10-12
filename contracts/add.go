@@ -2,7 +2,7 @@ package contracts
 
 import (
 	"encoding/json"
-	goton "github.com/move-ton/go-ton-sdk"
+	goton "github.com/move-ton/ton-client-go"
 )
 
 //ABI ...

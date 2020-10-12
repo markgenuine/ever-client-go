@@ -3,7 +3,7 @@ package queries
 import (
 	"encoding/json"
 
-	goton "github.com/move-ton/go-ton-sdk"
+	goton "github.com/move-ton/ton-client-go"
 )
 
 // Query queries.query
