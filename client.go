@@ -6,12 +6,13 @@ package goton
 #cgo windows LDFLAGS: -L./lib/windows -lton_client
 #include "./lib/client_method.h"
 
-void callB(int request_id, tc_string_t result_json, tc_string_t error_json, int flags);
+//void callB(int request_id, tc_string_data_t result_json, tc_string_data_t error_json, int flags);
 */
 import "C"
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"strings"
 	"sync"
 	"unsafe"
@@ -42,21 +43,39 @@ var MapStore = make(map[int]*AsyncResponse)
 
 // InitClient create context and setup settings from file or default settings
 func InitClient(config *TomlConfig) (*Client, error) {
-	client, err := NewClient()
+
+	client := &Client{}
+	// if client, err := NewClient(config); err != nil {
+	// 	client.Destroy()
+	// 	return nil, err
+	// }
+
+	// client.config = config
+	// client.AsyncRequestID = 0
+
+	// _, err = client.Request(Setup(config))
+	// if err != nil {
+	// 	client.Destroy()
+	// 	return nil, err
+	// }
+
+	configTrf, err := json.Marshal(config)
 	if err != nil {
 		return nil, err
 	}
+	// configTrfS := C.CString(string(configTrf))
+	// defer C.free(unsafe.Pointer(configTrfS))
 
-	client.config = config
-	client.AsyncRequestID = 0
+	contM := C.CString(string(configTrf))
+	defer C.free(unsafe.Pointer(contM))
+	param1 := C.tc_string_data_t{content: contM, len: C.uint32_t(len(configTrf))}
 
-	_, err = client.Request(Setup(config))
-	if err != nil {
-		client.Destroy()
-		return nil, err
-	}
+	strtr := C.tc_create_context(param1)
+	fmt.Println(strtr)
+	// client.client =
 
 	return client, nil
+
 }
 
 func (client *Client) GetResp(resp int) *AsyncResponse {
@@ -74,18 +93,26 @@ func (client *Client) GetResp(resp int) *AsyncResponse {
 }
 
 // NewClient create connect node
-func NewClient() (*Client, error) {
+// func NewClient(config *TomlConfig) (*Client, error) {
 
-	client := Client{
-		client: C.tc_create_context(),
-	}
+// 	configTrf, err := json.Marshal(config)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	configTrfS := C.CString(string(configTrf))
+// 	defer C.free(unsafe.Pointer(configTrfS))
 
-	if client.client == C.uint32_t(0) {
-		return &client, errors.New("Context don't connect")
-	}
+// 	ddd := converToStringGo(C.tc_create_context(configTrfS), C.int(len(resultJSON)))
+// 	fmt.Println(ddd)
 
-	return &client, nil
-}
+// 	client := Client{}
+
+// 	if client.client == C.uint32_t(0) {
+// 		return &client, errors.New("Context don't connect")
+// 	}
+
+// 	return &client, nil
+// }
 
 // Destroy disconnect node
 func (client *Client) Destroy() {
@@ -97,25 +124,27 @@ func (client *Client) Destroy() {
 func (client *Client) Request(method, params string) (string, error) {
 	methodsCS := C.CString(method)
 	defer C.free(unsafe.Pointer(methodsCS))
-	param1 := C.tc_string_t{content: methodsCS, len: C.uint32_t(len(method))}
+	param1 := C.tc_string_data_t{content: methodsCS, len: C.uint32_t(len(method))}
 
 	paramsCS := C.CString(params)
 	defer C.free(unsafe.Pointer(paramsCS))
-	param2 := C.tc_string_t{content: paramsCS, len: C.uint32_t(len(params))}
+	param2 := C.tc_string_data_t{content: paramsCS, len: C.uint32_t(len(params))}
 
-	tcResponseHandle := C.tc_json_request(client.client, param1, param2)
-	defer C.tc_destroy_json_response(tcResponseHandle)
+	tcResponseHandle := C.tc_request_sync(client.client, param1, param2)
+	defer C.tc_destroy_string(tcResponseHandle)
 
-	tcResponse := C.tc_read_json_response(tcResponseHandle)
+	tcResponse := C.tc_read_string(tcResponseHandle)
+	fmt.Println(converToStringGo(tcResponse.content, C.int(tcResponse.len)))
 
-	resultJSON := tcResponse.result_json
-	errorJSON := tcResponse.error_json
+	// resultJSON := tcResponse.result_json
+	// errorJSON := tcResponse.error_json
 
-	if errorJSON.len > 0 {
-		return "", errors.New(converToStringGo(errorJSON.content, C.int(errorJSON.len)))
-	}
+	// if errorJSON.len > 0 {
+	// 	return "", errors.New(converToStringGo(errorJSON.content, C.int(errorJSON.len)))
+	// }
 
-	return converToStringGo(resultJSON.content, C.int(resultJSON.len)), nil
+	// return converToStringGo(resultJSON.content, C.int(resultJSON.len)), nil
+	return "", nil
 }
 
 // func (client *Client) RequestAsync(method, params string) int {
@@ -137,13 +166,13 @@ func (client *Client) Request(method, params string) (string, error) {
 // 	return res.ReqID
 // }
 
-//export callB
-func callB(requestID C.int, resultJSON C.tc_string_t, errorJSON C.tc_string_t, flags C.int) {
-	reg := MapStore[int(requestID)]
-	reg.ResultJSON = converToStringGo(resultJSON.content, C.int(resultJSON.len))
-	reg.ErrorJSON = converToStringGo(errorJSON.content, C.int(errorJSON.len))
-	reg.Flags = int(flags)
-}
+// //export callB
+// func callB(requestID C.int, resultJSON C.tc_string_t, errorJSON C.tc_string_t, flags C.int) {
+// 	reg := MapStore[int(requestID)]
+// 	reg.ResultJSON = converToStringGo(resultJSON.content, C.int(resultJSON.len))
+// 	reg.ErrorJSON = converToStringGo(errorJSON.content, C.int(errorJSON.len))
+// 	reg.Flags = int(flags)
+// }
 
 func converToStringGo(valueString *C.char, valueLen C.int) string {
 	return deleteQuotesLR(C.GoStringN(valueString, valueLen))
