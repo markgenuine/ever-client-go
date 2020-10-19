@@ -139,12 +139,60 @@ type ParamsOfExecuteMessage struct {
 	ExecutionOptions *ExecutionOptions `json:"execution_options,omitempty"`
 }
 
-// // type ResultOfExecuteMessage struct {
-// //     transaction?: any
-// //     out_messages: any[]
-// //     decoded?: DecodedOutput
-// //     account?: any
-// // }
+type ResultOfExecuteMessage struct {
+	Transaction interface{}   `json:"transaction,omitempty"`
+	OutMessages []interface{} `json:"out_messages"`
+	Decoded     DecodedOutput `json:"decoded,omitempty"`
+	Account     interface{}   `json:"account"`
+}
+
+type DecodedOutput struct {
+	// out_messages: DecodedMessageBody | null[],
+	Output json.RawMessage `json:"output"`
+}
+
+// out_messages: DecodedMessageBody?[] – Decoded bodies of the out messages.
+// output?: any – Decoded body of the function output message.
+
+// DecodedMessageBody
+
+// type DecodedMessageBody = {
+//     body_type: MessageBodyType,
+//     name: string,
+//     value?: any,
+//     header?: FunctionHeader
+// };
+// body_type: MessageBodyType – Type of the message body content.
+// name: string – Function or event name.
+// value?: any – Parameters or result value.
+// header?: FunctionHeader – Function header.
+
+// MessageBodyType
+
+// type MessageBodyType = 'Input' | 'Output' | 'InternalOutput' | 'Event';
+// One of the following value:
+
+// Input – Message contains the input of the ABI function.
+// Output – Message contains the output of the ABI function.
+// InternalOutput – Message contains the input of the imported ABI function.
+// Event – Message contains the input of the ABI event.
+
+// FunctionHeader
+
+// The ABI function header.
+
+// Includes several hidden function parameters that contract uses for security and replay protection reasons.
+
+// The actual set of header fields depends on the contract's ABI.
+
+// type FunctionHeader = {
+//     expire?: number,
+//     time?: bigint,
+//     pubkey?: string
+// };
+// expire?: number – Message expiration time in seconds.
+// time?: bigint – Message creation time in milliseconds.
+// pubkey?: string – Public key used to sign message. Encoded with hex.
 
 // ExecuteMessage ...
 func ExecuteMessage(pOEM *ParamsOfExecuteMessage) (string, string) {
@@ -153,8 +201,22 @@ func ExecuteMessage(pOEM *ParamsOfExecuteMessage) (string, string) {
 		return "", ""
 	}
 
-	// fmt.Println(string(request))
 	return "tvm.execute_message", string(request)
+}
+
+// ExecuteMessageResult ...
+func ExecuteMessageResult(resp string, err error) (*ResultOfExecuteMessage, error) {
+	if err != nil {
+		return nil, err
+	}
+
+	rOEM := &ResultOfExecuteMessage{}
+	err = json.Unmarshal([]byte(resp), rOEM)
+	if err != nil {
+		return nil, err
+	}
+
+	return rOEM, nil
 }
 
 // ExecuteGet ...
