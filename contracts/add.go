@@ -69,19 +69,19 @@ type ParamsOfLocalRun struct {
 	Address string `json:"address"`
 	//Account string `json:"account"`
 	//CallSet RunFunctionCallSet `json:"call_set"`
-	Abi          ABI           `json:"abi"`
-	FunctionName string        `json:"functionName"`
-	Input        interface{}   `json:"input"`
-	KeyPair      *goton.TONKey `json:"keyPair,omitempty"`
-	FullRun      bool          `json:"fullRun"`
+	Abi          ABI            `json:"abi"`
+	FunctionName string         `json:"functionName"`
+	Input        interface{}    `json:"input"`
+	KeyPair      *goton.KeyPair `json:"keyPair,omitempty"`
+	FullRun      bool           `json:"fullRun"`
 }
 
 type ParamsOfRun struct {
 	Address string `json:"address"`
 	//CallSet RunFunctionCallSet
-	Abi          ABI           `json:"abi"`
-	FunctionName string        `json:"functionName"`
-	KeyPair      *goton.TONKey `json:"keypair,omitempty"`
+	Abi          ABI            `json:"abi"`
+	FunctionName string         `json:"functionName"`
+	KeyPair      *goton.KeyPair `json:"keypair,omitempty"`
 	//TryIndex     int          `json:"tryIndex,omitempty"`
 	Input interface{} `json:"input"`
 }
@@ -117,7 +117,7 @@ type ParamsOfGetDeployAddress struct {
 	Abi         ABI             `json:"abi"`
 	InitParams  json.RawMessage `json:"initParams,omitempty"`
 	ImageBase64 string          `json:"imageBase64"`
-	KeyPair     *goton.TONKey   `json:"keyPair"`
+	KeyPair     *goton.KeyPair  `json:"keyPair"`
 	WorkChainID int             `json:"workChainID,omitempty"`
 }
 
@@ -143,7 +143,7 @@ type ParamsOfDeploy struct {
 	ConstructorParams json.RawMessage `json:"constructorParams"`
 	InitParams        json.RawMessage `json:"initParams,omitempty"` //init_params: Option<serde_json::Value>,
 	ImageBase64       string          `json:"imageBase64"`          //image_base64: String,
-	KeyPair           *goton.TONKey   `json:"keyPair"`
+	KeyPair           *goton.KeyPair  `json:"keyPair"`
 	WorkchainID       int             `json:"workchainID,omitempty"` // workchain_id: Option<i32>,
 	TryIndex          int             `json:"tryIndex,omitempty"`
 }
@@ -216,12 +216,12 @@ type ParamsOfEncodeUnsignedRunMessage struct {
 }
 
 type ParamsOfGetRunBody struct {
-	Abi          ABI           `json:"abi"`
-	FunctionName string        `json:"function"`
-	Header       interface{}   `json:"header,omitempty"`
-	Params       interface{}   `json:"params"`
-	Internal     bool          `json:"internal"`
-	KeyPair      *goton.TONKey `json:"keyPair,omitempty"`
+	Abi          ABI            `json:"abi"`
+	FunctionName string         `json:"function"`
+	Header       interface{}    `json:"header,omitempty"`
+	Params       interface{}    `json:"params"`
+	Internal     bool           `json:"internal"`
+	KeyPair      *goton.KeyPair `json:"keyPair,omitempty"`
 }
 
 type ResultOfGetRunBody struct {

@@ -6,14 +6,12 @@ package goton
 #cgo windows LDFLAGS: -L./lib/windows -lton_client
 #include "./lib/client_method.h"
 
-//void callB(int request_id, tc_string_data_t result_json, tc_string_data_t error_json, int flags);
+void callB(int request_id, tc_string_data_t paramsJson, int response_type, bool finished);
 */
 import "C"
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
-	"strings"
 	"sync"
 	"unsafe"
 )
@@ -31,88 +29,108 @@ type Client struct {
 	AsyncRequestID int
 }
 
+// ResultOfVersion ...
+type ResultOfVersion struct {
+	Version string
+}
+
+// ResultOfGetAPIReference ...
+type ResultOfGetAPIReference struct {
+	API API `json:"api"`
+}
+
+// API ...
+type API struct {
+	Modules []struct {
+		Description string `json:"description"`
+		Functions   []struct {
+			Description interface{}   `json:"description"`
+			Errors      interface{}   `json:"errors"`
+			Name        string        `json:"name"`
+			Params      []interface{} `json:"params"`
+			Result      struct {
+				Ref string `json:"ref"`
+			} `json:"result"`
+			Summary interface{} `json:"summary"`
+		} `json:"functions"`
+		Name    string `json:"name"`
+		Summary string `json:"summary"`
+		Types   []struct {
+			Description interface{} `json:"description"`
+			Name        string      `json:"name"`
+			Struct      []struct {
+				Description interface{} `json:"description"`
+				Name        string      `json:"name"`
+				Ref         string      `json:"ref"`
+				Summary     interface{} `json:"summary"`
+			} `json:"struct"`
+			Summary interface{} `json:"summary"`
+		} `json:"types"`
+	} `json:"modules"`
+	Version string `json:"version"`
+}
+
 // AsyncResponse ...
 type AsyncResponse struct {
-	ReqID      int
-	ResultJSON string
-	ErrorJSON  string
-	Flags      int
+	ReqID        int
+	Params       string
+	ResponseType int
+	Finished     bool
 }
 
 var MapStore = make(map[int]*AsyncResponse)
 
 // InitClient create context and setup settings from file or default settings
 func InitClient(config *TomlConfig) (*Client, error) {
-
-	client := &Client{}
-	// if client, err := NewClient(config); err != nil {
-	// 	client.Destroy()
-	// 	return nil, err
-	// }
-
-	// client.config = config
-	// client.AsyncRequestID = 0
-
-	// _, err = client.Request(Setup(config))
-	// if err != nil {
-	// 	client.Destroy()
-	// 	return nil, err
-	// }
+	client := Client{}
+	client.config = config
+	client.AsyncRequestID = 0
 
 	configTrf, err := json.Marshal(config)
 	if err != nil {
 		return nil, err
 	}
-	// configTrfS := C.CString(string(configTrf))
-	// defer C.free(unsafe.Pointer(configTrfS))
 
 	contM := C.CString(string(configTrf))
 	defer C.free(unsafe.Pointer(contM))
 	param1 := C.tc_string_data_t{content: contM, len: C.uint32_t(len(configTrf))}
 
-	strtr := C.tc_create_context(param1)
-	fmt.Println(strtr)
-	// client.client =
+	response := C.tc_create_context(param1)
+	responseStr := C.tc_read_string(response)
+	defer C.tc_destroy_string(response)
 
-	return client, nil
+	stringGo := converToStringGo(responseStr.content, C.int(responseStr.len))
 
+	var resultResp map[string]interface{}
+	json.Unmarshal([]byte(stringGo), &resultResp)
+	if _, ok := resultResp["error"]; ok {
+		return &client, errors.New(stringGo)
+	} else if elem, ok := resultResp["result"]; ok {
+		client.client = C.uint32_t(elem.(float64))
+		if client.client == C.uint32_t(0) {
+			return &client, errors.New("Context don't connect")
+		}
+	}
+	return &client, nil
 }
 
-func (client *Client) GetResp(resp int) *AsyncResponse {
-
+// GetResp ...
+func (client *Client) GetResp(resp int) (string, error) {
 	var mapReq *AsyncResponse
+	nowInd := MapStore[resp]
 	for {
-		if MapStore[resp].Flags != 1 {
+		if !((nowInd.ResponseType == 0 || nowInd.ResponseType == 1) && nowInd.Finished) {
 			continue
 		} else {
-			mapReq = MapStore[resp]
+			mapReq = nowInd
 			break
 		}
 	}
-	return mapReq
+	if nowInd.ResponseType == 1 {
+		return "", errors.New(mapReq.Params)
+	}
+	return mapReq.Params, nil
 }
-
-// NewClient create connect node
-// func NewClient(config *TomlConfig) (*Client, error) {
-
-// 	configTrf, err := json.Marshal(config)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	configTrfS := C.CString(string(configTrf))
-// 	defer C.free(unsafe.Pointer(configTrfS))
-
-// 	ddd := converToStringGo(C.tc_create_context(configTrfS), C.int(len(resultJSON)))
-// 	fmt.Println(ddd)
-
-// 	client := Client{}
-
-// 	if client.client == C.uint32_t(0) {
-// 		return &client, errors.New("Context don't connect")
-// 	}
-
-// 	return &client, nil
-// }
 
 // Destroy disconnect node
 func (client *Client) Destroy() {
@@ -132,68 +150,84 @@ func (client *Client) Request(method, params string) (string, error) {
 
 	tcResponseHandle := C.tc_request_sync(client.client, param1, param2)
 	defer C.tc_destroy_string(tcResponseHandle)
-
 	tcResponse := C.tc_read_string(tcResponseHandle)
-	fmt.Println(converToStringGo(tcResponse.content, C.int(tcResponse.len)))
+	stringGo := converToStringGo(tcResponse.content, C.int(tcResponse.len))
+	var resultResp map[string]interface{}
+	json.Unmarshal([]byte(stringGo), &resultResp)
 
-	// resultJSON := tcResponse.result_json
-	// errorJSON := tcResponse.error_json
+	if _, ok := resultResp["error"]; ok {
+		return "", errors.New(stringGo)
+	} else if elem, ok := resultResp["result"]; ok {
+		jsonbody, err := json.Marshal(elem)
+		return string(jsonbody), err
+	}
 
-	// if errorJSON.len > 0 {
-	// 	return "", errors.New(converToStringGo(errorJSON.content, C.int(errorJSON.len)))
-	// }
-
-	// return converToStringGo(resultJSON.content, C.int(resultJSON.len)), nil
 	return "", nil
 }
 
-// func (client *Client) RequestAsync(method, params string) int {
-// 	methodsCS := C.CString(method)
-// 	defer C.free(unsafe.Pointer(methodsCS))
-// 	param1 := C.tc_string_t{content: methodsCS, len: C.uint32_t(len(method))}
+// RequestAsync ...
+func (client *Client) RequestAsync(method, params string) int {
+	methodsCS := C.CString(method)
+	defer C.free(unsafe.Pointer(methodsCS))
+	param1 := C.tc_string_data_t{content: methodsCS, len: C.uint32_t(len(method))}
 
-// 	paramsCS := C.CString(params)
-// 	defer C.free(unsafe.Pointer(paramsCS))
-// 	param2 := C.tc_string_t{content: paramsCS, len: C.uint32_t(len(params))}
+	paramsCS := C.CString(params)
+	defer C.free(unsafe.Pointer(paramsCS))
+	param2 := C.tc_string_data_t{content: paramsCS, len: C.uint32_t(len(params))}
 
-// 	res := &AsyncResponse{}
-// 	client.mutx.Lock()
-// 	client.AsyncRequestID++
-// 	res.ReqID = client.AsyncRequestID
-// 	client.mutx.Unlock()
-// 	MapStore[res.ReqID] = res
-// 	go C.tc_json_request_async(client.client, param1, param2, C.int(res.ReqID), C.OnResult(C.callB))
-// 	return res.ReqID
-// }
-
-// //export callB
-// func callB(requestID C.int, resultJSON C.tc_string_t, errorJSON C.tc_string_t, flags C.int) {
-// 	reg := MapStore[int(requestID)]
-// 	reg.ResultJSON = converToStringGo(resultJSON.content, C.int(resultJSON.len))
-// 	reg.ErrorJSON = converToStringGo(errorJSON.content, C.int(errorJSON.len))
-// 	reg.Flags = int(flags)
-// }
-
-func converToStringGo(valueString *C.char, valueLen C.int) string {
-	return deleteQuotesLR(C.GoStringN(valueString, valueLen))
+	res := &AsyncResponse{}
+	client.mutx.Lock()
+	client.AsyncRequestID++
+	res.ReqID = client.AsyncRequestID
+	client.mutx.Unlock()
+	MapStore[res.ReqID] = res
+	C.tc_request(client.client, param1, param2, C.uint32_t(res.ReqID), C.tc_response_handler_t(C.callB))
+	return res.ReqID
 }
 
-func deleteQuotesLR(val string) string {
-	return strings.TrimRight(strings.TrimLeft(val, `"`), `"`)
+//export callB
+func callB(requestID C.int, paramsJSON C.tc_string_data_t, responseType C.int, finished C.bool) {
+	// respNow := int(responseType)
+	// finishedNow := bool(finished)
+	// if !(respNow == 0 || respNow == 1) && !finishedNow {
+	// 	return
+	// }
+	reg := MapStore[int(requestID)]
+	reg.Params = converToStringGo(paramsJSON.content, C.int(paramsJSON.len))
+	reg.ResponseType = int(responseType)
+	reg.Finished = bool(finished)
+}
+
+func converToStringGo(valueString *C.char, valueLen C.int) string {
+	return C.GoStringN(valueString, valueLen)
 }
 
 // Version ...
 func Version() (string, string) {
-	return "version", ""
+	return "client.version", ""
 }
 
-// Setup
-func Setup(config *TomlConfig) (string, string) {
-	req, err := json.Marshal(&config)
+// VersionResult ...
+func VersionResult(resp string, err error) (*ResultOfVersion, error) {
 	if err != nil {
-		err = errors.New("Error conver to config in json")
-		return "", ""
+		return nil, err
 	}
+	resultStruct := &ResultOfVersion{}
+	err = json.Unmarshal([]byte(resp), resultStruct)
+	return resultStruct, err
+}
 
-	return "setup", string(req)
+// GetAPIReference ...
+func GetAPIReference() (string, string) {
+	return "client.get_api_reference", ""
+}
+
+// GetAPIReferenceResult ...
+func GetAPIReferenceResult(resp string, err error) (*ResultOfGetAPIReference, error) {
+	if err != nil {
+		return nil, err
+	}
+	resultStruct := &ResultOfGetAPIReference{}
+	err = json.Unmarshal([]byte(resp), resultStruct)
+	return resultStruct, err
 }

@@ -6,26 +6,41 @@ import (
 	goton "github.com/move-ton/ton-client-go"
 )
 
-// Query queries.query
-func Query(sq *goton.ParamsOfQuery) (string, string) {
+// QueryCollection method net.query_collection
+func QueryCollection(sq *goton.ParamsOfQuery) (string, string) {
 	request, err := json.Marshal(sq)
 	if err != nil {
 		return "", ""
 	}
 
-	return "queries.query", string(request)
+	return "net.query_collection", string(request)
 }
 
-// WaitFor queries.wait_for
-func WaitFor(powf *goton.ParamsOfWaitFor) (string, string) {
-	request, err := json.Marshal(powf)
+// WaitForCollection net.wait_for_collection
+func WaitForCollection(pOWFC *ParamsOfWaitForCollection) (string, string) {
+	request, err := json.Marshal(pOWFC)
 	if err != nil {
 		return "", ""
 	}
-	return "queries.wait_for", string(request)
+	return "net.wait_for_collection", string(request)
 }
 
-// Unsubscribe queries.unsubscribe
+// WaitForCollectionResult net.wait_for_collection
+func WaitForCollectionResult(resp string, err error) (*ResultOfWaitForCollection, error) {
+	if err != nil {
+		return nil, err
+	}
+
+	rOWFC := &ResultOfWaitForCollection{}
+	err = json.Unmarshal([]byte(resp), rOWFC)
+	if err != nil {
+		return nil, err
+	}
+
+	return rOWFC, nil
+}
+
+// Unsubscribe net.unsubscribe
 func Unsubscribe(handle int) (string, string) {
 	hndl := &goton.HandleStruct{}
 	hndl.Handle = handle
@@ -33,30 +48,30 @@ func Unsubscribe(handle int) (string, string) {
 	if err != nil {
 		return "", ""
 	}
-	return "queries.unsubscribe", string(request)
+	return "net.unsubscribe", string(request)
 }
 
-// Subscribe queries.subscribe
+// Subscribe net.subscribe
 func Subscribe(sq *goton.ParamsOfSubscribe) (string, string) {
 	request, err := json.Marshal(sq)
 	if err != nil {
 		return "", ""
 	}
 
-	return "queries.subscribe", string(request)
+	return "net.subscribe_collection", string(request)
 }
 
-// SubscribeResp response queries.subscribe method
-func SubscribeResp(resp string, err error) (*goton.HandleStruct, error) {
-	if err != nil {
-		return nil, err
-	}
+// // SubscribeResp response net.subscribe method
+// func SubscribeResp(resp string, err error) (*goton.HandleStruct, error) {
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	hndl := &goton.HandleStruct{}
-	err = json.Unmarshal([]byte(resp), hndl)
-	if err != nil {
-		return nil, err
-	}
+// 	hndl := &goton.HandleStruct{}
+// 	err = json.Unmarshal([]byte(resp), hndl)
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	return hndl, nil
-}
+// 	return hndl, nil
+// }

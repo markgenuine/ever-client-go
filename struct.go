@@ -24,43 +24,27 @@ const (
 )
 
 var (
-	chains        = getChains()
+	Chains        = getChains()
 	LensMnemonic  = getlengthCounWordsInMnemonic()
 	SortDirection = getSortDirection()
 	// TONMnemonicDictionary map with dictionary
 	TONMnemonicDictionary = getTONMnemonicDictionary()
 )
 
-// TONKey struct with keys
-type TONKey struct {
+// KeyPair struct with keys
+type KeyPair struct {
 	Public string `json:"public"`
 	Secret string `json:"secret"`
 }
+
+// SigningBoxHandle ...
+type SigningBoxHandle int
 
 // InputMessage struct for generate message
 type InputMessage struct {
 	Text   string `json:"text,omitempty"`
 	Hex    string `json:"hex,omitempty"`
 	Base64 string `json:"base64,omitempty"`
-}
-
-// MaxFactorizeResult method crypto MaxFactorizeResult
-type MaxFactorizeResult struct {
-	A string `json:"a"`
-	B string `json:"b"`
-}
-
-// ModularPowerRequest method crypto ModularPowerRequest
-type ModularPowerRequest struct {
-	Base     string `json:"base"`
-	Exponent string `json:"exponent"`
-	Modulus  string `json:"modulus"`
-}
-
-// RandomGenerateBytesRequest method crypto RandomGenerateBytesRequest
-type RandomGenerateBytesRequest struct {
-	Length         int    `json:"length"`
-	OutputEncoding string `json:"outputEncoding,omitempty"`
 }
 
 // MnemonicStructRequest method crypto MnemonicStructRequest
@@ -73,17 +57,6 @@ type MnemonicStructRequest struct {
 // MessageInputMessage generate message->input message struct
 type MessageInputMessage struct {
 	*InputMessage `json:"message"`
-}
-
-// ScryptDate method crypto ScryptDate
-type ScryptDate struct {
-	Password       *InputMessage `json:"password"`
-	Salt           *InputMessage `json:"salt"`
-	LogN           int           `json:"logN"`
-	R              int           `json:"r"`
-	P              int           `json:"p"`
-	DkLen          int           `json:"dkLen"`
-	OutputEncoding string        `json:"outputEncoding,omitempty"`
 }
 
 // NaclBoxIn for method crypto nalc box
@@ -130,29 +103,36 @@ type HDPathDerivery struct {
 
 // TomlConfig struct with config data
 type TomlConfig struct {
-	BaseURL                            string   `toml:"base_URL" json:"baseURL"`
-	Servers                            []string `toml:"servers" json:"servers"`
-	MessageRetriesCount                int      `toml:"message_retries_count" json:"messageRetriesCount"`
-	MessageExpirationTimeout           int      `toml:"message_expiration_timeout" json:"messageExpirationTimeout"`
-	MessageExpirationTimeoutGrowFactor float32  `toml:"message_expiration_timeout_grow_factor" json:"messageExpirationTimeoutGrowFactor"`
-	MessageProcessingTimeout           int      `toml:"message_processing_timeout" json:"messageProcessingTimeout"`
-	WaitForTimeout                     int      `toml:"wait_for_timeout" json:"waitForTimeout"`
-	AccessKey                          string   `toml:"access_key" json:"accessKey"`
-	OutOfSyncThreshold                 int      `toml:"out_of_sync_threshold" json:"outOfSyncThreshold"`
+	Network struct {
+		ServerAddress            string `toml:"server_address" json:"server_address"`
+		MessageRetriesCount      int    `toml:"message_retries_count" json:"message_retries_count"`
+		MessageProcessingTimeout int    `toml:"message_processing_timeout" json:"message_processing_timeout"`
+		WaitForTimeout           int    `toml:"wait_for_timeout" json:"wait_for_timeout"`
+		OutOfSyncThreshold       int    `toml:"out_of_sync_threshold" json:"out_of_sync_threshold"`
+		AccessKey                string `toml:"access_key" json:"access_key"`
+	} `toml:"network" json:"network"`
+	Crypto struct {
+		FishParam string `toml:"fish_param" json:"fish_param"`
+	} `toml:"crypto" json:"crypto"`
+	Abi struct {
+		MessageExpirationTimeout           int     `toml:"message_expiration_timeout" json:"message_expiration_timeout"`
+		MessageExpirationTimeoutGrowFactor float32 `toml:"message_expiration_timeout_grow_factor" json:"message_expiration_timeout_grow_factor"`
+	} `toml:"abi" json:"abi"`
 }
 
 // NewConfig create new config for connect client
 // chanID 0-devnet, 1-mainnet,
 func NewConfig(chanID int) *TomlConfig {
 	config := TomlConfig{}
-	config.BaseURL = chains[chanID]
-	config.Servers = append(config.Servers, config.BaseURL)
-	config.MessageRetriesCount = 10
-	config.MessageExpirationTimeout = 10000 //ms
-	config.MessageExpirationTimeoutGrowFactor = 1.5
-	config.MessageProcessingTimeout = 40000 //ms
-	config.WaitForTimeout = 40000           //ms
-	config.OutOfSyncThreshold = 15000       //ms
+	config.Network.ServerAddress = Chains[chanID]
+	config.Network.MessageRetriesCount = 10
+	config.Network.MessageProcessingTimeout = 40000 //ms
+	config.Network.WaitForTimeout = 40000           //ms
+	config.Network.OutOfSyncThreshold = 15000       //ms
+	config.Network.AccessKey = ""
+	config.Crypto.FishParam = ""
+	config.Abi.MessageExpirationTimeout = 40000 //ms
+	config.Abi.MessageExpirationTimeoutGrowFactor = 1.5
 
 	return &config
 }
@@ -237,3 +217,16 @@ type OrderBy struct {
 type HandleStruct struct {
 	Handle int `json:"handle"`
 }
+
+//ABI ...
+// type ABI struct {
+// 	ABIVersion int      `json:"ABI version"`
+// 	Header     []string `json:"header"`
+// 	Functions  []struct {
+// 		Name    string        `json:"name"`
+// 		Inputs  []interface{} `json:"inputs"`
+// 		Outputs []interface{} `json:"outputs"`
+// 	} `json:"functions"`
+// 	Data   []interface{} `json:"data"`
+// 	Events []interface{} `json:"events"`
+// }
