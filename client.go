@@ -80,7 +80,7 @@ type AsyncResponse struct {
 
 var (
 	MapStore = make(map[int]*AsyncResponse)
-	// MSMu     sync.Mutex
+	MM       sync.Mutex
 )
 
 // InitClient create context and setup settings from file or default settings
@@ -124,7 +124,9 @@ func (client *Client) GetResp(resp int) (string, error) {
 		typeRes int
 	)
 	for {
+		MM.Lock()
 		nowInd := MapStore[resp]
+		MM.UnLock()
 		typeRes = nowInd.ResponseType
 		if !((typeRes == 0 || typeRes == 1) && nowInd.Finished) {
 			continue
@@ -200,12 +202,12 @@ func callB(requestID C.int, paramsJSON C.tc_string_data_t, responseType C.int, f
 	// 	return
 	// }
 
-	// MSMu.Lock()
+	MM.Lock()
 	reg := MapStore[int(requestID)]
 	reg.Params = converToStringGo(paramsJSON.content, C.int(paramsJSON.len))
 	reg.ResponseType = int(responseType)
 	reg.Finished = bool(finished)
-	// MSMu.UnLock()
+	MM.UnLock()
 }
 
 func converToStringGo(valueString *C.char, valueLen C.int) string {
