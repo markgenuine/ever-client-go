@@ -119,17 +119,21 @@ func InitClient(config *TomlConfig) (*Client, error) {
 
 // GetResp ...
 func (client *Client) GetResp(resp int) (string, error) {
-	var mapReq *AsyncResponse
+	var (
+		mapReq  *AsyncResponse
+		typeRes int
+	)
 	for {
 		nowInd := MapStore[resp]
-		if !((nowInd.ResponseType == 0 || nowInd.ResponseType == 1) && nowInd.Finished) {
+		typeRes = nowInd.ResponseType
+		if !((typeRes == 0 || typeRes == 1) && nowInd.Finished) {
 			continue
 		} else {
 			mapReq = nowInd
 			break
 		}
 	}
-	if nowInd.ResponseType == 1 {
+	if typeRes == 1 {
 		return "", errors.New(mapReq.Params)
 	}
 	return mapReq.Params, nil
