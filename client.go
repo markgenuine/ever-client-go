@@ -126,7 +126,7 @@ func (client *Client) GetResp(resp int) (string, error) {
 	for {
 		MM.Lock()
 		nowInd := MapStore[resp]
-		MM.UnLock()
+		MM.Unlock()
 		typeRes = nowInd.ResponseType
 		if !((typeRes == 0 || typeRes == 1) && nowInd.Finished) {
 			continue
@@ -196,18 +196,12 @@ func (client *Client) RequestAsync(method, params string) int {
 
 //export callB
 func callB(requestID C.int, paramsJSON C.tc_string_data_t, responseType C.int, finished C.bool) {
-	// respNow := int(responseType)
-	// finishedNow := bool(finished)
-	// if !(respNow == 0 || respNow == 1) && !finishedNow {
-	// 	return
-	// }
-
 	MM.Lock()
 	reg := MapStore[int(requestID)]
 	reg.Params = converToStringGo(paramsJSON.content, C.int(paramsJSON.len))
 	reg.ResponseType = int(responseType)
 	reg.Finished = bool(finished)
-	MM.UnLock()
+	MM.Unlock()
 }
 
 func converToStringGo(valueString *C.char, valueLen C.int) string {
