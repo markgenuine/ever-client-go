@@ -80,7 +80,7 @@ type AsyncResponse struct {
 
 var (
 	MapStore = make(map[int]*AsyncResponse)
-	MSMu     sync.Mutex
+	// MSMu     sync.Mutex
 )
 
 // InitClient create context and setup settings from file or default settings
@@ -120,8 +120,8 @@ func InitClient(config *TomlConfig) (*Client, error) {
 // GetResp ...
 func (client *Client) GetResp(resp int) (string, error) {
 	var mapReq *AsyncResponse
-	nowInd := MapStore[resp]
 	for {
+		nowInd := MapStore[resp]
 		if !((nowInd.ResponseType == 0 || nowInd.ResponseType == 1) && nowInd.Finished) {
 			continue
 		} else {
@@ -196,12 +196,12 @@ func callB(requestID C.int, paramsJSON C.tc_string_data_t, responseType C.int, f
 	// 	return
 	// }
 
-	MSMu.Lock()
+	// MSMu.Lock()
 	reg := MapStore[int(requestID)]
 	reg.Params = converToStringGo(paramsJSON.content, C.int(paramsJSON.len))
 	reg.ResponseType = int(responseType)
 	reg.Finished = bool(finished)
-	MSMu.UnLock()
+	// MSMu.UnLock()
 }
 
 func converToStringGo(valueString *C.char, valueLen C.int) string {
