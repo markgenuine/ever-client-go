@@ -1,25 +1,26 @@
 package net
 
-import "encoding/json"
+const (
+	SortDirectionASC  = "ASC"
+	SortDirectionDESC = "DESC"
+)
 
-// type ParamsOfQueryCollection struct {
-//     Collection string
-//     filter?: any
-//     result: string
-//     order?: OrderBy[]
-//     limit?: number
-// };
+type ParamsOfQueryCollection struct {
+	Collection string      `json:"collection"`
+	Filter     interface{} `json:"filter,omitempty"`
+	Result     string      `json:"result"`
+	Order      []OrderBy   `json:"order,omitempty"`
+	Limit      int         `json:"limit,omitempty"`
+}
 
-// type ResultOfQueryCollection struct {
-//     result: any[]
-// };
+type ResultOfQueryCollection struct {
+	Result []interface{} `json:"result"`
+}
 
-// type OrderBy = {
-//     path: string,
-//     direction: SortDirection
-// };
-
-// type SortDirection = 'ASC' | 'DESC';
+type OrderBy struct {
+	Path      string `json:"path"`
+	Direction string `json:"direction"`
+}
 
 // ParamsOfWaitForCollection ...
 type ParamsOfWaitForCollection struct {
@@ -31,17 +32,15 @@ type ParamsOfWaitForCollection struct {
 
 // ResultOfWaitForCollection ...
 type ResultOfWaitForCollection struct {
-	Result json.RawMessage `json:"result"`
+	Result interface{} `json:"result"`
 }
 
-// type ResultOfSubscribeCollection = {
-//     handle: number
-// };
+type ResultOfSubscribeCollection struct {
+	Handle int `json:"handle"`
+}
 
-// type unit = void;
-
-// type ParamsOfSubscribeCollection = {
-//     collection: string,
-//     filter?: any,
-//     result: string
-// };
+type ParamsOfSubscribeCollection struct {
+	Collection string      `json:"collection"`
+	Filter     interface{} `json:"filter,omitempty"`
+	Result     string      `json:"result"`
+}

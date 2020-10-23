@@ -31,76 +31,6 @@ var (
 	TONMnemonicDictionary = getTONMnemonicDictionary()
 )
 
-// KeyPair struct with keys
-type KeyPair struct {
-	Public string `json:"public"`
-	Secret string `json:"secret"`
-}
-
-// SigningBoxHandle ...
-type SigningBoxHandle int
-
-// InputMessage struct for generate message
-type InputMessage struct {
-	Text   string `json:"text,omitempty"`
-	Hex    string `json:"hex,omitempty"`
-	Base64 string `json:"base64,omitempty"`
-}
-
-// MnemonicStructRequest method crypto MnemonicStructRequest
-type MnemonicStructRequest struct {
-	*InputMessage `json:"entropy,omitempty"`
-	Dictionary    int    `json:"dictionary,omitempty"`
-	Phrase        string `json:"phrase,omitempty"`
-}
-
-// MessageInputMessage generate message->input message struct
-type MessageInputMessage struct {
-	*InputMessage `json:"message"`
-}
-
-// NaclBoxIn for method crypto nalc box
-type NaclBoxIn struct {
-	*InputMessage  `json:"message"`
-	Nonce          string `json:"nonce"`
-	TheirPublicKey string `json:"theirPublicKey"`
-	SecretKey      string `json:"secretKey"`
-	OutputEncoding string `json:"outputEncoding,omitempty"`
-}
-
-// NaclSecretBox for method crypto nalc box secret
-type NaclSecretBox struct {
-	*InputMessage  `json:"message"`
-	Nonce          string `json:"nonce"`
-	Key            string `json:"key"`
-	OutputEncoding string `json:"outputEncoding,omitempty"`
-}
-
-// NaclSign for method crypto NaclSign
-type NaclSign struct {
-	*InputMessage  `json:"message"`
-	Key            string `json:"key"`
-	OutputEncoding string `json:"outputEncoding,omitempty"`
-}
-
-// HDSerialized for method crypto HDKeys
-type HDSerialized struct {
-	Serialized string `json:"serialized"`
-}
-
-// HDDerivery for method HDKeysDerivery
-type HDDerivery struct {
-	Serialized string `json:"serialized"`
-	Index      int    `json:"index"`
-	Hardened   bool   `json:"hardened"`
-}
-
-// HDPathDerivery for methods HDKeysDeriveryPath
-type HDPathDerivery struct {
-	Serialized string `json:"serialized"`
-	Path       string `json:"path"`
-}
-
 // TomlConfig struct with config data
 type TomlConfig struct {
 	Network struct {
@@ -166,57 +96,25 @@ func getSortDirection() map[int]string {
 	}
 }
 
-// FixInputMessage make InputMessage struct
-func FixInputMessage(value string, format string) *InputMessage {
-	inpMess := &InputMessage{}
-	switch format {
-	case "text":
-		inpMess.Text = value
-	case "hex":
-		inpMess.Hex = value
-	case "base64":
-		inpMess.Base64 = value
-	}
+// // FixInputMessage make InputMessage struct
+// func FixInputMessage(value string, format string) *InputMessage {
+// 	inpMess := &InputMessage{}
+// 	switch format {
+// 	case "text":
+// 		inpMess.Text = value
+// 	case "hex":
+// 		inpMess.Hex = value
+// 	case "base64":
+// 		inpMess.Base64 = value
+// 	}
 
-	return inpMess
-}
+// 	return inpMess
+// }
 
-// Queries structs
-
-// ParamsOfQuery ...
-type ParamsOfQuery struct {
-	Table   string  `json:"table"`
-	Filter  string  `json:"filter"`
-	Result  string  `json:"result"`
-	OrderBy OrderBy `json:"order_by,omitempty"`
-	Limit   int     `json:"limit,omitempty"` //max:50
-}
-
-// ParamsOfSubscribe ...
-type ParamsOfSubscribe struct {
-	Table  string `json:"table"`
-	Filter string `json:"filter"`
-	Result string `json:"result"`
-}
-
-// ParamsOfWaitFor ...
-type ParamsOfWaitFor struct {
-	Table   string `json:"table"`
-	Filter  string `json:"filter"`
-	Result  string `json:"result"`
-	Timeout int    `json:"timeout"`
-}
-
-// OrderBy ...
-type OrderBy struct {
-	Path      string `json:"path"`
-	Direction string `json:"direction"`
-}
-
-// HandleStruct ...
-type HandleStruct struct {
-	Handle int `json:"handle"`
-}
+// // HandleStruct ...
+// type HandleStruct struct {
+// 	Handle int `json:"handle"`
+// }
 
 //ABI ...
 // type ABI struct {
