@@ -1,43 +1,41 @@
 package goton
 
 import (
-	"fmt"
 	"testing"
 )
 
 func TestClientMethods(t *testing.T) {
-
 	config := NewConfig(0)
+	client, err := InitClient(config)
+	if err != nil {
+		t.Errorf("test Failed - Init client error: %s", err)
+	}
+	defer client.Destroy()
 
-	t.Run("TestNewConfig", func(t *testing.T) {
-		tomlConf := &TomlConfig{}
-		tomlConf.BaseURL = chains[0]
-		tomlConf.MessageRetriesCount = 10
-		tomlConf.MessageExpirationTimeout = 10000
-		tomlConf.MessageExpirationTimeoutGrowFactor = 1.5
-		tomlConf.MessageProcessingTimeout = 40000
-		tomlConf.WaitForTimeout = 40000
-		tomlConf.OutOfSyncThreshold = 15000
+	idVersion := client.Version()
+	idAPIReference := client.GetAPIReference()
+	idBuildInfo := client.GetBuildInfo()
 
-		if fmt.Sprintf("%T", tomlConf) != fmt.Sprintf("%T", config) {
-			t.Errorf("test Failed - Default config type: %T different new config type: %T", tomlConf, config)
-		}
-	})
+	valueVersion, err := client.GetResp(idVersion)
+	if err != nil {
+		t.Errorf("test Failed - Error get version, err: %s", err)
+	}
 
-	t.Run("TestVersion", func(t *testing.T) {
-		client, err := InitClient(config)
-		if err != nil {
-			t.Errorf("test Failed - Init client error: %s", err)
-		}
-		defer client.Destroy()
+	if valueVersion.(ResultOfVersion).Version != VersionLibSDK {
+		t.Errorf("Version lib %s different version go-ton-sdk %s", valueVersion.(ResultOfVersion).Version, VersionLibSDK)
+	}
 
-		value, err := client.Request(Version())
-		if err != nil {
-			t.Errorf("test Failed - Error get version, err: %s", err)
-		}
+	valueAPIReference, err := client.GetResp(idAPIReference)
+	if err != nil {
+		t.Errorf("test Failed - Error get api reference, err: %s", err)
+	}
 
-		if value != VersionLibSDK {
-			t.Errorf("test Failed - Version lib %s different and version go-ton-sdk %s", value, VersionLibSDK)
-		}
-	})
+	if valueAPIReference.(ResultOfGetAPIReference).API.Version != VersionLibSDK {
+		t.Errorf("API Version %s different version go-ton-sdk %s", valueAPIReference.(ResultOfGetAPIReference).API.Version, VersionLibSDK)
+	}
+
+	_, err = client.GetResp(idBuildInfo)
+	if err != nil {
+		t.Errorf("test Failed - Error get build info, err: %s", err)
+	}
 }
