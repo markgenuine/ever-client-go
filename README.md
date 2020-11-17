@@ -3,9 +3,9 @@ FreeTON SDK Golang language based itself on [TON-SDK](https://github.com/tonlabs
 
 ## Install
 ```sh
-$ go get github.com/markgenuine/ton-client-go
+$ go get github.com/move-ton/ton-client-go
 ```
 ## Usage
 ```go
-import goton "github.com/markgenuine/ton-client-go"
+import goton "github.com/move-ton/ton-client-go"
 ```
