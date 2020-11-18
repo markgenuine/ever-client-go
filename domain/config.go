@@ -35,23 +35,13 @@ type (
 	}
 )
 
-// ParseConfigFile parse TOML config file
-// func ParseConfigFile(path string) (*TomlConfig, error) {
-// 	var config TomlConfig
-// 	if _, err := toml.DecodeFile(path, &config); err != nil {
-// 		return nil, err
-// 	}
-
-// 	return &config, nil
-// }
-
 // NewDefaultConfig create new config for connect client. ChanID 0-localhost, 1-devnet, 2-mainnet,
 func NewDefaultConfig(chainID int) Config {
 	config := Config{
 		Network: &Network{
 			ServerAddress:            Chains()[chainID],
-			NetworkRetriesCount:      0,
-			MessageRetriesCount:      10,
+			NetworkRetriesCount:      5,
+			MessageRetriesCount:      5,
 			MessageProcessingTimeout: 40000, //ms
 			WaitForTimeout:           40000, //ms
 			OutOfSyncThreshold:       15000, //ms
@@ -61,9 +51,10 @@ func NewDefaultConfig(chainID int) Config {
 			MnemonicDictionary:  1,
 			MnemonicWordCount:   12,
 			HdkeyDerivationPath: "",
-			HdkeyCompliant:      false,
+			HdkeyCompliant:      true,
 		},
 		Abi: &Abi{
+			Workchain:                          0,
 			MessageExpirationTimeout:           40000, //ms
 			MessageExpirationTimeoutGrowFactor: 1.5},
 	}
