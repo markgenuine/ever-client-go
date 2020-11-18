@@ -1,7 +1,7 @@
 package boc
 
 import (
-	"github.com/markgenuine/ton-client-go/domain"
+	"github.com/move-ton/ton-client-go/domain"
 )
 
 type boc struct {
