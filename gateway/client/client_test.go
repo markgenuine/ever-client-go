@@ -3,7 +3,7 @@ package client
 import (
 	"testing"
 
-	"github.com/markgenuine/ton-client-go/domain"
+	"github.com/move-ton/ton-client-go/domain"
 	"github.com/stretchr/testify/assert"
 )
 

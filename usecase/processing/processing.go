@@ -1,7 +1,7 @@
 package processing
 
 import (
-	"github.com/markgenuine/ton-client-go/domain"
+	"github.com/move-ton/ton-client-go/domain"
 )
 
 type processing struct {
@@ -21,17 +21,17 @@ func NewProcessing(
 }
 
 // SendMessage method processing.send_message
-func (p *processing) Send(pOSM domain.ParamsOfSendMessage, ResponseHandler int) (int, error) { ///responseHandler?: ResponseHandler – additional responses handler.### Result
+func (p *processing) SendMessage(pOSM domain.ParamsOfSendMessage) (int, error) {
 	return p.client.Request("processing.send_message", pOSM)
 }
 
 // WaitForTransaction method processing.wait_for_transaction
-func (p *processing) WaitForTransaction(pOWFT domain.ParamsOfWaitForTransaction, ResponseHandler int) (int, error) { ///responseHandler?: ResponseHandler – additional responses handler.### Result
+func (p *processing) WaitForTransaction(pOWFT domain.ParamsOfWaitForTransaction) (int, error) {
 	return p.client.Request("processing.wait_for_transaction", pOWFT)
 }
 
 // ProcessMessage method processing.process_message
-func (p *processing) Process(pOPM domain.ParamsOfProcessMessage, ResponseHandler int) (int, error) { ///responseHandler?: ResponseHandler – additional responses handler.### Result
+func (p *processing) ProcessMessage(pOPM domain.ParamsOfProcessMessage) (int, error) {
 	return p.client.Request("processing.process_message", pOPM)
 }
 

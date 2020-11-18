@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/markgenuine/ton-client-go/domain"
-	"github.com/markgenuine/ton-client-go/gateway/client"
+	"github.com/move-ton/ton-client-go/domain"
+	"github.com/move-ton/ton-client-go/gateway/client"
 	"github.com/stretchr/testify/assert"
 )
 

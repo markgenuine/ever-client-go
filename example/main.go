@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	goton "github.com/markgenuine/ton-client-go"
+	goton "github.com/move-ton/ton-client-go"
 )
 
 func main() {

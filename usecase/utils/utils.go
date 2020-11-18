@@ -1,6 +1,6 @@
 package utils
 
-import "github.com/markgenuine/ton-client-go/domain"
+import "github.com/move-ton/ton-client-go/domain"
 
 type utils struct {
 	config domain.Config

@@ -1,7 +1,7 @@
 package crypto
 
 import (
-	"github.com/markgenuine/ton-client-go/domain"
+	"github.com/move-ton/ton-client-go/domain"
 )
 
 type crypto struct {

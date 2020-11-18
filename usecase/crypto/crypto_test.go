@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/markgenuine/ton-client-go/domain"
-	"github.com/markgenuine/ton-client-go/gateway/client"
-	"github.com/markgenuine/ton-client-go/util"
+	"github.com/move-ton/ton-client-go/domain"
+	"github.com/move-ton/ton-client-go/gateway/client"
+	"github.com/move-ton/ton-client-go/util"
 	"github.com/stretchr/testify/assert"
 )
 

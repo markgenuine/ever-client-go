@@ -1,15 +1,15 @@
 package goton
 
 import (
-	"github.com/markgenuine/ton-client-go/domain"
-	clientgw "github.com/markgenuine/ton-client-go/gateway/client"
-	"github.com/markgenuine/ton-client-go/usecase/abi"
-	"github.com/markgenuine/ton-client-go/usecase/boc"
-	"github.com/markgenuine/ton-client-go/usecase/crypto"
-	"github.com/markgenuine/ton-client-go/usecase/net"
-	"github.com/markgenuine/ton-client-go/usecase/processing"
-	"github.com/markgenuine/ton-client-go/usecase/tvm"
-	"github.com/markgenuine/ton-client-go/usecase/utils"
+	"github.com/move-ton/ton-client-go/domain"
+	clientgw "github.com/move-ton/ton-client-go/gateway/client"
+	"github.com/move-ton/ton-client-go/usecase/abi"
+	"github.com/move-ton/ton-client-go/usecase/boc"
+	"github.com/move-ton/ton-client-go/usecase/crypto"
+	"github.com/move-ton/ton-client-go/usecase/net"
+	"github.com/move-ton/ton-client-go/usecase/processing"
+	"github.com/move-ton/ton-client-go/usecase/tvm"
+	"github.com/move-ton/ton-client-go/usecase/utils"
 )
 
 // Ton ...
