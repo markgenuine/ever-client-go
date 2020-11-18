@@ -14,8 +14,8 @@ import (
 	"sync"
 	"unsafe"
 
-	"github.com/markgenuine/ton-client-go/domain"
-	"github.com/markgenuine/ton-client-go/util"
+	"github.com/move-ton/ton-client-go/domain"
+	"github.com/move-ton/ton-client-go/util"
 )
 
 const (
@@ -44,6 +44,7 @@ func (c *clientGateway) Request(method string, paramsIn interface{}) (int, error
 	defer C.free(unsafe.Pointer(paramsCS))
 	param2 := C.tc_string_data_t{content: paramsCS, len: C.uint32_t(len(params))}
 
+	//fmt.Println(params)
 	c.mx.Lock()
 	c.AsyncRequestID++
 	res := &AsyncResponse{
@@ -126,7 +127,7 @@ func (c *clientGateway) GetResp(resp int) (interface{}, error) {
 		nowInd := State.stores[resp]
 		State.Unlock()
 		typeRes = nowInd.ResponseType
-		if !((typeRes == 0 || typeRes == 1) && nowInd.Finished) {
+		if !nowInd.Finished {
 			continue
 		} else {
 			mapReq = nowInd
@@ -301,10 +302,8 @@ func getResponse(methodName, resp string) interface{} {
 		resultStruct := domain.ResultOfWaitForCollection{}
 		json.Unmarshal([]byte(resp), &resultStruct)
 		return resultStruct
-	case "net.unsubscribe": //??????
-		// resultStruct := domain..ResultOfWaitForCollection{}
-		// json.Unmarshal([]byte(resp), &resultStruct)
-		// return resultStruct
+	case "net.unsubscribe":
+		return []byte(resp)
 	case "net.subscribe_collection":
 		resultStruct := domain.ResultOfSubscribeCollection{}
 		json.Unmarshal([]byte(resp), &resultStruct)
