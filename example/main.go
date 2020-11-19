@@ -9,22 +9,17 @@ import (
 
 func main() {
 
-	ton, err := goton.NewTon(2)
+	ton, err := goton.NewTon(1)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	defer ton.Client.Destroy()
 
-	idReq, err := ton.Client.Version()
+	value, err := ton.Client.Version()
 	if err != nil {
-		log.Fatal(idReq)
+		log.Fatal(err)
 	}
 
-	value, err := ton.Client.GetResp(idReq)
-	if err != nil {
-		log.Fatal(idReq)
-	}
-
-	fmt.Println("Version bindings is: ", value)
+	fmt.Println("Version bindings is: ", value.Version)
 }
