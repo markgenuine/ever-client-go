@@ -42,12 +42,12 @@ type (
 
 	//BocUseCase ...
 	BocUseCase interface {
-		ParseMessage(pOP ParamsOfParse) (int, error)
-		ParseTransaction(pOP ParamsOfParse) (int, error)
-		ParseAccount(pOP ParamsOfParse) (int, error)
-		ParseBlock(pOP ParamsOfParse) (int, error)
-		ParseShardstate(pOPS ParamsOfParseShardstate) (int, error)
-		GetBlockhainConfig(pOGBC ParamsOfGetBlockchainConfig) (int, error)
-		GetBocHash(pOGBH ParamsOfGetBocHash) (int, error)
+		ParseMessage(pOP ParamsOfParse) (*ResultOfParse, error)
+		ParseTransaction(pOP ParamsOfParse) (*ResultOfParse, error)
+		ParseAccount(pOP ParamsOfParse) (*ResultOfParse, error)
+		ParseBlock(pOP ParamsOfParse) (*ResultOfParse, error)
+		ParseShardstate(pOPS ParamsOfParseShardstate) (*ResultOfParse, error)
+		GetBlockhainConfig(pOGBC ParamsOfGetBlockchainConfig) (*ResultOfGetBlockchainConfig, error)
+		GetBocHash(pOGBH ParamsOfGetBocHash) (*ResultOfGetBocHash, error)
 	}
 )

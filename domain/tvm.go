@@ -86,7 +86,7 @@ type (
 
 	// ResultOfRunGet ...
 	ResultOfRunGet struct {
-		Output interface{} `json:"output"`
+		Output json.RawMessage `json:"output"`
 	}
 
 	// TransactionFees ...
@@ -101,8 +101,8 @@ type (
 
 	// TvmUseCase ...
 	TvmUseCase interface {
-		RunExecutor(ParamsOfRunExecutor) (int, error)
-		RunTvm(ParamsOfRunTvm) (int, error)
-		RunGet(ParamsOfRunGet) (int, error)
+		RunExecutor(pORE ParamsOfRunExecutor) (*ResultOfRunExecuteMessage, error)
+		RunTvm(pORT ParamsOfRunTvm) (*ResultOfRunTvm, error)
+		RunGet(pORG ParamsOfRunGet) (*ResultOfRunGet, error)
 	}
 )

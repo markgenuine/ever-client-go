@@ -13,6 +13,13 @@ type (
 		Data    json.RawMessage `json:"data"`
 	}
 
+	// ClientResponse ...
+	ClientResponse struct {
+		Code  int
+		Data  []byte
+		Error error
+	}
+
 	// ResultOfVersion ...
 	ResultOfVersion struct {
 		Version string `json:"version"`
@@ -68,11 +75,12 @@ type (
 
 	// ClientGateway ...
 	ClientGateway interface {
-		Request(method string, paramsIn interface{}) (int, error)
-		Version() (int, error)
-		GetAPIReference() (int, error)
-		GetBuildInfo() (int, error)
-		GetResp(resp int) (interface{}, error)
 		Destroy()
+		GetResult(method string, paramIn interface{}, resultStruct interface{}) error
+		Request(method string, paramsIn interface{}) (<-chan *ClientResponse, error)
+		GetResponse(method string, paramIn interface{}) ([]byte, error)
+		Version() (*ResultOfVersion, error)
+		GetAPIReference() (*ResultOfGetAPIReference, error)
+		GetBuildInfo() (*ResultOfBuildInfo, error)
 	}
 )

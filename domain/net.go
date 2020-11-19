@@ -58,10 +58,10 @@ type (
 
 	// NetUseCase ...
 	NetUseCase interface {
-		QueryCollection(ParamsOfQueryCollection) (int, error)
-		WaitForCollection(ParamsOfWaitForCollection) (int, error)
-		Unsubscribe(ResultOfSubscribeCollection) (int, error)
-		SubscribeCollection(ParamsOfSubscribeCollection) (int, error)
+		QueryCollection(ParamsOfQueryCollection) (*ResultOfQueryCollection, error)
+		WaitForCollection(ParamsOfWaitForCollection) (*ResultOfWaitForCollection, error)
+		Unsubscribe(ResultOfSubscribeCollection)
+		SubscribeCollection(ParamsOfSubscribeCollection) (*ResultOfSubscribeCollection, error)
 	}
 )
 

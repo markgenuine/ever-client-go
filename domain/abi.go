@@ -86,7 +86,7 @@ type (
 	DeploySet struct {
 		Tvc         string      `json:"tvc"`
 		WorkchainID int         `json:"workchain_id"`
-		InitialData interface{} `json:"initial_data,omitempty"`
+		InitialData interface{} `json:"initial_data"`
 	}
 
 	// SignerNone No keys are provided. Creates an unsigned message.
@@ -178,22 +178,18 @@ type (
 		PublicKey  string              `json:"public_key,omitempty"`
 		InitParams StateInitParams     `json:"init_params,omitempty"`
 	}
+
 	// MessageSourceEncoded ...
 	MessageSourceEncoded struct {
 		Type    MessageSourceType `json:"type"`
-		Message string            `json:"message"`
-		Abi     AbiA              `json:"abi,omitempty"`
+		Message string            `json:"message,omitempty"`
+		Abi     *AbiA             `json:"abi,omitempty"`
 	}
 
 	// MessageSourceEncodingParams ...
 	MessageSourceEncodingParams struct {
-		Type               MessageSourceType `json:"type"`
-		Abi                AbiA              `json:"abi,omitempty"`
-		Address            string            `json:"address,omitempty"`
-		DeploySet          *DeploySet        `json:"deploy_set,omitempty"`
-		CallSet            *CallSet          `json:"call_set,omitempty"`
-		Signer             interface{}       `json:"signer"`
-		ProcessingTryIndex int               `json:"processing_try_index"`
+		Type MessageSourceType `json:"type"`
+		ParamsOfEncodeMessage
 	}
 
 	// StateInitParams ...
@@ -232,12 +228,13 @@ type (
 
 	// ParamsOfEncodeMessage ...
 	ParamsOfEncodeMessage struct {
-		Abi                AbiA        `json:"abi"`
-		Address            string      `json:"address,omitempty"`
-		DeploySet          *DeploySet  `json:"deploy_set,omitempty"`
-		CallSet            *CallSet    `json:"call_set,omitempty"`
-		Signer             interface{} `json:"signer"`
-		ProcessingTryIndex int         `json:"processing_try_index"`
+		Type               MessageSourceType `json:"type,omitempty"`
+		Abi                AbiA              `json:"abi"`
+		Address            string            `json:"address"`
+		DeploySet          *DeploySet        `json:"deploy_set,omitempty"`
+		CallSet            *CallSet          `json:"call_set,omitempty"`
+		Signer             interface{}       `json:"signer"`
+		ProcessingTryIndex int               `json:"processing_try_index"`
 	}
 
 	// ResultOfEncodeMessage ...
@@ -299,13 +296,13 @@ type (
 
 	//AbiUseCase ...
 	AbiUseCase interface {
-		EncodeMessageBody(pOEMB ParamsOfEncodeMessageBody) (int, error)
-		AttachSignatureToMessageBody(pOASTMB ParamsOfAttachSignatureToMessageBody) (int, error)
-		EncodeMessage(pOEM ParamsOfEncodeMessage) (int, error)
-		AttachSignature(pOAS ParamsOfAttachSignature) (int, error)
-		DecodeMessage(pODM ParamsOfDecodeMessage) (int, error)
-		DecodeMessageBody(pODMB ParamsOfDecodeMessageBody) (int, error)
-		EncodeAccount(pOEA ParamsOfEncodeAccount) (int, error)
+		EncodeMessageBody(pOEMB ParamsOfEncodeMessageBody) (*ResultOfEncodeMessageBody, error)
+		AttachSignatureToMessageBody(pOASTMB ParamsOfAttachSignatureToMessageBody) (*ResultOfAttachSignatureToMessageBody, error)
+		EncodeMessage(pOEM ParamsOfEncodeMessage) (*ResultOfEncodeMessage, error)
+		AttachSignature(pOAS ParamsOfAttachSignature) (*ResultOfAttachSignature, error)
+		DecodeMessage(pODM ParamsOfDecodeMessage) (*DecodedMessageBody, error)
+		DecodeMessageBody(pODMB ParamsOfDecodeMessageBody) (*DecodedMessageBody, error)
+		EncodeAccount(pOEA ParamsOfEncodeAccount) (*ResultOfEncodeAccount, error)
 	}
 )
 
@@ -375,6 +372,6 @@ func NewMessageSourceEncoded() MessageSourceEncoded {
 }
 
 // NewMessageSourceEncodingParams ...
-func NewMessageSourceEncodingParams() MessageSourceEncodingParams {
-	return MessageSourceEncodingParams{Type: MessageSourceTypeEncodingParams}
+func NewMessageSourceEncodingParams() ParamsOfEncodeMessage {
+	return ParamsOfEncodeMessage{Type: MessageSourceTypeEncodingParams}
 }
