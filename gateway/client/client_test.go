@@ -22,7 +22,7 @@ func Test(t *testing.T) {
 		t.Run("TestGetApiReference", func(t *testing.T) {
 			getAPIReference, err := client.GetAPIReference()
 			assert.Equal(t, nil, err)
-			assert.Equal(t, "1.0.0", getAPIReference.API.Version)
+			assert.Equal(t, VersionLibSDK, getAPIReference.API.Version)
 		})
 
 		t.Run("TestBuildInfo", func(t *testing.T) {

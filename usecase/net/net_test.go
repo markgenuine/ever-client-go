@@ -3,6 +3,7 @@ package net
 import (
 	"encoding/json"
 	"fmt"
+	"sync"
 	"testing"
 	"time"
 
@@ -72,5 +73,38 @@ func TestNet(t *testing.T) {
 		valueRes2, err := netUC.WaitForCollection(query)
 		assert.NotEqual(t, nil, err)
 		assert.Equal(t, json.RawMessage(nil), valueRes2.Result)
+	})
+
+	t.Run("TestSubscribeCollection", func(t *testing.T) {
+
+		// # Prepare query
+		nowTime := int(time.Now().Unix())
+		filter := fmt.Sprintf(`{"created_at":{"gt":%d}}`, nowTime)
+		query := domain.ParamsOfSubscribeCollection{Collection: "messages", Filter: json.RawMessage(filter), Result: "created_at"}
+
+		// # Create generator
+		generator, handle, err := netUC.SubscribeCollection(query)
+		assert.NotNil(t, generator)
+		assert.Equal(t, nil, err)
+		assert.NotNil(t, handle)
+
+		swG := &sync.WaitGroup{}
+		swG.Add(1)
+
+		go func() {
+			defer swG.Done()
+			respCount := 1
+			for g := range generator {
+				if respCount > 10 {
+					err = netUC.Unsubscribe(domain.ResultOfSubscribeCollection{Handle: handle.Handle})
+					assert.Equal(t, nil, err)
+					break
+				}
+				assert.NotEqual(t, nil, g)
+				respCount++
+			}
+		}()
+
+		swG.Wait()
 	})
 }
