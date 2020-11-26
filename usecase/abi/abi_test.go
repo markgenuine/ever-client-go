@@ -65,7 +65,7 @@ func TestAbi(t *testing.T) {
 		assert.Equal(t, nil, err)
 		err = json.Unmarshal(bytesID, &id)
 		assert.Equal(t, nil, err)
-		assert.Equal(t, "0x0000000000000000000000000000000000000000000000000000000000000000", id)
+		assert.Equal(t, "0x0", id)
 		assert.Equal(t, eventsExpire, valueDM.Header.Expire)
 		assert.Equal(t, eventsTime, valueDM.Header.Time)
 		assert.Equal(t, keyPair.Public, valueDM.Header.PubKey)
@@ -81,7 +81,7 @@ func TestAbi(t *testing.T) {
 		assert.Equal(t, nil, err)
 		err = json.Unmarshal(bytesID, &id)
 		assert.Equal(t, nil, err)
-		assert.Equal(t, "0x0000000000000000000000000000000000000000000000000000000000000000", id)
+		assert.Equal(t, "0x0", id)
 		assert.NotEqual(t, nil, valueDM2.Header)
 
 		message = "te6ccgEBAQEAVQAApeACvg5/pmQpY4m61HmJ0ne+zjHJu3MNG8rJxUDLbHKBu/AAAAAAAAAMKr6z6rxK3xYJAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA"
@@ -95,7 +95,7 @@ func TestAbi(t *testing.T) {
 		assert.Equal(t, nil, err)
 		err = json.Unmarshal(bytesID, &id)
 		assert.Equal(t, nil, err)
-		assert.Equal(t, "0x0000000000000000000000000000000000000000000000000000000000000000", id)
+		assert.Equal(t, "0x0", id)
 		assert.NotEqual(t, nil, valueDM2.Header)
 
 		_, err = abiUC.DecodeMessage(domain.ParamsOfDecodeMessage{Abi: abiValue, Message: "0x0"})
@@ -129,7 +129,7 @@ func TestAbi(t *testing.T) {
 		assert.Equal(t, nil, err)
 		err = json.Unmarshal(bytesID, &id)
 		assert.Equal(t, nil, err)
-		assert.Equal(t, "0x0000000000000000000000000000000000000000000000000000000000000000", id)
+		assert.Equal(t, "0x0", id)
 		assert.Equal(t, eventsExpire, valueDMB1.Header.Expire)
 		assert.Equal(t, eventsTime, valueDMB1.Header.Time)
 		assert.Equal(t, keyPair.Public, valueDMB1.Header.PubKey)
@@ -218,5 +218,28 @@ func TestAbi(t *testing.T) {
 		valueEncoded, err = abiUC.EncodeAccount(domain.ParamsOfEncodeAccount{StateInit: stateInitSource})
 		assert.Equal(t, nil, err)
 		assert.Equal(t, "05beb555e942fa744fd96f45a9ea9d0a8248208ca12421947c06e59bc997d309", valueEncoded.ID)
+
+		// # Test exception (external signer)
+		signerExt := domain.NewSignerExternal()
+		signerExt.PublicKey = keyPair.Public
+		msEP := domain.NewMessageSourceEncodingParams()
+		msEP.Abi = abiValue
+		msEP.Signer = signerExt
+		msEP.DeploySet = &deploySet
+		msEP.CallSet = &callSet
+		stateInitSource.Source = msEP
+		_, err = abiUC.EncodeAccount(domain.ParamsOfEncodeAccount{StateInit: stateInitSource})
+		assert.NotEqual(t, nil, err)
+
+		// # Encode account from TVC
+		stateSI := domain.NewStateInitTvc()
+		stateSI.Tvc = eventsTvc
+		encoded, err := abiUC.EncodeAccount(domain.ParamsOfEncodeAccount{StateInit: stateSI})
+		assert.NotEqual(t, nil, err)
+		assert.NotEqual(t, "05beb555e942fa744fd96f45a9ea9d0a8248208ca12421947c06e59bc997d309", encoded.ID)
+
+		stateSI.PublicKey = keyPair.Public
+		encoded, err = abiUC.EncodeAccount(domain.ParamsOfEncodeAccount{StateInit: stateSI})
+		assert.NotEqual(t, nil, err)
 	})
 }
