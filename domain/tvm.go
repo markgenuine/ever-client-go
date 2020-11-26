@@ -1,6 +1,9 @@
 package domain
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"math/big"
+)
 
 const (
 
@@ -54,11 +57,11 @@ type (
 
 	// ResultOfRunExecuteMessage ...
 	ResultOfRunExecuteMessage struct {
-		Transaction json.RawMessage  `json:"transaction,omitempty"`
-		OutMessages []string         `json:"out_messages"`
-		Decoded     *DecodedOutput   `json:"decoded,omitempty"`
-		Account     string           `json:"account"`
-		Fees        *TransactionFees `json:"fees"`
+		Transaction json.RawMessage `json:"transaction,omitempty"`
+		OutMessages []string        `json:"out_messages"`
+		Decoded     DecodedOutput   `json:"decoded,omitempty"`
+		Account     string          `json:"account"`
+		Fees        TransactionFees `json:"fees"`
 	}
 
 	// ParamsOfRunTvm ...
@@ -91,12 +94,12 @@ type (
 
 	// TransactionFees ...
 	TransactionFees struct {
-		InMsgFwdFee      string `json:"in_msg_fwd_fee"`
-		StorageFee       string `json:"storage_fee"`
-		GasFee           string `json:"gas_fee"`
-		OutMsgsFwdFee    string `json:"out_msgs_fwd_fee"`
-		TotalAccountFees string `json:"total_account_fees"`
-		TotalOutput      string `json:"total_output"`
+		InMsgFwdFee      big.Int `json:"in_msg_fwd_fee"`
+		StorageFee       big.Int `json:"storage_fee"`
+		GasFee           big.Int `json:"gas_fee"`
+		OutMsgsFwdFee    big.Int `json:"out_msgs_fwd_fee"`
+		TotalAccountFees big.Int `json:"total_account_fees"`
+		TotalOutput      big.Int `json:"total_output"`
 	}
 
 	// TvmUseCase ...
