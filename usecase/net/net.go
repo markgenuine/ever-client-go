@@ -1,6 +1,8 @@
 package net
 
 import (
+	"encoding/json"
+
 	"github.com/move-ton/ton-client-go/domain"
 )
 
@@ -35,13 +37,41 @@ func (n *net) WaitForCollection(pOWFC domain.ParamsOfWaitForCollection) (*domain
 }
 
 // Unsubscribe net.unsubscribe
-func (n *net) Unsubscribe(rOSC domain.ResultOfSubscribeCollection) {
-	n.client.GetResult("net.unsubscribe", rOSC, nil)
+func (n *net) Unsubscribe(rOSC domain.ResultOfSubscribeCollection) error {
+	_, err := n.client.GetResponse("net.unsubscribe", rOSC)
+	return err
 }
 
 // SubscribeCollection method net.subscribe_collection
-func (n *net) SubscribeCollection(pOSC domain.ParamsOfSubscribeCollection) (*domain.ResultOfSubscribeCollection, error) {
+func (n *net) SubscribeCollection(pOSC domain.ParamsOfSubscribeCollection) (<-chan interface{}, *domain.ResultOfSubscribeCollection, error) {
 	result := new(domain.ResultOfSubscribeCollection)
-	err := n.client.GetResult("net.subscribe_collection", pOSC, result)
-	return result, err
+	responses, err := n.client.Request("net.subscribe_collection", pOSC)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	data := <-responses
+	if data.Error != nil {
+		return nil, nil, data.Error
+	}
+	if err := json.Unmarshal(data.Data, result); err != nil {
+		return nil, nil, err
+	}
+
+	respInBuffer := domain.DynBufferForResponses(responses)
+	chanResult := make(chan interface{}, 1)
+	go func() {
+		var body struct {
+			Result interface{} `json:"result"`
+		}
+		for r := range respInBuffer {
+			if err := json.Unmarshal(r.Data, &body); err != nil {
+				panic(err)
+			}
+			chanResult <- body.Result
+		}
+		close(chanResult)
+	}()
+
+	return chanResult, result, nil
 }

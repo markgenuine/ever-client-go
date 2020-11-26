@@ -60,8 +60,8 @@ type (
 	NetUseCase interface {
 		QueryCollection(ParamsOfQueryCollection) (*ResultOfQueryCollection, error)
 		WaitForCollection(ParamsOfWaitForCollection) (*ResultOfWaitForCollection, error)
-		Unsubscribe(ResultOfSubscribeCollection)
-		SubscribeCollection(ParamsOfSubscribeCollection) (*ResultOfSubscribeCollection, error)
+		Unsubscribe(ResultOfSubscribeCollection) error
+		SubscribeCollection(ParamsOfSubscribeCollection) (<-chan interface{}, *ResultOfSubscribeCollection, error)
 	}
 )
 
