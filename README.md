@@ -8,6 +8,8 @@ Works for Golang 1.14+
 [![Chat on Telegram RU](https://img.shields.io/badge/Chat%20on-Telegram%20RU-blue)](https://t.me/MOVETON_SDK_RU)
 [![Chat on Telegram EN](https://img.shields.io/badge/Chat%20on-Telegram%20EN-blue)](https://t.me/MOVETON_SDK_EN)
 
+Many thanks to @temamagic for advice on architecture, tests, code, and commit style.
+
 ## Installation
 
 ```sh
@@ -55,11 +57,13 @@ go test -exec "env DYLD_LIBRARY_PATH=/path-with-lib/ " -v
 ```
 
 ## Tests
+```
 $ go test ./... -v
 $ go run ./example/*.go
+```
 
 ## Usage
-```go
+```golang
 import goton "github.com/move-ton/ton-client-go"
 ```
 
@@ -93,4 +97,4 @@ func main() {
 
 ```
 For more examples see *_test.go files
-ton-client-go/usecase
+[ton-client-go/usecase](https://github.com/move-ton/ton-client-go/tree/master/usecase)
