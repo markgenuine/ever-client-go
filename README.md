@@ -8,7 +8,7 @@ Works for Golang 1.14+
 [![Chat on Telegram RU](https://img.shields.io/badge/Chat%20on-Telegram%20RU-blue)](https://t.me/MOVETON_SDK_RU)
 [![Chat on Telegram EN](https://img.shields.io/badge/Chat%20on-Telegram%20EN-blue)](https://t.me/MOVETON_SDK_EN)
 
-Many thanks to [@temamagic](https://github.com/temamagic) for advice on architecture, tests, code, and commit style.
+Many thanks to [@temamagic](https://github.com/temamagic) for advice on architecture, tests, code and commit style.
 
 ## Installation
 
