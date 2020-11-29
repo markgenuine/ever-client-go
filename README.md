@@ -5,8 +5,6 @@ Works for Golang 1.14+
 [![version](https://img.shields.io/github/v/tag/move-ton/ton-client-go.svg)](https://github.com/move-ton/ton-client-go/releases/latest)
 [![license](https://img.shields.io/github/license/move-ton/ton-client-go.svg)](https://github.com/move-ton/ton-client-go/blob/master/LICENSE)
 [![Go version](https://img.shields.io/badge/go-1.14+-blue.svg)](https://github.com/moovweb/gvm)
-![TonClient Ubuntu 20.04](https://github.com/move-ton/ton-client-go/workflows/TonClient%20Ubuntu%2020.04/badge.svg) 
-![TonClient MacOS Latest](https://github.com/move-ton/ton-client-go/workflows/TonClient%20MacOS%20Latest/badge.svg)  
 [![Chat on Telegram RU](https://img.shields.io/badge/Chat%20on-Telegram%20RU-blue)](https://t.me/MOVETON_SDK_RU)
 [![Chat on Telegram EN](https://img.shields.io/badge/Chat%20on-Telegram%20EN-blue)](https://t.me/MOVETON_SDK_EN)
 
