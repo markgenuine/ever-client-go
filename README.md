@@ -1,28 +1,51 @@
-# ton-client-go
-FreeTON SDK Golang language based itself on [TON-SDK](https://github.com/tonlabs/TON-SDK).
-1. For complited from source code SDK-lib:
+# TON Client
+TON SDK Client library Golang bindings based itself on [TON-SDK](https://github.com/tonlabs/TON-SDK).
+Works for Golang 1.14+
+
+[![version](https://img.shields.io/github/v/tag/move-ton/ton-client-go.svg)](https://github.com/move-ton/ton-client-go/releases/latest)
+[![license](https://img.shields.io/github/license/move-ton/ton-client-go.svg)](https://github.com/move-ton/ton-client-go/blob/master/LICENSE)
+[![Go version](https://img.shields.io/badge/go-1.14+-blue.svg)](https://github.com/moovweb/gvm)
+![TonClient Ubuntu 20.04](https://github.com/move-ton/ton-client-go/workflows/TonClient%20Ubuntu%2020.04/badge.svg) 
+![TonClient MacOS Latest](https://github.com/move-ton/ton-client-go/workflows/TonClient%20MacOS%20Latest/badge.svg)  
+[![Chat on Telegram RU](https://img.shields.io/badge/Chat%20on-Telegram%20RU-blue)](https://t.me/MOVETON_SDK_RU)
+[![Chat on Telegram EN](https://img.shields.io/badge/Chat%20on-Telegram%20EN-blue)](https://t.me/MOVETON_SDK_EN)
+
+## Installation
+
+```sh
+$ go get -u github.com/move-ton/ton-client-go
+```
+or
+
+```sh
+$ git clone https://github.com/move-ton/ton-client-go.git
+$ cd ton-client-go
+```
+
+## Installation dependency
+### For complited from source code SDK-lib  
 ```
 export CGO_LDFLAGS="-L/path-to-installation/TON-SDK/target/release/deps/ -lton_client"
 ```
-Linux:
+#### Linux:
 ```
 export LD_LIBRARY_PATH=/path-to-installation/TON-SDK/target/release/deps/
 ```
-MacOS:
+#### MacOS:
 ```
 export DYLD_LIBRARY_PATH=/path-to-installation/TON-SDK/target/release/deps/
 ```
 and add file to "lib" directory darwin for macOS and linux.
 
-2. For completed of binary lib complited:
+### For completed of binary lib complited:
 ```
 export CGO_LDFLAGS="-L/path-with-lib/ -lton_client"
 ```
-Linux:
+#### Linux:
 ```
 export LD_LIBRARY_PATH=/path-with-lib/
 ```
-MacOS:
+#### MacOS:
 ```
 export DYLD_LIBRARY_PATH=/path-with-lib/
 ```
@@ -33,15 +56,43 @@ go run  -exec "env DYLD_LIBRARY_PATH=/path-with-lib/" main.go
 go test -exec "env DYLD_LIBRARY_PATH=/path-with-lib/ " -v
 ```
 
-## Install
-```sh
-$ go get -u github.com/move-ton/ton-client-go
-```
-## Test
-$ go test -v
+## Tests
+$ go test ./... -v
 $ go run ./example/*.go
 
 ## Usage
 ```go
 import goton "github.com/move-ton/ton-client-go"
 ```
+
+## Example
+```golang
+package main
+
+import (
+	"fmt"
+	"log"
+
+	goton "github.com/move-ton/ton-client-go"
+)
+
+func main() {
+
+	ton, err := goton.NewTon(1)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer ton.Client.Destroy()
+
+	value, err := ton.Client.Version()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Version bindings is: ", value.Version)
+}
+
+```
+For more examples see *_test.go files
+ton-client-go/usecase
