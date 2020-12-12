@@ -3,9 +3,9 @@ package domain
 type (
 	// Config ...
 	Config struct {
-		Network *Network `toml:"network" json:"network,omitempty"`
-		Crypto  *Crypto  `toml:"crypto" json:"crypto,omitempty"`
-		Abi     *Abi     `toml:"abi" json:"abi,omitempty"`
+		Network *Network   `toml:"network" json:"network,omitempty"`
+		Crypto  *Crypto    `toml:"crypto" json:"crypto,omitempty"`
+		Abi     *AbiConfig `toml:"abi" json:"abi,omitempty"`
 	}
 
 	// Network ...
@@ -27,8 +27,8 @@ type (
 		HdkeyCompliant      bool   `toml:"hdkey_compliant" json:"hdkey_compliant,omitempty"`
 	}
 
-	// Abi ...
-	Abi struct {
+	// AbiConfig ...
+	AbiConfig struct {
 		Workchain                          int     `toml:"workchain" json:"workchain,omitempty"`
 		MessageExpirationTimeout           int     `toml:"message_expiration_timeout" json:"message_expiration_timeout"`
 		MessageExpirationTimeoutGrowFactor float32 `toml:"message_expiration_timeout_grow_factor" json:"message_expiration_timeout_grow_factor"`
@@ -53,7 +53,7 @@ func NewDefaultConfig(chainID int) Config {
 			HdkeyDerivationPath: "",
 			HdkeyCompliant:      true,
 		},
-		Abi: &Abi{
+		Abi: &AbiConfig{
 			Workchain:                          0,
 			MessageExpirationTimeout:           40000, //ms
 			MessageExpirationTimeoutGrowFactor: 1.5},

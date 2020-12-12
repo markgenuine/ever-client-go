@@ -112,8 +112,8 @@ type (
 		Handle SigningBoxHandle `json:"handle"`
 	}
 
-	//AbiA ...
-	AbiA struct {
+	//Abi ...
+	Abi struct {
 		Type  AbiType     `json:"type"`
 		Value interface{} `json:"value"`
 	}
@@ -183,7 +183,7 @@ type (
 	MessageSourceEncoded struct {
 		Type    MessageSourceType `json:"type"`
 		Message string            `json:"message,omitempty"`
-		Abi     *AbiA             `json:"abi,omitempty"`
+		Abi     *Abi              `json:"abi,omitempty"`
 	}
 
 	// MessageSourceEncodingParams ...
@@ -194,13 +194,13 @@ type (
 
 	// StateInitParams ...
 	StateInitParams struct {
-		Abi   AbiA        `json:"abi"`
+		Abi   Abi         `json:"abi"`
 		Value interface{} `json:"value"`
 	}
 
 	// ParamsOfEncodeMessageBody ...
 	ParamsOfEncodeMessageBody struct {
-		Abi                AbiA        `json:"abi"`
+		Abi                Abi         `json:"abi"`
 		CallSet            CallSet     `json:"call_set"`
 		IsInternal         bool        `json:"is_internal"`
 		Signer             interface{} `json:"signer"`
@@ -215,7 +215,7 @@ type (
 
 	// ParamsOfAttachSignatureToMessageBody ...
 	ParamsOfAttachSignatureToMessageBody struct {
-		Abi       AbiA   `json:"abi"`
+		Abi       Abi    `json:"abi"`
 		PublicKey string `json:"public_key"`
 		Message   string `json:"message"`
 		Signature string `json:"signature"`
@@ -229,7 +229,7 @@ type (
 	// ParamsOfEncodeMessage ...
 	ParamsOfEncodeMessage struct {
 		Type               MessageSourceType `json:"type,omitempty"`
-		Abi                AbiA              `json:"abi"`
+		Abi                Abi               `json:"abi"`
 		Address            string            `json:"address"`
 		DeploySet          *DeploySet        `json:"deploy_set,omitempty"`
 		CallSet            *CallSet          `json:"call_set,omitempty"`
@@ -247,7 +247,7 @@ type (
 
 	// ParamsOfAttachSignature ...
 	ParamsOfAttachSignature struct {
-		Abi       AbiA   `json:"abi"`
+		Abi       Abi    `json:"abi"`
 		PublicKey string `json:"public_key"`
 		Message   string `json:"message"`
 		Signature string `json:"signature"`
@@ -261,7 +261,7 @@ type (
 
 	// ParamsOfDecodeMessage ...
 	ParamsOfDecodeMessage struct {
-		Abi     AbiA   `json:"abi"`
+		Abi     Abi    `json:"abi"`
 		Message string `json:"message"`
 	}
 
@@ -275,7 +275,7 @@ type (
 
 	// ParamsOfDecodeMessageBody ...
 	ParamsOfDecodeMessageBody struct {
-		Abi        AbiA   `json:"abi"`
+		Abi        Abi    `json:"abi"`
 		Body       string `json:"body"`
 		IsInternal bool   `json:"is_internal"`
 	}
@@ -307,23 +307,23 @@ type (
 )
 
 // NewAbiContract Abi type Contract
-func NewAbiContract() AbiA {
-	return AbiA{Type: "Contract"}
+func NewAbiContract() Abi {
+	return Abi{Type: "Contract"}
 }
 
 // NewAbiJSON Abi type Json
-func NewAbiJSON() AbiA {
-	return AbiA{Type: "Json"}
+func NewAbiJSON() Abi {
+	return Abi{Type: "Json"}
 }
 
 // NewAbiHandle Abi type Handle
-func NewAbiHandle() AbiA {
-	return AbiA{Type: "Handle"}
+func NewAbiHandle() Abi {
+	return Abi{Type: "Handle"}
 }
 
 // NewAbiSerialized Abi type Serialized
-func NewAbiSerialized() AbiA {
-	return AbiA{Type: "Serialized"}
+func NewAbiSerialized() Abi {
+	return Abi{Type: "Serialized"}
 }
 
 // NewSignerNone Signer type None

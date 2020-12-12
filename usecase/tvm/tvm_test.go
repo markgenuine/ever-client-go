@@ -3,15 +3,20 @@ package tvm
 import (
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
+	"math/big"
 	"os"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/move-ton/ton-client-go/domain"
 	"github.com/move-ton/ton-client-go/gateway/client"
 	"github.com/move-ton/ton-client-go/usecase/abi"
+	"github.com/move-ton/ton-client-go/usecase/boc"
 	"github.com/move-ton/ton-client-go/usecase/crypto"
+	"github.com/move-ton/ton-client-go/usecase/net"
 	"github.com/move-ton/ton-client-go/usecase/processing"
 	"github.com/stretchr/testify/assert"
 )
@@ -64,19 +69,20 @@ func TestTvm(t *testing.T) {
 		assert.Equal(t, nil, err)
 
 		// # Send grams
-		fileAbi, err = os.Open("../samples/Giver.abi.json")
+		fileAbiG, err := os.Open("../samples/Giver.abi.json")
 		assert.Equal(t, nil, err)
-		byteAbi, err = ioutil.ReadAll(fileAbi)
-		assert.Equal(t, nil, err)
-
-		eventsAbi = domain.AbiContract{}
-		err = json.Unmarshal(byteAbi, &eventsAbi)
+		byteAbiG, err := ioutil.ReadAll(fileAbiG)
 		assert.Equal(t, nil, err)
 
-		giverAbi := domain.NewAbiJSON()
-		giverAbi.Value = eventsAbi
-		callSet.FunctionName = "grant"
-		callSet.Input = json.RawMessage(`{"dest":"` + deployMessage.Address + `"}`)
+		eventsAbiG := domain.AbiContract{}
+		err = json.Unmarshal(byteAbiG, &eventsAbiG)
+		assert.Equal(t, nil, err)
+
+		giverAbi := domain.NewAbiContract()
+		giverAbi.Value = eventsAbiG
+		callSetN := domain.CallSet{}
+		callSetN.FunctionName = "grant"
+		callSetN.Input = json.RawMessage(`{"dest":"` + deployMessage.Address + `"}`)
 		assert.Equal(t, nil, err)
 		procUC := processing.NewProcessing(tvmUC.config, tvmUC.client)
 		_, err = procUC.ProcessMessage(domain.ParamsOfProcessMessage{
@@ -85,20 +91,115 @@ func TestTvm(t *testing.T) {
 				Abi:     giverAbi,
 				Signer:  domain.NewSignerNone(),
 				Address: "0:b61cf024cda7dad90e556d0fafb72c08579d5ebf73a67737317d9f3fc73521c5",
-				CallSet: &callSet}, SendEvents: false})
-		assert.NotEqual(t, nil, err)
+				CallSet: &callSetN}, SendEvents: false})
+		assert.Equal(t, nil, err)
 
 		// # Deploy account
 		_, err = procUC.ProcessMessage(domain.ParamsOfProcessMessage{
 			MessageEncodeParams: &domain.ParamsOfEncodeMessage{
 				Type:      "EncodingParams",
-				Abi:       giverAbi,
+				Abi:       abiValue,
 				Signer:    signerKey,
 				DeploySet: &deploySet,
 				CallSet:   &callSet,
 			}, SendEvents: false})
-		assert.NotEqual(t, nil, err)
+		assert.Equal(t, nil, err)
 
+		// # Get account data
+		time.Sleep(time.Second * 5)
+		netUC := net.NewNet(tvmUC.config, tvmUC.client)
+		filter := fmt.Sprintf(`{"id":{"eq":"%s"}}`, deployMessage.Address)
+		query := domain.ParamsOfWaitForCollection{Collection: "accounts", Filter: json.RawMessage(filter), Result: "id, boc"}
+		valueNet, err := netUC.WaitForCollection(query)
+		assert.Equal(t, nil, err)
+
+		// # Get account balance
+		var (
+			objmap            map[string]json.RawMessage
+			bocV, origBalance string
+		)
+		err = json.Unmarshal(valueNet.Result, &objmap)
+		assert.Equal(t, nil, err)
+
+		err = json.Unmarshal(objmap["boc"], &bocV)
+		assert.Equal(t, nil, err)
+
+		bocUC := boc.NewBoc(tvmUC.config, tvmUC.client)
+		parsed, err := bocUC.ParseAccount(domain.ParamsOfParse{Boc: bocV})
+		err = json.Unmarshal(parsed.Parsed, &objmap)
+		assert.Equal(t, nil, err)
+
+		err = json.Unmarshal(objmap["balance"], &origBalance)
+		assert.Equal(t, nil, err)
+
+		// # Run executor (unlimited balance should not affect account balance)
+		subscribeParams := `{"subscriptionId":"0x1111111111111111111111111111111111111111111111111111111111111111",
+		    "pubkey":"0x2222222222222222222222222222222222222222222222222222222222222222",
+		    "to":"0:3333333333333333333333333333333333333333333333333333333333333333",
+		    "value":"0x123",
+		    "period":"0x456"}`
+		callSetSP := domain.CallSet{FunctionName: "subscribe", Input: json.RawMessage(subscribeParams)}
+		encodeMessage, err := abiUC.EncodeMessage(domain.ParamsOfEncodeMessage{
+			Type:    "EncodingParams",
+			Abi:     abiValue,
+			Signer:  signerKey,
+			Address: deployMessage.Address,
+			CallSet: &callSetSP,
+		})
+		assert.Equal(t, nil, err)
+
+		result, err := tvmUC.RunExecutor(domain.ParamsOfRunExecutor{Message: encodeMessage.Message, Account: domain.AccountForExecutorAccount{Type: "Account", Boc: bocV, UnlimitedBalance: true}, Abi: abiValue})
+		assert.Equal(t, nil, err)
+
+		// # Get account balance again
+		parsed, err = bocUC.ParseAccount(domain.ParamsOfParse{Boc: result.Account})
+		err = json.Unmarshal(parsed.Parsed, &objmap)
+		assert.Equal(t, nil, err)
+
+		var parsedBalanced string
+		err = json.Unmarshal(objmap["balance"], &parsedBalanced)
+		assert.Equal(t, nil, err)
+		assert.Equal(t, origBalance, parsedBalanced)
+
+		// # Run executor in standard mode (limited balance)
+		result, err = tvmUC.RunExecutor(domain.ParamsOfRunExecutor{Message: encodeMessage.Message, Account: domain.AccountForExecutorAccount{Type: "Account", Boc: bocV, UnlimitedBalance: false}, Abi: abiValue})
+		assert.Equal(t, nil, err)
+
+		err = json.Unmarshal(result.Transaction, &objmap)
+		assert.Equal(t, nil, err)
+
+		var inMsg string
+		err = json.Unmarshal(objmap["in_msg"], &inMsg)
+		assert.Equal(t, nil, err)
+		assert.Equal(t, encodeMessage.MessageID, inMsg)
+		resCmp := result.Fees.TotalAccountFees.Cmp(big.NewInt(0))
+		assert.Equal(t, 1, resCmp)
+
+		// # Check subscription
+		callSet = domain.CallSet{FunctionName: "getSubscription", Input: json.RawMessage(`{"subscriptionId":"0x1111111111111111111111111111111111111111111111111111111111111111"}`)}
+		encodedMessage, err := abiUC.EncodeMessage(domain.ParamsOfEncodeMessage{
+			Type:    "EncodingParams",
+			Abi:     abiValue,
+			Address: deployMessage.Address,
+			Signer:  signerKey,
+			CallSet: &callSet,
+		})
+		assert.Equal(t, nil, err)
+
+		result2, err := tvmUC.RunTvm(domain.ParamsOfRunTvm{Message: encodedMessage.Message, Account: result.Account, Abi: abiValue})
+		assert.Equal(t, nil, err)
+
+		err = json.Unmarshal(result2.Decoded.Output, &objmap)
+		assert.Equal(t, nil, err)
+
+		err = json.Unmarshal(objmap["value0"], &objmap)
+		assert.Equal(t, nil, err)
+
+		var addressCmp string
+		err = json.Unmarshal(objmap["pubkey"], &addressCmp)
+		assert.Equal(t, nil, err)
+
+		assert.Equal(t, "0x2222222222222222222222222222222222222222222222222222222222222222", addressCmp)
 	})
 
 	clientMain.Destroy()
@@ -138,5 +239,71 @@ func TestTvm(t *testing.T) {
 		valueRunGet, err = tvmUC.RunGet(domain.ParamsOfRunGet{Account: electorAccount.Account, FunctionName: "unknown_function"})
 		assert.NotEqual(t, nil, err)
 		assert.Equal(t, json.RawMessage(nil), valueRunGet.Output)
+	})
+
+	bocUC := boc.NewBoc(tvmUC.config, tvmUC.client)
+
+	t.Run("TestRunExecutorAccNone", func(t *testing.T) {
+		message := "te6ccgEBAQEAXAAAs0gAV2lB0HI8/VEO/pBKDJJJeoOcIh+dL9JzpmRzM8PfdicAPGNEGwRWGaJsR6UYmnsFVC2llSo1ZZN5mgUnCiHf7ZaUBKgXyAAGFFhgAAAB69+UmQS/LjmiQA=="
+		result, err := tvmUC.RunExecutor(domain.ParamsOfRunExecutor{Message: message, Account: domain.AccountForExecutorNone{Type: "None"}, SkipTransactionCheck: true})
+		assert.Equal(t, nil, err)
+
+		parsed, err := bocUC.ParseAccount(domain.ParamsOfParse{Boc: result.Account})
+		assert.Equal(t, nil, err)
+		var object map[string]json.RawMessage
+		err = json.Unmarshal(parsed.Parsed, &object)
+		assert.Equal(t, nil, err)
+		assert.Equal(t, `"0:f18d106c11586689b11e946269ec1550b69654a8d5964de668149c28877fb65a"`, string(object["id"]))
+		assert.Equal(t, `"Uninit"`, string(object["acc_type_name"]))
+	})
+
+	t.Run("TestRunExecutorAccUninit", func(t *testing.T) {
+		cryptoUC := crypto.NewCrypto(tvmUC.config, tvmUC.client)
+		keypair, err := cryptoUC.GenerateRandomSignKeys()
+		assert.Equal(t, nil, err)
+
+		fileAbi, err := os.Open("../samples/Hello.abi.json")
+		assert.Equal(t, nil, err)
+		byteAbi, err := ioutil.ReadAll(fileAbi)
+		assert.Equal(t, nil, err)
+
+		eventsAbi := domain.AbiContract{}
+		err = json.Unmarshal(byteAbi, &eventsAbi)
+		assert.Equal(t, nil, err)
+
+		abiValue := domain.NewAbiContract()
+		abiValue.Value = eventsAbi
+
+		fileTvc, err := os.Open("../samples/Hello.tvc")
+		assert.Equal(t, nil, err)
+		byteTvc, err := ioutil.ReadAll(fileTvc)
+		assert.Equal(t, nil, err)
+		tvc := base64.StdEncoding.EncodeToString(byteTvc)
+
+		signer := domain.NewSignerKeys()
+		signer.Keys = *keypair
+		deploySet := domain.DeploySet{Tvc: tvc}
+		callSet := domain.CallSet{FunctionName: "constructor"}
+		abiUI := abi.NewAbi(tvmUC.config, tvmUC.client)
+		deployMessage, err := abiUI.EncodeMessage(domain.ParamsOfEncodeMessage{
+			Type:      "EncodingParams",
+			Abi:       abiValue,
+			Signer:    signer,
+			DeploySet: &deploySet,
+			CallSet:   &callSet,
+		})
+		assert.Equal(t, nil, err)
+		accountForExecutor := domain.AccountForExecutorUninit{Type: domain.AccountForExecutorTypeUninit}
+		result, err := tvmUC.RunExecutor(domain.ParamsOfRunExecutor{Message: deployMessage.Message, Account: accountForExecutor})
+		assert.Equal(t, nil, err)
+
+		// # Parse account
+		parsed, err := bocUC.ParseAccount(domain.ParamsOfParse{Boc: result.Account})
+		assert.Equal(t, nil, err)
+		var object map[string]json.RawMessage
+		err = json.Unmarshal(parsed.Parsed, &object)
+		assert.Equal(t, nil, err)
+		assert.Equal(t, `"`+deployMessage.Address+`"`, string(object["id"]))
+		assert.Equal(t, `"Active"`, string(object["acc_type_name"]))
 	})
 }
