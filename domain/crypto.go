@@ -244,7 +244,7 @@ type (
 	ParamsOfMnemonicDeriveSignKeys struct {
 		Phrase     string `json:"phrase"`
 		Path       string `json:"path,omitempty"`
-		Dictionary int    `json:"dictionary"`
+		Dictionary int    `json:"dictionary,omitempty"`
 		WordCount  int    `json:"word_count,omitempty"`
 	}
 
@@ -303,6 +303,55 @@ type (
 		Public string `json:"public"`
 	}
 
+	// ParamsOfChaCha20 ...
+	ParamsOfChaCha20 struct {
+		Data  string `json:"data"`
+		Key   string `json:"key"`
+		Nonce string `json:"nonce"`
+	}
+
+	// ResultOfChaCha20 ...
+	ResultOfChaCha20 struct {
+		Data string `json:"data"`
+	}
+
+	// RegisteredSigningBox ...
+	RegisteredSigningBox struct {
+		Handle SigningBoxHandle
+	}
+
+	// ParamsOfAppSigningBox ...
+	ParamsOfAppSigningBox struct {
+		Type     string `json:"type"`
+		Unsigned string `json:"unsigned,omitempty"`
+	}
+
+	// ResultOfAppSigningBox ...
+	ResultOfAppSigningBox struct {
+		Type      string `json:"type"`
+		PublicKey string `json:"public_key,omitempty"`
+		Signature string `json:"signature,omitempty"`
+	}
+
+	// ResultOfSigningBoxGetPublicKey ...
+	ResultOfSigningBoxGetPublicKey struct {
+		PubKey string `json:"pubkey"`
+	}
+
+	// EventCallbackRegisterSigningBox ...
+	EventCallbackRegisterSigningBox func(event *ParamsOfAppSigningBox)
+
+	// ParamsOfSigningBoxSign ...
+	ParamsOfSigningBoxSign struct {
+		SigningBox SigningBoxHandle `json:"signing_box"`
+		Unsigned   string           `json:"unsigned"`
+	}
+
+	// ResultOfSigningBoxSign ...
+	ResultOfSigningBoxSign struct {
+		Signature string `json:"signature"`
+	}
+
 	// CryptoUseCase ...
 	CryptoUseCase interface {
 		Factorize(poF ParamsOfFactorize) (*ResultOfFactorize, error)
@@ -336,6 +385,12 @@ type (
 		HdkeyXprvDerivePath(hdPD ParamsOfHDKeyDeriveFromXPrvPath) (*ResultOfHDKeyDeriveFromXPrvPath, error)
 		HdkeyXprvSecret(pOHKSFXP ParamsOfHDKeySecretFromXPrv) (*ResultOfHDKeySecretFromXPrv, error)
 		HdkeyXprvPublic(pOHKPFXP ParamsOfHDKeyPublicFromXPrv) (*ResultOfHDKeyPublicFromXPrv, error)
+		Chacha20(pOFCC ParamsOfChaCha20) (*ResultOfChaCha20, error)
+		//RegisterSigningBox(EventCallbackRegisterSigningBox) error
+		GetSigningBox(KeyPair) (*RegisteredSigningBox, error)
+		SigningBoxGetPublicKey(KeyPair) (*RegisteredSigningBox, error)
+		SigningBoxSign(pOSBS ParamsOfSigningBoxSign) (*ResultOfSigningBoxSign, error)
+		// remove_signing_box
 	}
 )
 
@@ -367,4 +422,14 @@ func NewDefaultParamsOfMnemonicDeriveSignKeys() ParamsOfMnemonicDeriveSignKeys {
 // NewDefaultParamsOfHDKeyXPrvFromMnemonic ...
 func NewDefaultParamsOfHDKeyXPrvFromMnemonic() ParamsOfHDKeyXPrvFromMnemonic {
 	return ParamsOfHDKeyXPrvFromMnemonic{Phrase: "", Dictionary: DefaultDictionary, WordCount: DefaultWordCount}
+}
+
+// NewParamsOfAppSigningBoxGetPublicKey ...
+func NewParamsOfAppSigningBoxGetPublicKey() *ParamsOfAppSigningBox {
+	return &ParamsOfAppSigningBox{Type: "GetPublicKey"}
+}
+
+// NewParamsOfAppSigningBoxSign ...
+func NewParamsOfAppSigningBoxSign(unsigned string) *ParamsOfAppSigningBox {
+	return &ParamsOfAppSigningBox{Type: "Sign", Unsigned: unsigned}
 }

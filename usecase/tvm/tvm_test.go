@@ -91,7 +91,7 @@ func TestTvm(t *testing.T) {
 				Abi:     giverAbi,
 				Signer:  domain.NewSignerNone(),
 				Address: "0:b61cf024cda7dad90e556d0fafb72c08579d5ebf73a67737317d9f3fc73521c5",
-				CallSet: &callSetN}, SendEvents: false})
+				CallSet: &callSetN}, SendEvents: false}, nil)
 		assert.Equal(t, nil, err)
 
 		// # Deploy account
@@ -102,7 +102,7 @@ func TestTvm(t *testing.T) {
 				Signer:    signerKey,
 				DeploySet: &deploySet,
 				CallSet:   &callSet,
-			}, SendEvents: false})
+			}, SendEvents: false}, nil)
 		assert.Equal(t, nil, err)
 
 		// # Get account data

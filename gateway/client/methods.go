@@ -19,3 +19,8 @@ func (c *clientGateway) GetBuildInfo() (*domain.ResultOfBuildInfo, error) {
 	err := c.GetResult("client.build_info", nil, result)
 	return result, err
 }
+
+func (c *clientGateway) ResolveAppRequest(pORAR *domain.ParamsOfResolveAppRequest) error {
+	_, err := c.GetResponse("client.resolve_app_request", pORAR)
+	return err
+}
