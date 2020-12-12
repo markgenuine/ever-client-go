@@ -71,7 +71,7 @@ type (
 	// FunctionHeader ...
 	FunctionHeader struct {
 		Expire int    `json:"expire,omitempty"`
-		Time   int    `json:"time,omitempty"`
+		Time   int    `json:"time,omitempty"` //big.Int
 		PubKey string `json:"pubkey,omitempty"`
 	}
 
@@ -118,49 +118,50 @@ type (
 		Value interface{} `json:"value"`
 	}
 
-	// AbiFunctions ...
-	AbiFunctions struct {
-		Name    string     `json:"name"`
-		Inputs  []AbiParam `json:"inputs"`
-		Outputs []AbiParam `json:"outputs"`
-		ID      int        `json:"id,omitempty"`
+	// AbiParam ...
+	AbiParam struct {
+		Name       string      `json:"name"`
+		Type       string      `json:"type"`
+		Components []*AbiParam `json:"components,omitempty"`
 	}
 
 	// AbiEvent ...
 	AbiEvent struct {
 		Name   string     `json:"name"`
 		Inputs []AbiParam `json:"inputs"`
-		ID     int        `json:"id,omitempty"`
+		ID     string     `json:"id,omitempty"`
 	}
 
 	// AbiData ...
 	AbiData struct {
-		Key        string      `json:"key"`
+		Key        string      `json:"key"` //bigInt
 		Name       string      `json:"name"`
-		ParamType  string      `json:"type"`
+		Type       string      `json:"type"`
 		Components []*AbiParam `json:"components,omitempty"`
 	}
 
-	// AbiParam ...
-	AbiParam struct {
-		Name       string      `json:"name"`
-		ParamType  string      `json:"type"`
-		Components []*AbiParam `json:"components,omitempty"`
+	// AbiFunctions ...
+	AbiFunctions struct {
+		Name    string     `json:"name"`
+		Inputs  []AbiParam `json:"inputs"`
+		Outputs []AbiParam `json:"outputs"`
+		ID      string     `json:"id,omitempty"`
 	}
 
 	// AbiContract ...
 	AbiContract struct {
-		AbiVersion int            `json:"ABI version,omitempty"`
-		Header     []string       `json:"header,omitempty"`
-		Functions  []AbiFunctions `json:"functions"`
-		Events     []*AbiEvent    `json:"events,omitempty"`
-		Data       []*AbiData     `json:"data,omitempty"`
+		AbiVersion int `json:"ABI version,omitempty"`
+		//AbiVersion int `json:"abi_version,omitempty"`
+		Header    []string        `json:"header,omitempty"`
+		Functions []*AbiFunctions `json:"functions,omitempty"`
+		Events    []*AbiEvent     `json:"events,omitempty"`
+		Data      []*AbiData      `json:"data,omitempty"`
 	}
 
 	// StateInitSourceM Deploy message.
 	StateInitSourceM struct {
 		Type   StateInitSourceType `json:"type"`
-		Source interface{}         `json:"source"`
+		Source interface{}         `json:"source"` //MessageSource
 	}
 
 	// StateInitSourceSI State init data
@@ -182,7 +183,7 @@ type (
 	// MessageSourceEncoded ...
 	MessageSourceEncoded struct {
 		Type    MessageSourceType `json:"type"`
-		Message string            `json:"message,omitempty"`
+		Message string            `json:"message,omitempty"` //omitempty?s
 		Abi     *Abi              `json:"abi,omitempty"`
 	}
 
@@ -230,7 +231,7 @@ type (
 	ParamsOfEncodeMessage struct {
 		Type               MessageSourceType `json:"type,omitempty"`
 		Abi                Abi               `json:"abi"`
-		Address            string            `json:"address"`
+		Address            string            `json:"address,omitempty"`
 		DeploySet          *DeploySet        `json:"deploy_set,omitempty"`
 		CallSet            *CallSet          `json:"call_set,omitempty"`
 		Signer             interface{}       `json:"signer"`
@@ -269,7 +270,7 @@ type (
 	DecodedMessageBody struct {
 		BodyType MessageBodyType `json:"body_type"`
 		Name     string          `json:"name"`
-		Value    json.RawMessage `json:"value"`
+		Value    json.RawMessage `json:"value,omitempty"`
 		Header   *FunctionHeader `json:"header,omitempty"`
 	}
 
@@ -283,8 +284,8 @@ type (
 	// ParamsOfEncodeAccount ...
 	ParamsOfEncodeAccount struct {
 		StateInit   interface{} `json:"state_init"`
-		Balance     string      `json:"balance,omitempty"`
-		LastTransLt string      `json:"last_trans_lt,omitempty"`
+		Balance     string      `json:"balance,omitempty"`       //big.Int
+		LastTransLt string      `json:"last_trans_lt,omitempty"` //big.Int
 		LastPaid    int         `json:"last_paid,omitempty"`
 	}
 

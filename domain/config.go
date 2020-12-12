@@ -24,7 +24,6 @@ type (
 		MnemonicDictionary  int    `toml:"mnemonic_dictionary" json:"mnemonic_dictionary,omitempty"`
 		MnemonicWordCount   int    `toml:"mnemonic_word_count" json:"mnemonic_word_count,omitempty"`
 		HdkeyDerivationPath string `toml:"hdkey_derivation_path" json:"hdkey_derivation_path,omitempty"`
-		HdkeyCompliant      bool   `toml:"hdkey_compliant" json:"hdkey_compliant,omitempty"`
 	}
 
 	// AbiConfig ...
@@ -51,7 +50,6 @@ func NewDefaultConfig(chainID int) Config {
 			MnemonicDictionary:  1,
 			MnemonicWordCount:   12,
 			HdkeyDerivationPath: "",
-			HdkeyCompliant:      true,
 		},
 		Abi: &AbiConfig{
 			Workchain:                          0,

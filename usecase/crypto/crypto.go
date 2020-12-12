@@ -237,3 +237,53 @@ func (c *crypto) HdkeyXprvPublic(pOHKPFXP domain.ParamsOfHDKeyPublicFromXPrv) (*
 	err := c.client.GetResult("crypto.hdkey_public_from_xprv", pOHKPFXP, result)
 	return result, err
 }
+
+// Chacha20 method crypto.chacha20
+func (c *crypto) Chacha20(pOFCC domain.ParamsOfChaCha20) (*domain.ResultOfChaCha20, error) {
+	result := new(domain.ResultOfChaCha20)
+	err := c.client.GetResult("crypto.hdkey_secret_from_xprv", pOFCC, result)
+	return result, err
+}
+
+// RegisterSigningBox method crypto.register_signing_box
+func (c *crypto) RegisterSigningBox(pOASB domain.ParamsOfAppSigningBox, callback domain.EventCallbackRegisterSigningBox) error {
+	// result := new(domain.RegisteredSigningBox)
+	// err := c.client.GetResult("crypto.hdkey_secret_from_xprv", pOASB, result)
+	// return result, err
+	// responses, err := c.client.Request("crypto.register_signing_box", pOASB)
+	// if err != nil {
+	// 	return err
+	// }
+
+	// responses = domain.DynBufferForResponses(responses)
+
+	// return domain.HandleEvents(responses, callback, &domain.RegisteredSigningBox)
+	return nil
+}
+
+// GetSigningBox ...
+func (c *crypto) GetSigningBox(keypair domain.KeyPair) (*domain.RegisteredSigningBox, error) {
+	result := new(domain.RegisteredSigningBox)
+	err := c.client.GetResult("crypto.get_signing_box", keypair, result)
+	return result, err
+}
+
+// SigningBoxGetPublicKey ...
+func (c *crypto) SigningBoxGetPublicKey(keypair domain.KeyPair) (*domain.RegisteredSigningBox, error) {
+	result := new(domain.RegisteredSigningBox)
+	err := c.client.GetResult("crypto.signing_box_get_public_key", keypair, result)
+	return result, err
+}
+
+// SigningBoxSign ...
+func (c *crypto) SigningBoxSign(pOSBS domain.ParamsOfSigningBoxSign) (*domain.ResultOfSigningBoxSign, error) {
+	result := new(domain.ResultOfSigningBoxSign)
+	err := c.client.GetResult("crypto.signing_box_sign", pOSBS, result)
+	return result, err
+}
+
+// SigningBoxSign ...
+func (c *crypto) RemoveSigningBox(rSB domain.RegisteredSigningBox) error {
+	_, err := c.client.GetResponse("client.resolve_app_request", rSB)
+	return err
+}

@@ -33,6 +33,15 @@ type (
 	// ProcessingEventType ...
 	ProcessingEventType string
 
+	// ProcessingEvent ...
+	ProcessingEvent struct {
+		Type         ProcessingEventType `json:"type"`
+		Error        ClientError         `json:"error"`
+		ShardBlockID string              `json:"shard_block_id"`
+		MessageID    string              `json:"message_id"`
+		Message      string              `json:"message"`
+	}
+
 	//ProcessingEventWFFB - WillFetchFirstBlock
 	ProcessingEventWFFB struct {
 		Type ProcessingEventType `json:"type"`
@@ -49,7 +58,7 @@ type (
 		Type         ProcessingEventType `json:"type"`
 		ShardBlockID string              `json:"shard_block_id"`
 		MessageID    string              `json:"message_id"`
-		Message      string              `json:"Message"`
+		Message      string              `json:"message"`
 	}
 
 	//ProcessingEventDS - DidSend
@@ -57,7 +66,7 @@ type (
 		Type         ProcessingEventType `json:"type"`
 		ShardBlockID string              `json:"shard_block_id"`
 		MessageID    string              `json:"message_id"`
-		Message      string              `json:"Message"`
+		Message      string              `json:"message"`
 	}
 
 	//ProcessingEventSF - SendFailed
@@ -65,7 +74,7 @@ type (
 		Type         ProcessingEventType `json:"type"`
 		ShardBlockID string              `json:"shard_block_id"`
 		MessageID    string              `json:"message_id"`
-		Message      string              `json:"Message"`
+		Message      string              `json:"message"`
 		Error        ClientError         `json:"error"`
 	}
 
@@ -74,7 +83,7 @@ type (
 		Type         ProcessingEventType `json:"type"`
 		ShardBlockID string              `json:"shard_block_id"`
 		MessageID    string              `json:"message_id"`
-		Message      string              `json:"Message"`
+		Message      string              `json:"message"`
 	}
 
 	//ProcessingEventFNBF - FetchNextBlockFailed
@@ -82,7 +91,7 @@ type (
 		Type         ProcessingEventType `json:"type"`
 		ShardBlockID string              `json:"shard_block_id"`
 		MessageID    string              `json:"message_id"`
-		Message      string              `json:"Message"`
+		Message      string              `json:"message"`
 		Error        ClientError         `json:"error"`
 	}
 
@@ -90,14 +99,14 @@ type (
 	ProcessingEventME struct {
 		Type      ProcessingEventType `json:"type"`
 		MessageID string              `json:"message_id"`
-		Message   string              `json:"Message"`
+		Message   string              `json:"message"`
 		Error     ClientError         `json:"error"`
 	}
 
 	// ParamsOfSendMessage ...
 	ParamsOfSendMessage struct {
 		Message    string `json:"message"`
-		Abi        AbiA   `json:"abi,omitempty"`
+		Abi        Abi    `json:"abi,omitempty"`
 		SendEvents bool   `json:"send_events"`
 	}
 
@@ -108,7 +117,7 @@ type (
 
 	// ParamsOfWaitForTransaction ...
 	ParamsOfWaitForTransaction struct {
-		Abi          AbiA   `json:"abi,omitempty"`
+		Abi          Abi    `json:"abi,omitempty"`
 		Message      string `json:"message"`
 		ShardBlockID string `json:"shard_block_id"`
 		SendEvents   bool   `json:"send_events"`
@@ -134,11 +143,15 @@ type (
 		SendEvents          bool                   `json:"send_events"`
 	}
 
+	// EventCallback ...
+	//change!!!!
+	EventCallback func(event *ProcessingEvent) //*ProcessingEvent ???
+
 	// ProcessingUseCase ...
 	ProcessingUseCase interface {
-		SendMessage(ParamsOfSendMessage) (*ResultOfSendMessage, error)
-		WaitForTransaction(ParamsOfWaitForTransaction) (*ResultOfProcessMessage, error)
-		ProcessMessage(ParamsOfProcessMessage) (*ResultOfProcessMessage, error)
+		SendMessage(ParamsOfSendMessage, EventCallback) (*ResultOfSendMessage, error)
+		WaitForTransaction(ParamsOfWaitForTransaction, EventCallback) (*ResultOfProcessMessage, error)
+		ProcessMessage(ParamsOfProcessMessage, EventCallback) (*ResultOfProcessMessage, error)
 	}
 )
 

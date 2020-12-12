@@ -2,6 +2,7 @@ package domain
 
 import (
 	"encoding/json"
+	"fmt"
 )
 
 type (
@@ -18,6 +19,13 @@ type (
 		Code  int
 		Data  []byte
 		Error error
+	}
+
+	// AppRequestResult ...
+	AppRequestResult struct {
+		Type   string      `json:"type"`
+		Text   string      `json:"text,omitempty"`
+		Result interface{} `json:"result,omitempty"`
 	}
 
 	// ResultOfVersion ...
@@ -73,6 +81,12 @@ type (
 		GitCommit string `json:"git_commit"`
 	}
 
+	// ParamsOfResolveAppRequest ...
+	ParamsOfResolveAppRequest struct {
+		AppRequestID int              `json:"app_request_id"`
+		Result       AppRequestResult `json:"result"`
+	}
+
 	// ClientGateway ...
 	ClientGateway interface {
 		Destroy()
@@ -82,6 +96,7 @@ type (
 		Version() (*ResultOfVersion, error)
 		GetAPIReference() (*ResultOfGetAPIReference, error)
 		GetBuildInfo() (*ResultOfBuildInfo, error)
+		ResolveAppRequest(*ParamsOfResolveAppRequest) error
 	}
 )
 
@@ -124,4 +139,30 @@ func DynBufferForResponses(in <-chan *ClientResponse) <-chan *ClientResponse {
 	}()
 
 	return out
+}
+
+// HandleEvents ...
+func HandleEvents(responses <-chan *ClientResponse, callback EventCallback, result interface{}) error {
+	for r := range responses {
+		switch r.Code {
+		case 100:
+			event := &ProcessingEvent{}
+			if err := json.Unmarshal(r.Data, event); err != nil {
+				panic(err)
+			}
+			callback(event)
+		case 1:
+			return r.Error
+		case 0:
+			if err := json.Unmarshal(r.Data, result); err != nil {
+				panic(err)
+			}
+
+			return nil
+		default:
+			panic(fmt.Errorf("unknown response type code %v", r.Code))
+		}
+	}
+
+	return nil
 }
