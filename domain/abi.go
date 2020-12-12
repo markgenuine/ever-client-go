@@ -134,7 +134,7 @@ type (
 
 	// AbiData ...
 	AbiData struct {
-		Key        string      `json:"key"` //bigInt
+		Key        int         `json:"key"` //bigInt
 		Name       string      `json:"name"`
 		Type       string      `json:"type"`
 		Components []*AbiParam `json:"components,omitempty"`
