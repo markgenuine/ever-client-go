@@ -52,8 +52,9 @@ export DYLD_LIBRARY_PATH=/path-with-lib/
 
 Or use "-exec" for example:
 ```
+go build
 go run  -exec "env DYLD_LIBRARY_PATH=/path-with-lib/" main.go
-go test -exec "env DYLD_LIBRARY_PATH=/path-with-lib/ " -v
+go test -exec "env DYLD_LIBRARY_PATH=/path-with-lib/ ./... " -v
 ```
 
 ## Tests
