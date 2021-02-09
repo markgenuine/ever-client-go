@@ -1,5 +1,8 @@
 package domain
 
+// DebotErrorCode ...
+var DebotErrorCode map[string]int
+
 type (
 	// DebotHandle ...
 	DebotHandle = int
@@ -34,8 +37,8 @@ type (
 		DebotAddr string       `json:"debot_addr,omitempty"`
 	}
 
-	// ResultOfAppDebotBractionowser ...
-	ResultOfAppDebotBractionowser struct {
+	// ResultOfAppDebotBrowser ...
+	ResultOfAppDebotBrowser struct {
 		Type       string            `json:"type"`
 		Value      string            `json:"value,omitmepty"`
 		SigningBox *SigningBoxHandle `json:"signing_box,omitempty"`
@@ -53,5 +56,69 @@ type (
 	}
 
 	// DebotUseCase ...
-	DebotUseCase interface{}
+	DebotUseCase interface {
+		Start(*ParamsOfStart, AppDebotBrowser) (*RegisteredDebot, error)
+		Fetch(*ParamsOfFetch, AppDebotBrowser) (*RegisteredDebot, error)
+		Execute(*ParamsOfExecute) error
+		Remove(*RegisteredDebot) error
+	}
 )
+
+func init() {
+	DebotErrorCode = map[string]int{
+		"DebotStartFailed":     801,
+		"DebotFetchFailed":     802,
+		"DebotExecutionFailed": 803,
+		"DebotInvalidHandle":   804,
+	}
+}
+
+// ParamsOfAppDebotBrowserLogNew ...
+func ParamsOfAppDebotBrowserLogNew() *ParamsOfAppDebotBrowser {
+	return &ParamsOfAppDebotBrowser{Type: "Log"}
+}
+
+// ParamsOfAppDebotBrowserSwitchNew ...
+func ParamsOfAppDebotBrowserSwitchNew() *ParamsOfAppDebotBrowser {
+	return &ParamsOfAppDebotBrowser{Type: "Switch"}
+}
+
+// ParamsOfAppDebotBrowserSwitchCompletedNew ...
+func ParamsOfAppDebotBrowserSwitchCompletedNew() *ParamsOfAppDebotBrowser {
+	return &ParamsOfAppDebotBrowser{Type: "SwitchCompleted"}
+}
+
+// ParamsOfAppDebotBrowserShowActionNew...
+func ParamsOfAppDebotBrowserShowActionNew() *ParamsOfAppDebotBrowser {
+	return &ParamsOfAppDebotBrowser{Type: "ShowAction"}
+}
+
+// ParamsOfAppDebotBrowserInputNew
+func ParamsOfAppDebotBrowserInputNew() *ParamsOfAppDebotBrowser {
+	return &ParamsOfAppDebotBrowser{Type: "Input"}
+}
+
+// ParamsOfAppDebotBrowserGetSigningBoxNew
+func ParamsOfAppDebotBrowserGetSigningBoxNew() *ParamsOfAppDebotBrowser {
+	return &ParamsOfAppDebotBrowser{Type: "GetSigningBox"}
+}
+
+// ParamsOfAppDebotBrowserInvokeDebotNew
+func ParamsOfAppDebotBrowserInvokeDebotNew() *ParamsOfAppDebotBrowser {
+	return &ParamsOfAppDebotBrowser{Type: "InvokeDebot"}
+}
+
+// ResultOfAppDebotBrowserInput
+func ResultOfAppDebotBrowserInput() *ResultOfAppDebotBrowser {
+	return &ResultOfAppDebotBrowser{Type: "Input"}
+}
+
+// ResultOfAppDebotBrowserGetSigningBox
+func ResultOfAppDebotBrowserGetSigningBox() *ResultOfAppDebotBrowser {
+	return &ResultOfAppDebotBrowser{Type: "GetSigningBox"}
+}
+
+// ResultOfAppDebotBrowserInvokeDebot
+func ResultOfAppDebotBrowserInvokeDebot() *ResultOfAppDebotBrowser {
+	return &ResultOfAppDebotBrowser{Type: "InvokeDebot"}
+}

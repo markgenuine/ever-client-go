@@ -23,27 +23,27 @@ func NewNet(
 }
 
 // QueryCollection method net.query_collection
-func (n *net) QueryCollection(pOQC domain.ParamsOfQueryCollection) (*domain.ResultOfQueryCollection, error) {
+func (n *net) QueryCollection(pOQC *domain.ParamsOfQueryCollection) (*domain.ResultOfQueryCollection, error) {
 	result := new(domain.ResultOfQueryCollection)
 	err := n.client.GetResult("net.query_collection", pOQC, result)
 	return result, err
 }
 
 // WaitForCollection net.wait_for_collection
-func (n *net) WaitForCollection(pOWFC domain.ParamsOfWaitForCollection) (*domain.ResultOfWaitForCollection, error) {
+func (n *net) WaitForCollection(pOWFC *domain.ParamsOfWaitForCollection) (*domain.ResultOfWaitForCollection, error) {
 	result := new(domain.ResultOfWaitForCollection)
 	err := n.client.GetResult("net.wait_for_collection", pOWFC, result)
 	return result, err
 }
 
 // Unsubscribe net.unsubscribe
-func (n *net) Unsubscribe(rOSC domain.ResultOfSubscribeCollection) error {
+func (n *net) Unsubscribe(rOSC *domain.ResultOfSubscribeCollection) error {
 	_, err := n.client.GetResponse("net.unsubscribe", rOSC)
 	return err
 }
 
 // SubscribeCollection method net.subscribe_collection
-func (n *net) SubscribeCollection(pOSC domain.ParamsOfSubscribeCollection) (<-chan interface{}, *domain.ResultOfSubscribeCollection, error) {
+func (n *net) SubscribeCollection(pOSC *domain.ParamsOfSubscribeCollection) (<-chan interface{}, *domain.ResultOfSubscribeCollection, error) {
 	result := new(domain.ResultOfSubscribeCollection)
 	responses, err := n.client.Request("net.subscribe_collection", pOSC)
 	if err != nil {

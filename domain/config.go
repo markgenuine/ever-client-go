@@ -11,11 +11,13 @@ type (
 	// Network ...
 	Network struct {
 		ServerAddress            string `toml:"server_address" json:"server_address,omitempty"`
+		Endpoints []string `toml:"endpoints" json:"endpoints,omitempty"`
 		NetworkRetriesCount      int    `toml:"network_retries_count" json:"network_retries_count,omitempty"`
 		MessageRetriesCount      int    `toml:"message_retries_count" json:"message_retries_count,omitempty"`
 		MessageProcessingTimeout int    `toml:"message_processing_timeout" json:"message_processing_timeout,omitempty"`
 		WaitForTimeout           int    `toml:"wait_for_timeout" json:"wait_for_timeout,omitempty"`
 		OutOfSyncThreshold       int    `toml:"out_of_sync_threshold" json:"out_of_sync_threshold,omitempty"`
+		ReconnectTimeout int `toml:"reconnect_timeout" json:"reconnect_timeout,omitempty"`
 		AccessKey                string `toml:"access_key" json:"access_key,omitempty"`
 	}
 

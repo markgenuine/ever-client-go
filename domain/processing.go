@@ -3,7 +3,6 @@ package domain
 import "encoding/json"
 
 const (
-
 	// PEWillFetchFirstBlock ...
 	PEWillFetchFirstBlock ProcessingEventType = "WillFetchFirstBlock"
 
@@ -28,6 +27,9 @@ const (
 	// PEMessageExpired ...
 	PEMessageExpired ProcessingEventType = "MessageExpired"
 )
+
+// ProcessingErrorCode ...
+var ProcessingErrorCode map[string]int
 
 type (
 	// ProcessingEventType ...
@@ -143,17 +145,34 @@ type (
 		SendEvents          bool                   `json:"send_events"`
 	}
 
-	// EventCallback ...
-	//change!!!!
-	EventCallback func(event *ProcessingEvent) //*ProcessingEvent ???
+	// EventCallback
+	EventCallback func(event *ProcessingEvent)
 
 	// ProcessingUseCase ...
 	ProcessingUseCase interface {
-		SendMessage(ParamsOfSendMessage, EventCallback) (*ResultOfSendMessage, error)
-		WaitForTransaction(ParamsOfWaitForTransaction, EventCallback) (*ResultOfProcessMessage, error)
-		ProcessMessage(ParamsOfProcessMessage, EventCallback) (*ResultOfProcessMessage, error)
+		SendMessage(*ParamsOfSendMessage, EventCallback) (*ResultOfSendMessage, error)
+		WaitForTransaction(*ParamsOfWaitForTransaction, EventCallback) (*ResultOfProcessMessage, error)
+		ProcessMessage(*ParamsOfProcessMessage, EventCallback) (*ResultOfProcessMessage, error)
 	}
 )
+
+func init() {
+	ProcessingErrorCode = map[string]int{
+		"MessageAlreadyExpired          ": 501,
+		"MessageHasNotDestinationAddress": 502,
+		"CanNotBuildMessageCell         ": 503,
+		"FetchBlockFailed               ": 504,
+		"SendMessageFailed              ": 505,
+		"InvalidMessageBoc              ": 506,
+		"MessageExpired                 ": 507,
+		"TransactionWaitTimeout         ": 508,
+		"InvalidBlockReceived           ": 509,
+		"CanNotCheckBlockShard          ": 510,
+		"BlockNotFound                  ": 511,
+		"InvalidData                    ": 512,
+		"ExternalSignerMustNotBeUsed    ": 513,
+	}
+}
 
 // NewProcEventWFFB - ProcessingEvent, type: WillFetchFirstBlock
 func NewProcEventWFFB() ProcessingEventWFFB {

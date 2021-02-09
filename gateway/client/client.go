@@ -19,7 +19,7 @@ import (
 
 const (
 	// VersionLibSDK ...
-	VersionLibSDK = "1.2.0"
+	VersionLibSDK = "1.5.0"
 )
 
 var mainStore = NewStore()
@@ -174,3 +174,4 @@ func (c *clientGateway) GetResponse(method string, paramIn interface{}) ([]byte,
 		}
 	}
 }
+

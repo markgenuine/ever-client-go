@@ -12,6 +12,7 @@ type Manager interface {
 	DeleteRequestID(int)
 	GetChannels(requestID int, delete bool) (chan<- *domain.ClientResponse, <-chan struct{}, bool)
 }
+
 type multiplexer struct {
 	sync.Locker
 	requestIDCounter int

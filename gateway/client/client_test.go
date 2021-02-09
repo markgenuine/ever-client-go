@@ -28,7 +28,7 @@ func Test(t *testing.T) {
 		t.Run("TestBuildInfo", func(t *testing.T) {
 			buildInfo, err := client.GetBuildInfo()
 			assert.Equal(t, nil, err)
-			assert.Equal(t, 0, buildInfo.BuildNumber)
+			assert.Equal(t, 1002000, buildInfo.BuildNumber)
 		})
 	})
 }
