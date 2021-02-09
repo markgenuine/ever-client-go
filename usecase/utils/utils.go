@@ -18,7 +18,7 @@ func NewUtils(
 	}
 }
 
-func (u *utils) ConverAddress(pOCA domain.ParamsOfConvertAddress) (*domain.ResultOfConvertAddress, error) {
+func (u *utils) ConvertAddress(pOCA *domain.ParamsOfConvertAddress) (*domain.ResultOfConvertAddress, error) {
 	result := new(domain.ResultOfConvertAddress)
 	err := u.client.GetResult("utils.convert_address", pOCA, result)
 	return result, err

@@ -1,6 +1,9 @@
 package domain
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"math/big"
+)
 
 const (
 	// SignNone ...
@@ -49,6 +52,9 @@ const (
 	MessageSourceTypeEncodingParams MessageSourceType = "EncodingParams"
 )
 
+// AbiErrorCode ...
+var AbiErrorCode map[string]int
+
 type (
 	// AbiHandle ...
 	AbiHandle int
@@ -70,9 +76,9 @@ type (
 
 	// FunctionHeader ...
 	FunctionHeader struct {
-		Expire int    `json:"expire,omitempty"`
-		Time   int    `json:"time,omitempty"` //big.Int
-		PubKey string `json:"pubkey,omitempty"`
+		Expire int      `json:"expire,omitempty"`
+		Time   *big.Int `json:"time,omitempty"`
+		PubKey string   `json:"pubkey,omitempty"`
 	}
 
 	// CallSet ...
@@ -134,7 +140,7 @@ type (
 
 	// AbiData ...
 	AbiData struct {
-		Key        int         `json:"key"` //bigInt
+		Key        *big.Int    `json:"key"`
 		Name       string      `json:"name"`
 		Type       string      `json:"type"`
 		Components []*AbiParam `json:"components,omitempty"`
@@ -284,8 +290,8 @@ type (
 	// ParamsOfEncodeAccount ...
 	ParamsOfEncodeAccount struct {
 		StateInit   interface{} `json:"state_init"`
-		Balance     string      `json:"balance,omitempty"`       //big.Int
-		LastTransLt string      `json:"last_trans_lt,omitempty"` //big.Int
+		Balance     *big.Int    `json:"balance,omitempty"`
+		LastTransLt *big.Int    `json:"last_trans_lt,omitempty"`
 		LastPaid    int         `json:"last_paid,omitempty"`
 	}
 
@@ -297,15 +303,31 @@ type (
 
 	//AbiUseCase ...
 	AbiUseCase interface {
-		EncodeMessageBody(pOEMB ParamsOfEncodeMessageBody) (*ResultOfEncodeMessageBody, error)
-		AttachSignatureToMessageBody(pOASTMB ParamsOfAttachSignatureToMessageBody) (*ResultOfAttachSignatureToMessageBody, error)
-		EncodeMessage(pOEM ParamsOfEncodeMessage) (*ResultOfEncodeMessage, error)
-		AttachSignature(pOAS ParamsOfAttachSignature) (*ResultOfAttachSignature, error)
-		DecodeMessage(pODM ParamsOfDecodeMessage) (*DecodedMessageBody, error)
-		DecodeMessageBody(pODMB ParamsOfDecodeMessageBody) (*DecodedMessageBody, error)
-		EncodeAccount(pOEA ParamsOfEncodeAccount) (*ResultOfEncodeAccount, error)
+		EncodeMessageBody(*ParamsOfEncodeMessageBody) (*ResultOfEncodeMessageBody, error)
+		AttachSignatureToMessageBody(*ParamsOfAttachSignatureToMessageBody) (*ResultOfAttachSignatureToMessageBody, error)
+		EncodeMessage(*ParamsOfEncodeMessage) (*ResultOfEncodeMessage, error)
+		AttachSignature(*ParamsOfAttachSignature) (*ResultOfAttachSignature, error)
+		DecodeMessage(*ParamsOfDecodeMessage) (*DecodedMessageBody, error)
+		DecodeMessageBody(*ParamsOfDecodeMessageBody) (*DecodedMessageBody, error)
+		EncodeAccount(*ParamsOfEncodeAccount) (*ResultOfEncodeAccount, error)
 	}
 )
+
+func init() {
+	AbiErrorCode = map[string]int{
+		"RequiredAddressMissingForEncodeMessage":    301,
+		"RequiredCallSetMissingForEncodeMessage":    302,
+		"InvalidJson":                               303,
+		"InvalidMessage":                            304,
+		"EncodeDeployMessageFailed":                 305,
+		"EncodeRunMessageFailed":                    306,
+		"AttachSignatureFailed":                     307,
+		"InvalidTvcImage":                           308,
+		"RequiredPublicKeyMissingForFunctionHeader": 309,
+		"InvalidSigner":                             310,
+		"InvalidAbi":                                311,
+	}
+}
 
 // NewAbiContract Abi type Contract
 func NewAbiContract() Abi {

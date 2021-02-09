@@ -48,7 +48,7 @@ type (
 
 	//UtilsUseCase ...
 	UtilsUseCase interface {
-		ConverAddress(pOCA ParamsOfConvertAddress) (*ResultOfConvertAddress, error)
+		ConvertAddress(*ParamsOfConvertAddress) (*ResultOfConvertAddress, error)
 	}
 )
 

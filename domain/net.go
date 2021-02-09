@@ -10,6 +10,9 @@ const (
 	SortDirectionDESC = "DESC"
 )
 
+// NetErrorCode ...
+var NetErrorCode map[string]int
+
 type (
 	// OrderBy ...
 	OrderBy struct {
@@ -58,12 +61,30 @@ type (
 
 	// NetUseCase ...
 	NetUseCase interface {
-		QueryCollection(ParamsOfQueryCollection) (*ResultOfQueryCollection, error)
-		WaitForCollection(ParamsOfWaitForCollection) (*ResultOfWaitForCollection, error)
-		Unsubscribe(ResultOfSubscribeCollection) error
-		SubscribeCollection(ParamsOfSubscribeCollection) (<-chan interface{}, *ResultOfSubscribeCollection, error)
+		QueryCollection(*ParamsOfQueryCollection) (*ResultOfQueryCollection, error)
+		WaitForCollection(*ParamsOfWaitForCollection) (*ResultOfWaitForCollection, error)
+		Unsubscribe(*ResultOfSubscribeCollection) error
+		SubscribeCollection(*ParamsOfSubscribeCollection) (<-chan interface{}, *ResultOfSubscribeCollection, error)
 	}
 )
+
+func init() {
+	
+	NetErrorCode = map[string]int{
+		"QueryFailed":  601,
+		"SubscribeFailed": 602,
+		"WaitForFailed": 603,
+		"GetSubscriptionResultFailed": 604,
+		"InvalidServerResponse": 605,
+		"ClockOutOfSync": 606,
+		"WaitForTimeout": 607,
+		"GraphqlError": 608,
+		"NetworkModuleSuspended": 609,
+		"WebsocketDisconnected": 610,
+		"NotSupported": 611,
+		"NoEndpointsProvided": 612,
+	}	
+}
 
 func getSortDirection() map[int]string {
 	return map[int]string{

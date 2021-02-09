@@ -5,6 +5,9 @@ import (
 	"fmt"
 )
 
+//ClientErrorCode ...
+var ClientErrorCode map[string]int
+
 type (
 
 	// ClientError ...
@@ -87,18 +90,74 @@ type (
 		Result       AppRequestResult `json:"result"`
 	}
 
+	//ParamsOfAppRequest ...
+	ParamsOfAppRequest struct {
+		AppRequestID int `json:"app_request_id"`
+		RequestData json.RawMessage `json:"request_data"`
+	}
+
 	// ClientGateway ...
 	ClientGateway interface {
 		Destroy()
-		GetResult(method string, paramIn interface{}, resultStruct interface{}) error
-		Request(method string, paramsIn interface{}) (<-chan *ClientResponse, error)
-		GetResponse(method string, paramIn interface{}) ([]byte, error)
-		Version() (*ResultOfVersion, error)
+		GetResult(string, interface{}, interface{}) error
+		Request(string, interface{}) (<-chan *ClientResponse, error)
+		GetResponse(string, interface{}) ([]byte, error)
 		GetAPIReference() (*ResultOfGetAPIReference, error)
+		Version() (*ResultOfVersion, error)
 		GetBuildInfo() (*ResultOfBuildInfo, error)
 		ResolveAppRequest(*ParamsOfResolveAppRequest) error
 	}
+
+	//AppSigningBox ...
+	AppSigningBox interface {
+		Request(ParamsOfAppSigningBox) (ResultOfAppSigningBox, error)
+		Notify(ParamsOfAppSigningBox)
+	}
+
+	//AppDebotBrowser ...
+	AppDebotBrowser interface {
+		Request(ParamsOfAppDebotBrowser) (ResultOfAppDebotBrowser, error)
+		Notify(ParamsOfAppDebotBrowser)
+	}
 )
+
+func init() {
+	ClientErrorCode = map[string]int{
+		"NotImplemented":                      1,
+		"InvalidHex":                          2,
+		"InvalidBase64":                       3,
+		"InvalidAddress":                      4,
+		"CallbackParamsCantBeConvertedToJson": 5,
+		"WebsocketConnectError":               6,
+		"WebsocketReceiveError":               7,
+		"WebsocketSendError":                  8,
+		"HttpClientCreateError":               9,
+		"HttpRequestCreateError":              10,
+		"HttpRequestSendError":                11,
+		"HttpRequestParseError":               12,
+		"CallbackNotRegistered":               13,
+		"NetModuleNotInit":                    14,
+		"InvalidConfig":                       15,
+		"CannotCreateRuntime":                 16,
+		"InvalidContextHandle":                17,
+		"CannotSerializeResult":               18,
+		"CannotSerializeError":                19,
+		"CannotConvertJsValueToJson":          20,
+		"CannotReceiveSpawnedResult":          21,
+		"SetTimerError":                       22,
+		"InvalidParams":                       23,
+		"ContractsAddressConversionFailed":    24,
+		"UnknownFunction":                     25,
+		"AppRequestError":                     26,
+		"NoSuchRequest":                       27,
+		"CanNotSendRequestResult":             28,
+		"CanNotReceiveRequestResult":          29,
+		"CanNotParseRequestResult":            30,
+		"UnexpectedCallbackResponse":          31,
+		"CanNotParseNumber":                   32,
+		"InternalError":                       33,
+	}
+}
 
 // DynBufferForResponses ...
 func DynBufferForResponses(in <-chan *ClientResponse) <-chan *ClientResponse {
@@ -165,4 +224,14 @@ func HandleEvents(responses <-chan *ClientResponse, callback EventCallback, resu
 	}
 
 	return nil
+}
+
+//AppRequestResultErrorNew ...
+func AppRequestResultErrorNew() *AppRequestResult {
+	return &AppRequestResult{Type: "Error"}
+}
+
+//AppRequestResultOkNew ...
+func AppRequestResultOkNew() *AppRequestResult {
+	return &AppRequestResult{Type: "Ok"}
 }

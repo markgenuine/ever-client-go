@@ -8,6 +8,9 @@ const (
 	DefaultDictionary = 1
 )
 
+// CryptoErrorCode ...
+var CryptoErrorCode map[string]int
+
 type (
 	// SigningBoxHandle ...
 	SigningBoxHandle int
@@ -339,7 +342,7 @@ type (
 	}
 
 	// EventCallbackRegisterSigningBox ...
-	EventCallbackRegisterSigningBox func(event *ParamsOfAppSigningBox)
+	//EventCallbackRegisterSigningBox func(event *ParamsOfAppSigningBox)
 
 	// ParamsOfSigningBoxSign ...
 	ParamsOfSigningBoxSign struct {
@@ -354,74 +357,99 @@ type (
 
 	// CryptoUseCase ...
 	CryptoUseCase interface {
-		Factorize(poF ParamsOfFactorize) (*ResultOfFactorize, error)
-		ModularPower(pOMP ParamsOfModularPower) (*ResultOfModularPower, error)
-		TonCrc16(pOTC ParamsOfTonCrc16) (*ResultOfTonCrc16, error)
-		GenerateRandomBytes(pOGRB ParamsOfGenerateRandomBytes) (*ResultOfGenerateRandomBytes, error)
-		ConvertPublicKeyString(pOCPTTSF ParamsOfConvertPublicKeyToTonSafeFormat) (*ResultOfConvertPublicKeyToTonSafeFormat, error)
+		Factorize(*ParamsOfFactorize) (*ResultOfFactorize, error)
+		ModularPower(*ParamsOfModularPower) (*ResultOfModularPower, error)
+		TonCrc16(*ParamsOfTonCrc16) (*ResultOfTonCrc16, error)
+		GenerateRandomBytes(*ParamsOfGenerateRandomBytes) (*ResultOfGenerateRandomBytes, error)
+		ConvertPublicKeyString(*ParamsOfConvertPublicKeyToTonSafeFormat) (*ResultOfConvertPublicKeyToTonSafeFormat, error)
 		GenerateRandomSignKeys() (*KeyPair, error)
-		Sign(pOS ParamsOfSign) (*ResultOfSign, error)
-		VerifySignature(pOVS ParamsOfVerifySignature) (*ResultOfVerifySignature, error)
-		Sha256(pOH ParamsOfHash) (*ResultOfHash, error)
-		Sha512(pOH ParamsOfHash) (*ResultOfHash, error)
-		Scrypt(sD ParamsOfScrypt) (*ResultOfScrypt, error)
-		NaclSignKeypairFromSecretKey(pONSKPFC ParamsOfNaclSignKeyPairFromSecret) (*KeyPair, error)
-		NaclSign(pONS ParamsOfNaclSign) (*ResultOfNaclSign, error)
-		NaclSignOpen(pONSO ParamsOfNaclSignOpen) (*ResultOfNaclSignOpen, error)
-		NaclSignDetached(pONS ParamsOfNaclSign) (*ResultOfNaclSignDetached, error)
+		Sign(*ParamsOfSign) (*ResultOfSign, error)
+		VerifySignature(*ParamsOfVerifySignature) (*ResultOfVerifySignature, error)
+		Sha256(*ParamsOfHash) (*ResultOfHash, error)
+		Sha512(*ParamsOfHash) (*ResultOfHash, error)
+		Scrypt(*ParamsOfScrypt) (*ResultOfScrypt, error)
+		NaclSignKeypairFromSecretKey(*ParamsOfNaclSignKeyPairFromSecret) (*KeyPair, error)
+		NaclSign(*ParamsOfNaclSign) (*ResultOfNaclSign, error)
+		NaclSignOpen(*ParamsOfNaclSignOpen) (*ResultOfNaclSignOpen, error)
+		NaclSignDetached(*ParamsOfNaclSign) (*ResultOfNaclSignDetached, error)
 		NaclBoxKeypair() (*KeyPair, error)
-		NaclBoxKeypairFromSecretKey(pONKPFS ParamsOfNaclBoxKeyPairFromSecret) (*KeyPair, error)
-		NaclBox(pONB ParamsOfNaclBox) (*ResultOfNaclBox, error)
-		NaclBoxOpen(pONBO ParamsOfNaclBoxOpen) (*ResultOfNaclBoxOpen, error)
-		NaclSecretBox(pONSB ParamsOfNaclSecretBox) (*ResultOfNaclBox, error)
-		NaclSecretBoxOpen(pONSBO ParamsOfNaclSecretBoxOpen) (*ResultOfNaclBoxOpen, error)
-		MnemonicWords(pOMW ParamsOfMnemonicWords) (*ResultOfMnemonicWords, error)
-		MnemonicFromRandom(pOMFR ParamsOfMnemonicFromRandom) (*ResultOfMnemonicFromRandom, error)
-		MnemonicFromEntropy(pOMFE ParamsOfMnemonicFromEntropy) (*ResultOfMnemonicFromEntropy, error)
-		MnemonicVerify(pOMV ParamsOfMnemonicVerify) (*ResultOfMnemonicVerify, error)
-		MnemonicDeriveSignKeys(pOMDSK ParamsOfMnemonicDeriveSignKeys) (*KeyPair, error)
-		HdkeyXprvFromMnemonic(pOHKXFM ParamsOfHDKeyXPrvFromMnemonic) (*ResultOfHDKeyXPrvFromMnemonic, error)
-		HdkeyXprvDerive(hdP ParamsOfHDKeyDeriveFromXPrv) (*ResultOfHDKeyDeriveFromXPrv, error)
-		HdkeyXprvDerivePath(hdPD ParamsOfHDKeyDeriveFromXPrvPath) (*ResultOfHDKeyDeriveFromXPrvPath, error)
-		HdkeyXprvSecret(pOHKSFXP ParamsOfHDKeySecretFromXPrv) (*ResultOfHDKeySecretFromXPrv, error)
-		HdkeyXprvPublic(pOHKPFXP ParamsOfHDKeyPublicFromXPrv) (*ResultOfHDKeyPublicFromXPrv, error)
-		Chacha20(pOFCC ParamsOfChaCha20) (*ResultOfChaCha20, error)
-		//RegisterSigningBox(EventCallbackRegisterSigningBox) error
-		GetSigningBox(KeyPair) (*RegisteredSigningBox, error)
-		SigningBoxGetPublicKey(KeyPair) (*RegisteredSigningBox, error)
-		SigningBoxSign(pOSBS ParamsOfSigningBoxSign) (*ResultOfSigningBoxSign, error)
-		// remove_signing_box
+		NaclBoxKeypairFromSecretKey(*ParamsOfNaclBoxKeyPairFromSecret) (*KeyPair, error)
+		NaclBox(*ParamsOfNaclBox) (*ResultOfNaclBox, error)
+		NaclBoxOpen(*ParamsOfNaclBoxOpen) (*ResultOfNaclBoxOpen, error)
+		NaclSecretBox(*ParamsOfNaclSecretBox) (*ResultOfNaclBox, error)
+		NaclSecretBoxOpen(*ParamsOfNaclSecretBoxOpen) (*ResultOfNaclBoxOpen, error)
+		MnemonicWords(*ParamsOfMnemonicWords) (*ResultOfMnemonicWords, error)
+		MnemonicFromRandom(*ParamsOfMnemonicFromRandom) (*ResultOfMnemonicFromRandom, error)
+		MnemonicFromEntropy(*ParamsOfMnemonicFromEntropy) (*ResultOfMnemonicFromEntropy, error)
+		MnemonicVerify(*ParamsOfMnemonicVerify) (*ResultOfMnemonicVerify, error)
+		MnemonicDeriveSignKeys(*ParamsOfMnemonicDeriveSignKeys) (*KeyPair, error)
+		HdkeyXprvFromMnemonic(*ParamsOfHDKeyXPrvFromMnemonic) (*ResultOfHDKeyXPrvFromMnemonic, error)
+		HdkeyDeriveFromXprv(*ParamsOfHDKeyDeriveFromXPrv) (*ResultOfHDKeyDeriveFromXPrv, error)
+		HdkeyDeriveFromXprvPath(*ParamsOfHDKeyDeriveFromXPrvPath) (*ResultOfHDKeyDeriveFromXPrvPath, error)
+		HdkeySecretFromXprv(*ParamsOfHDKeySecretFromXPrv) (*ResultOfHDKeySecretFromXPrv, error)
+		HdkeyPublicFromXprv(*ParamsOfHDKeyPublicFromXPrv) (*ResultOfHDKeyPublicFromXPrv, error)
+		Chacha20(*ParamsOfChaCha20) (*ResultOfChaCha20, error)
+		RegisterSigningBox(AppSigningBox) (*RegisteredSigningBox,error)
+		GetSigningBox(*KeyPair) (*RegisteredSigningBox, error)
+		SigningBoxGetPublicKey(*RegisteredSigningBox) (*ResultOfSigningBoxGetPublicKey, error)
+		SigningBoxSign(*ParamsOfSigningBoxSign) (*ResultOfSigningBoxSign, error)
+		RemoveSigningBox(rSB *RegisteredSigningBox) error
 	}
 )
 
+func init() {
+	CryptoErrorCode = map[string]int{
+		"InvalidPublicKey         ": 100,
+		"InvalidSecretKey         ": 101,
+		"InvalidKey               ": 102,
+		"InvalidFactorizeChallenge": 106,
+		"InvalidBigInt            ": 107,
+		"ScryptFailed             ": 108,
+		"InvalidKeySize           ": 109,
+		"NaclSecretBoxFailed      ": 110,
+		"NaclBoxFailed            ": 111,
+		"NaclSignFailed           ": 112,
+		"Bip39InvalidEntropy      ": 113,
+		"Bip39InvalidPhrase       ": 114,
+		"Bip32InvalidKey          ": 115,
+		"Bip32InvalidDerivePath   ": 116,
+		"Bip39InvalidDictionary   ": 117,
+		"Bip39InvalidWordCount    ": 118,
+		"MnemonicGenerationFailed ": 119,
+		"MnemonicFromEntropyFailed": 120,
+		"SigningBoxNotRegistered  ": 121,
+	}
+
+}
+
 // NewDefaultParamsOfMnemonicWords ...
-func NewDefaultParamsOfMnemonicWords() ParamsOfMnemonicWords {
-	return ParamsOfMnemonicWords{Dictionary: DefaultDictionary}
+func NewDefaultParamsOfMnemonicWords() *ParamsOfMnemonicWords {
+	return &ParamsOfMnemonicWords{Dictionary: DefaultDictionary}
 }
 
 // NewDefaultParamsOfMnemonicFromRandom ...
-func NewDefaultParamsOfMnemonicFromRandom() ParamsOfMnemonicFromRandom {
-	return ParamsOfMnemonicFromRandom{Dictionary: DefaultDictionary, WordCount: DefaultWordCount}
+func NewDefaultParamsOfMnemonicFromRandom() *ParamsOfMnemonicFromRandom {
+	return &ParamsOfMnemonicFromRandom{Dictionary: DefaultDictionary, WordCount: DefaultWordCount}
 }
 
 // NewDefaultParamsOfMnemonicFromEntropy ...
-func NewDefaultParamsOfMnemonicFromEntropy() ParamsOfMnemonicFromEntropy {
-	return ParamsOfMnemonicFromEntropy{Entropy: "", Dictionary: DefaultDictionary, WordCount: DefaultWordCount}
+func NewDefaultParamsOfMnemonicFromEntropy() *ParamsOfMnemonicFromEntropy {
+	return &ParamsOfMnemonicFromEntropy{Entropy: "", Dictionary: DefaultDictionary, WordCount: DefaultWordCount}
 }
 
 // NewDefaultParamsOfMnemonicVerify ...
-func NewDefaultParamsOfMnemonicVerify() ParamsOfMnemonicVerify {
-	return ParamsOfMnemonicVerify{Phrase: "", Dictionary: DefaultDictionary, WordCount: DefaultWordCount}
+func NewDefaultParamsOfMnemonicVerify() *ParamsOfMnemonicVerify {
+	return &ParamsOfMnemonicVerify{Phrase: "", Dictionary: DefaultDictionary, WordCount: DefaultWordCount}
 }
 
 // NewDefaultParamsOfMnemonicDeriveSignKeys ...
-func NewDefaultParamsOfMnemonicDeriveSignKeys() ParamsOfMnemonicDeriveSignKeys {
-	return ParamsOfMnemonicDeriveSignKeys{Phrase: "", Dictionary: DefaultDictionary, WordCount: DefaultWordCount}
+func NewDefaultParamsOfMnemonicDeriveSignKeys() *ParamsOfMnemonicDeriveSignKeys {
+	return &ParamsOfMnemonicDeriveSignKeys{Phrase: "", Dictionary: DefaultDictionary, WordCount: DefaultWordCount}
 }
 
 // NewDefaultParamsOfHDKeyXPrvFromMnemonic ...
-func NewDefaultParamsOfHDKeyXPrvFromMnemonic() ParamsOfHDKeyXPrvFromMnemonic {
-	return ParamsOfHDKeyXPrvFromMnemonic{Phrase: "", Dictionary: DefaultDictionary, WordCount: DefaultWordCount}
+func NewDefaultParamsOfHDKeyXPrvFromMnemonic() *ParamsOfHDKeyXPrvFromMnemonic {
+	return &ParamsOfHDKeyXPrvFromMnemonic{Phrase: "", Dictionary: DefaultDictionary, WordCount: DefaultWordCount}
 }
 
 // NewParamsOfAppSigningBoxGetPublicKey ...
@@ -430,6 +458,16 @@ func NewParamsOfAppSigningBoxGetPublicKey() *ParamsOfAppSigningBox {
 }
 
 // NewParamsOfAppSigningBoxSign ...
-func NewParamsOfAppSigningBoxSign(unsigned string) *ParamsOfAppSigningBox {
-	return &ParamsOfAppSigningBox{Type: "Sign", Unsigned: unsigned}
+func NewParamsOfAppSigningBoxSign() *ParamsOfAppSigningBox {
+	return &ParamsOfAppSigningBox{Type: "Sign"}
+}
+
+// NewResultOfAppSigningBoxGetPublicKey
+func NewResultOfAppSigningBoxGetPublicKey() *ResultOfAppSigningBox {
+	return &ResultOfAppSigningBox{Type: "GetPublicKey"}
+}
+
+// NewResultOfAppSigningBoxSign
+func NewResultOfAppSigningBoxSign() *ResultOfAppSigningBox {
+	return &ResultOfAppSigningBox{Type: "Sign"}
 }

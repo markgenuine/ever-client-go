@@ -22,10 +22,8 @@ func NewProcessing(
 	}
 }
 
-//change callback??????
-
 // SendMessage method processing.send_message
-func (p *processing) SendMessage(pOSM domain.ParamsOfSendMessage, callback domain.EventCallback) (*domain.ResultOfSendMessage, error) {
+func (p *processing) SendMessage(pOSM *domain.ParamsOfSendMessage, callback domain.EventCallback) (*domain.ResultOfSendMessage, error) {
 	if pOSM.SendEvents && callback == nil {
 		return nil, errors.New("Don't find callback")
 	}
@@ -44,7 +42,7 @@ func (p *processing) SendMessage(pOSM domain.ParamsOfSendMessage, callback domai
 }
 
 // WaitForTransaction method processing.wait_for_transaction
-func (p *processing) WaitForTransaction(pOWFT domain.ParamsOfWaitForTransaction, callback domain.EventCallback) (*domain.ResultOfProcessMessage, error) {
+func (p *processing) WaitForTransaction(pOWFT *domain.ParamsOfWaitForTransaction, callback domain.EventCallback) (*domain.ResultOfProcessMessage, error) {
 	if pOWFT.SendEvents && callback == nil {
 		return nil, errors.New("Don't find callback")
 	}
@@ -63,7 +61,7 @@ func (p *processing) WaitForTransaction(pOWFT domain.ParamsOfWaitForTransaction,
 }
 
 // ProcessMessage method processing.process_message
-func (p *processing) ProcessMessage(pOPM domain.ParamsOfProcessMessage, callback domain.EventCallback) (*domain.ResultOfProcessMessage, error) {
+func (p *processing) ProcessMessage(pOPM *domain.ParamsOfProcessMessage, callback domain.EventCallback) (*domain.ResultOfProcessMessage, error) {
 	if pOPM.SendEvents && callback == nil {
 		return nil, errors.New("Don't find callback")
 	}

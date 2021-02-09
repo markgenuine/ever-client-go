@@ -24,3 +24,21 @@ func FromHex(value string) []byte {
 
 	return dst[:n]
 }
+
+//ToHex ...
+func ToHex(value interface{}) []byte {
+	switch date := value.(type) {
+	case string:
+		return byteToHex([]byte(date))
+	case []byte:
+		return byteToHex(date)
+	}
+
+	return []byte("")
+}
+
+func byteToHex(sl []byte) []byte{
+	dst := make([]byte, hex.EncodedLen(len(sl)))
+	hex.Encode(dst, sl)
+	return dst
+}

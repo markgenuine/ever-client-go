@@ -57,7 +57,7 @@ func TestProcessing(t *testing.T) {
 		callSet := domain.CallSet{FunctionName: "constructor", Header: &domain.FunctionHeader{PubKey: keypair.Public}}
 
 		// # Encode deployment message
-		encoded, err := abiUC.EncodeMessage(domain.ParamsOfEncodeMessage{Abi: abiValue, Signer: signer, DeploySet: &deploySet, CallSet: &callSet})
+		encoded, err := abiUC.EncodeMessage(&domain.ParamsOfEncodeMessage{Abi: abiValue, Signer: signer, DeploySet: &deploySet, CallSet: &callSet})
 		assert.Equal(t, nil, err)
 
 		// # Send grams
@@ -77,7 +77,7 @@ func TestProcessing(t *testing.T) {
 		callSetN.Input = json.RawMessage(`{"dest":"` + encoded.Address + `"}`)
 		assert.Equal(t, nil, err)
 
-		_, err = procUC.ProcessMessage(domain.ParamsOfProcessMessage{
+		_, err = procUC.ProcessMessage(&domain.ParamsOfProcessMessage{
 			MessageEncodeParams: &domain.ParamsOfEncodeMessage{
 				Type:    "EncodingParams",
 				Abi:     giverAbi,
@@ -87,7 +87,7 @@ func TestProcessing(t *testing.T) {
 		assert.Equal(t, nil, err)
 
 		// # Deploy account
-		result, err := procUC.ProcessMessage(domain.ParamsOfProcessMessage{
+		result, err := procUC.ProcessMessage(&domain.ParamsOfProcessMessage{
 			MessageEncodeParams: &domain.ParamsOfEncodeMessage{
 				Type:      "EncodingParams",
 				Abi:       abiValue,
@@ -104,7 +104,7 @@ func TestProcessing(t *testing.T) {
 
 		// # Contract execution error
 		callSetErr := domain.CallSet{FunctionName: "returnValue", Input: json.RawMessage(`{"id": -1}`)}
-		_, err = procUC.ProcessMessage(domain.ParamsOfProcessMessage{
+		_, err = procUC.ProcessMessage(&domain.ParamsOfProcessMessage{
 			MessageEncodeParams: &domain.ParamsOfEncodeMessage{
 				Type:    "EncodingParams",
 				Abi:     abiValue,
@@ -124,7 +124,7 @@ func TestProcessing(t *testing.T) {
 		callSet := domain.CallSet{FunctionName: "constructor", Header: &domain.FunctionHeader{PubKey: keypair.Public}}
 
 		// # Encode deployment message
-		encoded, err := abiUC.EncodeMessage(domain.ParamsOfEncodeMessage{Abi: abiValue, Signer: signer, DeploySet: &deploySet, CallSet: &callSet})
+		encoded, err := abiUC.EncodeMessage(&domain.ParamsOfEncodeMessage{Abi: abiValue, Signer: signer, DeploySet: &deploySet, CallSet: &callSet})
 		assert.Equal(t, nil, err)
 
 		// # Send grams
@@ -144,7 +144,7 @@ func TestProcessing(t *testing.T) {
 		callSetN.Input = json.RawMessage(`{"dest":"` + encoded.Address + `"}`)
 		assert.Equal(t, nil, err)
 
-		_, err = procUC.ProcessMessage(domain.ParamsOfProcessMessage{
+		_, err = procUC.ProcessMessage(&domain.ParamsOfProcessMessage{
 			MessageEncodeParams: &domain.ParamsOfEncodeMessage{
 				Type:    "EncodingParams",
 				Abi:     giverAbi,
@@ -156,7 +156,7 @@ func TestProcessing(t *testing.T) {
 		events := make(chan *domain.ProcessingEvent, 10)
 
 		// # Deploy account
-		generator, err := procUC.ProcessMessage(domain.ParamsOfProcessMessage{
+		generator, err := procUC.ProcessMessage(&domain.ParamsOfProcessMessage{
 			MessageEncodeParams: &domain.ParamsOfEncodeMessage{
 				Type:      "EncodingParams",
 				Abi:       abiValue,
@@ -199,7 +199,7 @@ func TestProcessing(t *testing.T) {
 		callSet := domain.CallSet{FunctionName: "constructor", Header: &domain.FunctionHeader{PubKey: keypair.Public}}
 
 		// # Encode deployment message
-		encoded, err := abiUC.EncodeMessage(domain.ParamsOfEncodeMessage{Abi: abiValue, Signer: signer, DeploySet: &deploySet, CallSet: &callSet})
+		encoded, err := abiUC.EncodeMessage(&domain.ParamsOfEncodeMessage{Abi: abiValue, Signer: signer, DeploySet: &deploySet, CallSet: &callSet})
 		assert.Equal(t, nil, err)
 
 		// # Send grams
@@ -218,7 +218,7 @@ func TestProcessing(t *testing.T) {
 		callSetN.FunctionName = "grant"
 		callSetN.Input = json.RawMessage(`{"dest":"` + encoded.Address + `"}`)
 		assert.Equal(t, nil, err)
-		_, err = procUC.ProcessMessage(domain.ParamsOfProcessMessage{
+		_, err = procUC.ProcessMessage(&domain.ParamsOfProcessMessage{
 			MessageEncodeParams: &domain.ParamsOfEncodeMessage{
 				Type:    "EncodingParams",
 				Abi:     giverAbi,
@@ -228,11 +228,11 @@ func TestProcessing(t *testing.T) {
 		assert.Equal(t, nil, err)
 
 		// # Send message
-		shardBlockID, err := procUC.SendMessage(domain.ParamsOfSendMessage{Message: encoded.Message, SendEvents: false, Abi: abiValue}, nil)
+		shardBlockID, err := procUC.SendMessage(&domain.ParamsOfSendMessage{Message: encoded.Message, SendEvents: false, Abi: abiValue}, nil)
 		assert.Equal(t, nil, err)
 
 		//  # Wait for transaction
-		result, err := procUC.WaitForTransaction(domain.ParamsOfWaitForTransaction{Message: encoded.Message, ShardBlockID: shardBlockID.ShardBlockID, SendEvents: false, Abi: abiValue}, nil)
+		result, err := procUC.WaitForTransaction(&domain.ParamsOfWaitForTransaction{Message: encoded.Message, ShardBlockID: shardBlockID.ShardBlockID, SendEvents: false, Abi: abiValue}, nil)
 		assert.Equal(t, nil, err)
 		assert.Equal(t, 0, len(result.OutMessages))
 		assert.Equal(t, 0, len(result.Decoded.OutMessages))
@@ -248,7 +248,7 @@ func TestProcessing(t *testing.T) {
 		callSet := domain.CallSet{FunctionName: "constructor", Header: &domain.FunctionHeader{PubKey: keypair.Public}}
 
 		// # Encode deployment message
-		encoded, err := abiUC.EncodeMessage(domain.ParamsOfEncodeMessage{Abi: abiValue, Signer: signer, DeploySet: &deploySet, CallSet: &callSet})
+		encoded, err := abiUC.EncodeMessage(&domain.ParamsOfEncodeMessage{Abi: abiValue, Signer: signer, DeploySet: &deploySet, CallSet: &callSet})
 		assert.Equal(t, nil, err)
 
 		// # Send grams
@@ -267,7 +267,7 @@ func TestProcessing(t *testing.T) {
 		callSetN.FunctionName = "grant"
 		callSetN.Input = json.RawMessage(`{"dest":"` + encoded.Address + `"}`)
 		assert.Equal(t, nil, err)
-		_, err = procUC.ProcessMessage(domain.ParamsOfProcessMessage{
+		_, err = procUC.ProcessMessage(&domain.ParamsOfProcessMessage{
 			MessageEncodeParams: &domain.ParamsOfEncodeMessage{
 				Type:    "EncodingParams",
 				Abi:     giverAbi,
@@ -279,7 +279,7 @@ func TestProcessing(t *testing.T) {
 		events := make(chan *domain.ProcessingEvent, 10)
 
 		// # Send message
-		shardBlockID, err := procUC.SendMessage(domain.ParamsOfSendMessage{Message: encoded.Message, SendEvents: true, Abi: abiValue}, func(event *domain.ProcessingEvent) { events <- event })
+		shardBlockID, err := procUC.SendMessage(&domain.ParamsOfSendMessage{Message: encoded.Message, SendEvents: true, Abi: abiValue}, func(event *domain.ProcessingEvent) { events <- event })
 		assert.Equal(t, nil, err)
 		close(events)
 
@@ -291,7 +291,7 @@ func TestProcessing(t *testing.T) {
 
 		events = make(chan *domain.ProcessingEvent, 10)
 		//  # Wait for transaction
-		result, err := procUC.WaitForTransaction(domain.ParamsOfWaitForTransaction{Message: encoded.Message, ShardBlockID: shardBlockID.ShardBlockID, SendEvents: true, Abi: abiValue}, func(event *domain.ProcessingEvent) { events <- event })
+		result, err := procUC.WaitForTransaction(&domain.ParamsOfWaitForTransaction{Message: encoded.Message, ShardBlockID: shardBlockID.ShardBlockID, SendEvents: true, Abi: abiValue}, func(event *domain.ProcessingEvent) { events <- event })
 		assert.Equal(t, nil, err)
 		close(events)
 

@@ -2,6 +2,9 @@ package domain
 
 import "encoding/json"
 
+// BocErrorCode ...
+var BocErrorCode map[string]int
+
 type (
 	// ParamsOfParse ...
 	ParamsOfParse struct {
@@ -40,14 +43,34 @@ type (
 		Hash string `json:"hash"`
 	}
 
+	//ParamsOfGetCodeFromTvc ...
+	ParamsOfGetCodeFromTvc struct {
+		Tvc string `json:"tvc"`
+	}
+
+	//ResultOfGetCodeFromTvc ...
+	ResultOfGetCodeFromTvc struct {
+		Code string `json:"code"`
+	}
+
 	//BocUseCase ...
 	BocUseCase interface {
-		ParseMessage(pOP ParamsOfParse) (*ResultOfParse, error)
-		ParseTransaction(pOP ParamsOfParse) (*ResultOfParse, error)
-		ParseAccount(pOP ParamsOfParse) (*ResultOfParse, error)
-		ParseBlock(pOP ParamsOfParse) (*ResultOfParse, error)
-		ParseShardstate(pOPS ParamsOfParseShardstate) (*ResultOfParse, error)
-		GetBlockhainConfig(pOGBC ParamsOfGetBlockchainConfig) (*ResultOfGetBlockchainConfig, error)
-		GetBocHash(pOGBH ParamsOfGetBocHash) (*ResultOfGetBocHash, error)
+		ParseMessage(*ParamsOfParse) (*ResultOfParse, error)
+		ParseTransaction(*ParamsOfParse) (*ResultOfParse, error)
+		ParseAccount(*ParamsOfParse) (*ResultOfParse, error)
+		ParseBlock(*ParamsOfParse) (*ResultOfParse, error)
+		ParseShardstate(*ParamsOfParseShardstate) (*ResultOfParse, error)
+		GetBlockhainConfig(*ParamsOfGetBlockchainConfig) (*ResultOfGetBlockchainConfig, error)
+		GetBocHash(*ParamsOfGetBocHash) (*ResultOfGetBocHash, error)
+		GetCodeFromTvc(*ParamsOfGetCodeFromTvc) (*ResultOfGetCodeFromTvc, error)
 	}
 )
+
+func init() {
+	BocErrorCode = map[string]int{
+		"InvalidBoc":         201,
+		"SerializationError": 202,
+		"InappropriateBlock": 203,
+		"MissingSourceBoc":   204,
+	}
+}
