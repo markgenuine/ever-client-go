@@ -5,6 +5,14 @@ import (
 	"fmt"
 )
 
+const (
+	// AppRequestResultTypeError ...
+	AppRequestResultTypeError AppRequestResultType = "Error"
+
+	// AppRequestResultTypeOk ...
+	AppRequestResultTypeOk AppRequestResultType = "Ok"
+)
+
 //ClientErrorCode ...
 var ClientErrorCode map[string]int
 
@@ -24,11 +32,14 @@ type (
 		Error error
 	}
 
+	// AppRequestResultType ...
+	AppRequestResultType string
+
 	// AppRequestResult ...
 	AppRequestResult struct {
-		Type   string      `json:"type"`
-		Text   string      `json:"text,omitempty"`
-		Result interface{} `json:"result,omitempty"`
+		Type   AppRequestResultType `json:"type"`
+		Text   string               `json:"text,omitempty"`
+		Result interface{}          `json:"result,omitempty"`
 	}
 
 	// ResultOfVersion ...
@@ -92,8 +103,8 @@ type (
 
 	//ParamsOfAppRequest ...
 	ParamsOfAppRequest struct {
-		AppRequestID int `json:"app_request_id"`
-		RequestData json.RawMessage `json:"request_data"`
+		AppRequestID int             `json:"app_request_id"`
+		RequestData  json.RawMessage `json:"request_data"`
 	}
 
 	// ClientGateway ...
