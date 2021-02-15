@@ -25,15 +25,15 @@ func TestNet(t *testing.T) {
 	defer netUC.client.Destroy()
 
 	t.Run("TestQueryCollection", func(t *testing.T) {
-		valueRes1, err := netUC.QueryCollection(domain.ParamsOfQueryCollection{Collection: "blocks_signatures", Result: "id", Limit: 1})
+		valueRes1, err := netUC.QueryCollection(&domain.ParamsOfQueryCollection{Collection: "blocks_signatures", Result: "id", Limit: 1})
 		assert.Equal(t, nil, err)
 		assert.Greater(t, len(valueRes1.Result), 0)
 
-		valueRes2, err := netUC.QueryCollection(domain.ParamsOfQueryCollection{Collection: "accounts", Result: "id, balance", Limit: 5})
+		valueRes2, err := netUC.QueryCollection(&domain.ParamsOfQueryCollection{Collection: "accounts", Result: "id, balance", Limit: 5})
 		assert.Equal(t, nil, err)
 		assert.Equal(t, 5, len(valueRes2.Result))
 
-		valueRes3, err := netUC.QueryCollection(domain.ParamsOfQueryCollection{Collection: "messages", Filter: json.RawMessage(`{"created_at":{"gt":1562342740}}`), Result: "body, created_at", Order: []domain.OrderBy{{Path: "created_at", Direction: domain.SortDirectionASC}}, Limit: 10})
+		valueRes3, err := netUC.QueryCollection(&domain.ParamsOfQueryCollection{Collection: "messages", Filter: json.RawMessage(`{"created_at":{"gt":1562342740}}`), Result: "body, created_at", Order: []domain.OrderBy{{Path: "created_at", Direction: domain.SortDirectionASC}}, Limit: 10})
 		assert.Equal(t, nil, err)
 		var (
 			objmap    map[string]json.RawMessage
@@ -47,14 +47,14 @@ func TestNet(t *testing.T) {
 		assert.Equal(t, nil, err)
 		assert.Greater(t, createdAt, 1562342740)
 
-		_, err = netUC.QueryCollection(domain.ParamsOfQueryCollection{Collection: "messages"})
+		_, err = netUC.QueryCollection(&domain.ParamsOfQueryCollection{Collection: "messages"})
 		assert.NotEqual(t, nil, err)
 	})
 
 	t.Run("TestWaitCollection", func(t *testing.T) {
 		nowTime := int(time.Now().Unix())
 		filter := fmt.Sprintf(`{"now":{"gt":%d}}`, nowTime)
-		query := domain.ParamsOfWaitForCollection{Collection: "transactions", Filter: json.RawMessage(filter), Result: "id, now"}
+		query := &domain.ParamsOfWaitForCollection{Collection: "transactions", Filter: json.RawMessage(filter), Result: "id, now"}
 		valueRes1, err := netUC.WaitForCollection(query)
 		assert.Equal(t, nil, err)
 		var (
@@ -80,7 +80,7 @@ func TestNet(t *testing.T) {
 		// # Prepare query
 		nowTime := int(time.Now().Unix())
 		filter := fmt.Sprintf(`{"created_at":{"gt":%d}}`, nowTime)
-		query := domain.ParamsOfSubscribeCollection{Collection: "messages", Filter: json.RawMessage(filter), Result: "created_at"}
+		query := &domain.ParamsOfSubscribeCollection{Collection: "messages", Filter: json.RawMessage(filter), Result: "created_at"}
 
 		// # Create generator
 		generator, handle, err := netUC.SubscribeCollection(query)
@@ -96,7 +96,7 @@ func TestNet(t *testing.T) {
 			respCount := 1
 			for g := range generator {
 				if respCount > 10 {
-					err = netUC.Unsubscribe(domain.ResultOfSubscribeCollection{Handle: handle.Handle})
+					err = netUC.Unsubscribe(&domain.ResultOfSubscribeCollection{Handle: handle.Handle})
 					assert.Equal(t, nil, err)
 					break
 				}

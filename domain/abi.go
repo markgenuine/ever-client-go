@@ -24,16 +24,17 @@ const (
 	// TypeH ...
 	TypeH AbiType = "Handle"
 
-	// MessageBodyTypeInput ...
+	// MessageBodyTypeInput - Message contains the input of the ABI function.
 	MessageBodyTypeInput MessageBodyType = "Input"
 
-	// MessageBodyTypeOutput ...
+	// MessageBodyTypeOutput - Message contains the output of the ABI function.
 	MessageBodyTypeOutput MessageBodyType = "Output"
 
-	// MessageBodyTypeInternalOutput ...
+	// MessageBodyTypeInternalOutput - Message contains the input of the imported ABI function.
+	//Occurs when contract sends an internal message to other contract.
 	MessageBodyTypeInternalOutput MessageBodyType = "InternalOutput"
 
-	// MessageBodyTypeEvent ...
+	// MessageBodyTypeEvent - Message contains the input of the ABI event.
 	MessageBodyTypeEvent MessageBodyType = "Event"
 
 	// StateInitSourceTypeMessage ...
@@ -90,9 +91,10 @@ type (
 
 	// DeploySet ...
 	DeploySet struct {
-		Tvc         string      `json:"tvc"`
-		WorkchainID int         `json:"workchain_id"`
-		InitialData interface{} `json:"initial_data"`
+		Tvc           string      `json:"tvc"`
+		WorkchainID   int         `json:"workchain_id"`
+		InitialData   interface{} `json:"initial_data"`
+		InitialPubKey string      `json:"initial_pubkey,omitempty"`
 	}
 
 	// SignerNone No keys are provided. Creates an unsigned message.

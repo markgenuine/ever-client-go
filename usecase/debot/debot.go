@@ -18,7 +18,12 @@ func NewDebot(config domain.Config, client domain.ClientGateway) domain.DebotUse
 	}
 }
 
-// Start method debot.start
+// Start - UNSTABLE Starts an instance of debot.
+// Downloads debot smart contract from blockchain and switches it to context zero.
+// Returns a debot handle which can be used later in execute function.
+// This function must be used by Debot Browser to start a dialog with debot.
+// While the function is executing, several Browser Callbacks can be called, since the debot tries
+//to display all actions from the context 0 to the user.
 func (d *debot) Start(poS *domain.ParamsOfStart, app domain.AppDebotBrowser) (*domain.RegisteredDebot, error) {
 	result := new(domain.RegisteredDebot)
 	responses, err := d.client.Request("debot.start", poS)
@@ -64,10 +69,10 @@ func (d *debot) appRequestDebotStart(payload []byte, app domain.AppDebotBrowser)
 	appResponse, err := app.Request(appParams)
 	appRequestResult := domain.AppRequestResult{}
 	if err != nil {
-		appRequestResult.Type = "Error"
+		appRequestResult.Type = domain.AppRequestResultTypeError
 		appRequestResult.Text = err.Error()
 	} else {
-		appRequestResult.Type = "Ok"
+		appRequestResult.Type = domain.AppRequestResultTypeOk
 		appRequestResult.Result, _ = json.Marshal(appResponse)
 	}
 	err = d.client.ResolveAppRequest(&domain.ParamsOfResolveAppRequest{
@@ -89,7 +94,8 @@ func (d *debot) appNotifyDebotStart(payload []byte, app domain.AppDebotBrowser) 
 	app.Notify(appParams)
 }
 
-// Fetch method debot.fetch
+// Fetch - UNSTABLE Fetches debot from blockchain.
+//Downloads debot smart contract (code and data) from blockchain and creates an instance of Debot Engine for it.
 func (d *debot) Fetch(pOF *domain.ParamsOfFetch, app domain.AppDebotBrowser) (*domain.RegisteredDebot, error) {
 	result := new(domain.RegisteredDebot)
 	responses, err := d.client.Request("debot.fetch", pOF)
@@ -134,10 +140,10 @@ func (d *debot) appRequestDebotFetch(payload []byte, app domain.AppDebotBrowser)
 	appResponse, err := app.Request(appParams)
 	appRequestResult := domain.AppRequestResult{}
 	if err != nil {
-		appRequestResult.Type = "Error"
+		appRequestResult.Type = domain.AppRequestResultTypeError
 		appRequestResult.Text = err.Error()
 	} else {
-		appRequestResult.Type = "Ok"
+		appRequestResult.Type = domain.AppRequestResultTypeOk
 		appRequestResult.Result, _ = json.Marshal(appResponse)
 	}
 	err = d.client.ResolveAppRequest(&domain.ParamsOfResolveAppRequest{
@@ -158,13 +164,22 @@ func (d *debot) appNotifyDebotFetch(payload []byte, app domain.AppDebotBrowser) 
 	app.Notify(appParams)
 }
 
-// Execute method debot.execute
+// Execute - UNSTABLE Executes debot action.
+//Calls debot engine referenced by debot handle to execute input action. Calls Debot Browser Callbacks if needed.
 func (d *debot) Execute(pOE *domain.ParamsOfExecute) error {
 	_, err := d.client.GetResponse("debot.execute", pOE)
 	return err
 }
 
-// Remove method debot.remove
+// Send - UNSTABLE Sends message to Debot.
+// Used by Debot Browser to send response on Dinterface call or from other Debots.
+func (d *debot) Send(pOS *domain.ParamsOfStart) error {
+	_, err := d.client.GetResponse("debot.send", pOS)
+	return err
+}
+
+// Remove - UNSTABLE Destroys debot handle.
+//Removes handle from Client Context and drops debot engine referenced by that handle.
 func (d *debot) Remove(pOE *domain.RegisteredDebot) error {
 	_, err := d.client.GetResponse("debot.remove", pOE)
 	return err

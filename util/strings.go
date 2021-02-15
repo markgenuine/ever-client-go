@@ -37,7 +37,7 @@ func ToHex(value interface{}) []byte {
 	return []byte("")
 }
 
-func byteToHex(sl []byte) []byte{
+func byteToHex(sl []byte) []byte {
 	dst := make([]byte, hex.EncodedLen(len(sl)))
 	hex.Encode(dst, sl)
 	return dst

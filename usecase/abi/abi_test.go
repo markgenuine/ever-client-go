@@ -197,8 +197,8 @@ func TestAbi(t *testing.T) {
 		signer := domain.NewSignerKeys()
 		signer.Keys = keyPair
 		result, err := abiUC.EncodeMessageBody(&domain.ParamsOfEncodeMessageBody{Abi: abiValue, CallSet: callSet, IsInternal: false, Signer: signer})
-		assert.Equal(t,nil,err)
-		assert.Equal(t,"",result.DataToSign)
+		assert.Equal(t, nil, err)
+		assert.Equal(t, "", result.DataToSign)
 	})
 
 	t.Run("TestEncodeAccount", func(t *testing.T) {

@@ -18,6 +18,7 @@ func NewUtils(
 	}
 }
 
+// ConvertAddress - Converts address from any TON format to any TON format
 func (u *utils) ConvertAddress(pOCA *domain.ParamsOfConvertAddress) (*domain.ResultOfConvertAddress, error) {
 	result := new(domain.ResultOfConvertAddress)
 	err := u.client.GetResult("utils.convert_address", pOCA, result)

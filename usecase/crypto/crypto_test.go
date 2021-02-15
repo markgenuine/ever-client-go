@@ -248,5 +248,4 @@ func TestCrypto(t *testing.T) {
 		assert.Equal(t, "02a8eb63085f73c33fa31b4d1134259406347284f8dab6fc68f4bf8c96f6c39b75", publicXPrv.Public)
 	})
 
-
 }
