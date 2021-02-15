@@ -153,6 +153,18 @@ type (
 		Signature string `json:"signature"`
 	}
 
+	// ParamsOfNaclSignDetachedVerify ...
+	ParamsOfNaclSignDetachedVerify struct {
+		Unsigned  string `json:"unsigned"`
+		Signature string `json:"signature"`
+		Public    string `json:"public"`
+	}
+
+	// ResultOfNaclSignDetachedVerify ...
+	ResultOfNaclSignDetachedVerify struct {
+		Succeeded bool `json:"succeeded"`
+	}
+
 	// ParamsOfNaclBoxKeyPairFromSecret ...
 	ParamsOfNaclBoxKeyPairFromSecret struct {
 		Secret string `json:"secret"`
@@ -372,6 +384,7 @@ type (
 		NaclSign(*ParamsOfNaclSign) (*ResultOfNaclSign, error)
 		NaclSignOpen(*ParamsOfNaclSignOpen) (*ResultOfNaclSignOpen, error)
 		NaclSignDetached(*ParamsOfNaclSign) (*ResultOfNaclSignDetached, error)
+		NaclSignDetachedVerify(*ParamsOfNaclSignDetachedVerify) (*ResultOfNaclSignDetachedVerify, error)
 		NaclBoxKeypair() (*KeyPair, error)
 		NaclBoxKeypairFromSecretKey(*ParamsOfNaclBoxKeyPairFromSecret) (*KeyPair, error)
 		NaclBox(*ParamsOfNaclBox) (*ResultOfNaclBox, error)
@@ -389,7 +402,7 @@ type (
 		HdkeySecretFromXprv(*ParamsOfHDKeySecretFromXPrv) (*ResultOfHDKeySecretFromXPrv, error)
 		HdkeyPublicFromXprv(*ParamsOfHDKeyPublicFromXPrv) (*ResultOfHDKeyPublicFromXPrv, error)
 		Chacha20(*ParamsOfChaCha20) (*ResultOfChaCha20, error)
-		RegisterSigningBox(AppSigningBox) (*RegisteredSigningBox,error)
+		RegisterSigningBox(AppSigningBox) (*RegisteredSigningBox, error)
 		GetSigningBox(*KeyPair) (*RegisteredSigningBox, error)
 		SigningBoxGetPublicKey(*RegisteredSigningBox) (*ResultOfSigningBoxGetPublicKey, error)
 		SigningBoxSign(*ParamsOfSigningBoxSign) (*ResultOfSigningBoxSign, error)
@@ -399,25 +412,26 @@ type (
 
 func init() {
 	CryptoErrorCode = map[string]int{
-		"InvalidPublicKey         ": 100,
-		"InvalidSecretKey         ": 101,
-		"InvalidKey               ": 102,
+		"InvalidPublicKey":          100,
+		"InvalidSecretKey":          101,
+		"InvalidKey":                102,
 		"InvalidFactorizeChallenge": 106,
-		"InvalidBigInt            ": 107,
-		"ScryptFailed             ": 108,
-		"InvalidKeySize           ": 109,
-		"NaclSecretBoxFailed      ": 110,
-		"NaclBoxFailed            ": 111,
-		"NaclSignFailed           ": 112,
-		"Bip39InvalidEntropy      ": 113,
-		"Bip39InvalidPhrase       ": 114,
-		"Bip32InvalidKey          ": 115,
-		"Bip32InvalidDerivePath   ": 116,
-		"Bip39InvalidDictionary   ": 117,
-		"Bip39InvalidWordCount    ": 118,
-		"MnemonicGenerationFailed ": 119,
+		"InvalidBigInt":             107,
+		"ScryptFailed":              108,
+		"InvalidKeySize":            109,
+		"NaclSecretBoxFailed":       110,
+		"NaclBoxFailed":             111,
+		"NaclSignFailed":            112,
+		"Bip39InvalidEntropy":       113,
+		"Bip39InvalidPhrase":        114,
+		"Bip32InvalidKey":           115,
+		"Bip32InvalidDerivePath":    116,
+		"Bip39InvalidDictionary":    117,
+		"Bip39InvalidWordCount":     118,
+		"MnemonicGenerationFailed":  119,
 		"MnemonicFromEntropyFailed": 120,
-		"SigningBoxNotRegistered  ": 121,
+		"SigningBoxNotRegistered":   121,
+		"InvalidSignature":          122,
 	}
 
 }

@@ -174,4 +174,3 @@ func (c *clientGateway) GetResponse(method string, paramIn interface{}) ([]byte,
 		}
 	}
 }
-

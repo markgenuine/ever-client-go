@@ -35,6 +35,7 @@ type (
 		Action    *DebotAction `json:"action,omitempty"`
 		Prompt    string       `json:"prompt,omitempty"`
 		DebotAddr string       `json:"debot_addr,omitempty"`
+		Message string `json:"message,omitempty"`
 	}
 
 	// ResultOfAppDebotBrowser ...
@@ -55,11 +56,20 @@ type (
 		Action      DebotAction `json:"action"`
 	}
 
+	// ParamsOfSend ...
+	ParamsOfSend struct {
+		DebotHandle DebotHandle `json:"debot_handle"`
+		Source string `json:"source"`
+		FuncID int `json:"func_id"`
+		Params string `json:"params"`
+	}
+
 	// DebotUseCase ...
 	DebotUseCase interface {
 		Start(*ParamsOfStart, AppDebotBrowser) (*RegisteredDebot, error)
 		Fetch(*ParamsOfFetch, AppDebotBrowser) (*RegisteredDebot, error)
 		Execute(*ParamsOfExecute) error
+		Send(*ParamsOfStart) error
 		Remove(*RegisteredDebot) error
 	}
 )
@@ -70,6 +80,9 @@ func init() {
 		"DebotFetchFailed":     802,
 		"DebotExecutionFailed": 803,
 		"DebotInvalidHandle":   804,
+		"DebotInvalidJsonParams" : 805,
+		"DebotInvalidFunctionId" : 806,
+		"DebotInvalidAbi" : 807,
 	}
 }
 
@@ -108,6 +121,11 @@ func ParamsOfAppDebotBrowserInvokeDebotNew() *ParamsOfAppDebotBrowser {
 	return &ParamsOfAppDebotBrowser{Type: "InvokeDebot"}
 }
 
+// ParamsOfAppDebotBrowserSendNew
+func ParamsOfAppDebotBrowserSendNew() *ParamsOfAppDebotBrowser {
+	return &ParamsOfAppDebotBrowser{Type: "Send"}
+}
+
 // ResultOfAppDebotBrowserInput
 func ResultOfAppDebotBrowserInput() *ResultOfAppDebotBrowser {
 	return &ResultOfAppDebotBrowser{Type: "Input"}
@@ -122,3 +140,4 @@ func ResultOfAppDebotBrowserGetSigningBox() *ResultOfAppDebotBrowser {
 func ResultOfAppDebotBrowserInvokeDebot() *ResultOfAppDebotBrowser {
 	return &ResultOfAppDebotBrowser{Type: "InvokeDebot"}
 }
+
