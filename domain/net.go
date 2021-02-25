@@ -8,6 +8,16 @@ const (
 
 	// SortDirectionDESC ...
 	SortDirectionDESC = "DESC"
+
+	ParamsOfQueryOperationTypeQueryCollection     ParamsOfQueryOperationType = "QueryCollection"
+	ParamsOfQueryOperationTypeWaitForCollection   ParamsOfQueryOperationType = "WaitForCollection"
+	ParamsOfQueryOperationTypeAggregateCollection ParamsOfQueryOperationType = "AggregateCollection"
+
+	AggregationFnTypeCount   AggregationFnType = "COUNT"
+	AggregationFnTypeMin     AggregationFnType = "MIN"
+	AggregationFnTypeMax     AggregationFnType = "MAX"
+	AggregationFnTypeSum     AggregationFnType = "SUM"
+	AggregationFnTypeAverage AggregationFnType = "AVERAGE"
 )
 
 // NetErrorCode ...
@@ -21,19 +31,29 @@ type (
 		Direction string `json:"direction"`
 	}
 
+	ParamsOfQueryOperationType string
+
+	ParamsOfQueryOperation struct {
+		Type ParamsOfQueryOperationType `json:"type"`
+	}
+
+	AggregationFnType string
+
+	FieldAggregation struct {
+		Field string            `json:"field"`
+		Fn    AggregationFnType `json:"fn"`
+	}
+
 	// ParamsOfQuery ...
 	ParamsOfQuery struct {
 		Query     string          `json:"query"`
-		Variables json.RawMessage `json:"variables"`
+		Variables json.RawMessage `json:"variables,omitempty"`
 	}
 
 	//ResultOfQuery ...
 	ResultOfQuery struct {
 		Result json.RawMessage `json:"result"`
 	}
-
-	//ParamsOfQueryOperation ...
-	ParamsOfQueryOperation json.RawMessage
 
 	// ParamsOfBatchQuery
 	ParamsOfBatchQuery struct {
@@ -59,13 +79,11 @@ type (
 		Result []json.RawMessage `json:"result"`
 	}
 
-	FieldsAggregation json.RawMessage
-
 	// ParamsOfAggregateCollection ...
 	ParamsOfAggregateCollection struct {
 		Collection string              `json:"collection"`
 		Filter     interface{}         `json:"filter,omitempty"`
-		Fields     []FieldsAggregation `json:"fields,omitempty"`
+		Fields     []FieldAggregation `json:"fields,omitempty"`
 	}
 	// ResultOfAggregateCollection ...
 	ResultOfAggregateCollection struct {

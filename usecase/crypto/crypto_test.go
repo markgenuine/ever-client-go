@@ -202,7 +202,7 @@ func TestCrypto(t *testing.T) {
 		assert.Equal(t, nil, err)
 		assert.IsType(t, &domain.KeyPair{}, valueDerivSK)
 
-		keyPair1, err := cryptoUC.MnemonicDeriveSignKeys(&domain.ParamsOfMnemonicDeriveSignKeys{Phrase: phrase, Dictionary: domain.DictionaryList()["TON"], WordCount: domain.WordCounList()[24]})
+		keyPair1, err := cryptoUC.MnemonicDeriveSignKeys(&domain.ParamsOfMnemonicDeriveSignKeys{Phrase: phrase, Dictionary: dictMnem["TON"], WordCount:lenMnem[24]})
 		assert.Equal(t, nil, err)
 
 		publicSafe1, err := cryptoUC.ConvertPublicKeyString(&domain.ParamsOfConvertPublicKeyToTonSafeFormat{PublicKey: keyPair1.Public})

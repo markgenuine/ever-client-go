@@ -83,6 +83,9 @@ func init() {
 		"DebotInvalidJsonParams" : 805,
 		"DebotInvalidFunctionId" : 806,
 		"DebotInvalidAbi" : 807,
+		"DebotGetMethodFailed" : 808,
+		"DebotInvalidMsg" : 809,
+		"DebotExternaCallFailed" : 810,
 	}
 }
 
