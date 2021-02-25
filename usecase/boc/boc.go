@@ -18,58 +18,84 @@ func NewBoc(
 	}
 }
 
-// ParseMessage method boc.parse_message
+// ParseMessage - Parses message boc into a JSON.
+//JSON structure is compatible with GraphQL API message object.
 func (b *boc) ParseMessage(pOP *domain.ParamsOfParse) (*domain.ResultOfParse, error) {
 	result := new(domain.ResultOfParse)
 	err := b.client.GetResult("boc.parse_message", pOP, result)
 	return result, err
 }
 
-// ParseTransaction method boc.parse_transaction
+// ParseTransaction - Parses transaction boc into a JSON.
+//JSON structure is compatible with GraphQL API transaction object.
 func (b *boc) ParseTransaction(pOP *domain.ParamsOfParse) (*domain.ResultOfParse, error) {
 	result := new(domain.ResultOfParse)
 	err := b.client.GetResult("boc.parse_transaction", pOP, result)
 	return result, err
 }
 
-// ParseAccount method boc.parse_account
+// ParseAccount - Parses account boc into a JSON.
+//JSON structure is compatible with GraphQL API account object.
 func (b *boc) ParseAccount(pOP *domain.ParamsOfParse) (*domain.ResultOfParse, error) {
 	result := new(domain.ResultOfParse)
 	err := b.client.GetResult("boc.parse_account", pOP, result)
 	return result, err
 }
 
-// ParseBlock method boc.parse_block
+// ParseBlock - Parses block boc into a JSON.
+//JSON structure is compatible with GraphQL API block object.
 func (b *boc) ParseBlock(pOP *domain.ParamsOfParse) (*domain.ResultOfParse, error) {
 	result := new(domain.ResultOfParse)
 	err := b.client.GetResult("boc.parse_block", pOP, result)
 	return result, err
 }
 
-// ParseShardstate method boc.parse_shardstate
+// ParseShardstate - Parses shardstate boc into a JSON.
+//JSON structure is compatible with GraphQL API shardstate object.
 func (b *boc) ParseShardstate(pOPS *domain.ParamsOfParseShardstate) (*domain.ResultOfParse, error) {
 	result := new(domain.ResultOfParse)
 	err := b.client.GetResult("boc.parse_shardstate", pOPS, result)
 	return result, err
 }
 
-// GetBlockhainConfig method boc.get_blockchain_config
+// GetBlockhainConfig
 func (b *boc) GetBlockhainConfig(pOGBC *domain.ParamsOfGetBlockchainConfig) (*domain.ResultOfGetBlockchainConfig, error) {
 	result := new(domain.ResultOfGetBlockchainConfig)
 	err := b.client.GetResult("boc.get_blockchain_config", pOGBC, result)
 	return result, err
 }
 
-// GetBocHash Parse method boc.get_boc_hash
+// GetBocHash - Calculates BOC root hash.
 func (b *boc) GetBocHash(pOGBH *domain.ParamsOfGetBocHash) (*domain.ResultOfGetBocHash, error) {
 	result := new(domain.ResultOfGetBocHash)
 	err := b.client.GetResult("boc.get_boc_hash", pOGBH, result)
 	return result, err
 }
 
-// GetCodeFromTvc Parse method boc.get_code_from_tvc
+// GetCodeFromTvc - Extracts code from TVC contract image.
 func (b *boc) GetCodeFromTvc(pOGCFT *domain.ParamsOfGetCodeFromTvc) (*domain.ResultOfGetCodeFromTvc, error) {
 	result := new(domain.ResultOfGetCodeFromTvc)
 	err := b.client.GetResult("boc.get_code_from_tvc", pOGCFT, result)
 	return result, err
+}
+
+// CacheGet - Get BOC from cache.
+func (b *boc) CacheGet(pOBCG *domain.ParamsOfBocCacheGet)(*domain.ResultOfBocCacheGet,error){
+	result := new(domain.ResultOfBocCacheGet)
+	err := b.client.GetResult("boc.cache_get", pOBCG, result)
+	return result, err
+}
+
+// CacheSet - Save BOC into cache.
+func (b *boc) CacheSet(pOBCS *domain.ParamsOfBocCacheSet)(*domain.ResultOfBocCacheSet,error){
+	result := new(domain.ResultOfBocCacheSet)
+	err := b.client.GetResult("boc.cache_set", pOBCS, result)
+	return result, err
+}
+
+// CacheUnpin - Unpin BOCs with specified pin.
+//BOCs which don't have another pins will be removed from cache.
+func (b *boc) CacheUnpin(pOBCU *domain.ParamsOfBocCacheUnpin)(error){
+	_, err := b.client.GetResponse("boc.cache_unpin", pOBCU)
+	return err
 }

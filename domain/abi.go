@@ -254,6 +254,24 @@ type (
 		MessageID  string `json:"message_id"`
 	}
 
+	// ParamsOfEncodeInternalMessage ...
+	ParamsOfEncodeInternalMessage struct {
+		Abi       Abi        `json:"abi"`
+		Address   string     `json:"address,omitempty"`
+		DeploySet *DeploySet `json:"deploy_set,omitempty"`
+		CallSet   *CallSet   `json:"call_set,omitempty"`
+		Value     string     `json:"value"`
+		Bounce    bool       `json:"bounce"` //?
+		EnableIhr bool       `json:"enable_ihr"` //?
+	}
+
+	// ResultOfEncodeInternalMessage ...
+	ResultOfEncodeInternalMessage struct {
+		Message   string `json:"message"`
+		Address   string `json:"address"`
+		MessageID string `json:"message_id"`
+	}
+
 	// ParamsOfAttachSignature ...
 	ParamsOfAttachSignature struct {
 		Abi       Abi    `json:"abi"`
@@ -295,6 +313,7 @@ type (
 		Balance     *big.Int    `json:"balance,omitempty"`
 		LastTransLt *big.Int    `json:"last_trans_lt,omitempty"`
 		LastPaid    int         `json:"last_paid,omitempty"`
+		BocCache *BocCacheType `json:"boc_cache,omitempty"`
 	}
 
 	// ResultOfEncodeAccount ...
@@ -308,6 +327,7 @@ type (
 		EncodeMessageBody(*ParamsOfEncodeMessageBody) (*ResultOfEncodeMessageBody, error)
 		AttachSignatureToMessageBody(*ParamsOfAttachSignatureToMessageBody) (*ResultOfAttachSignatureToMessageBody, error)
 		EncodeMessage(*ParamsOfEncodeMessage) (*ResultOfEncodeMessage, error)
+		EncodeInternalMessage(*ParamsOfEncodeInternalMessage) (*ResultOfEncodeInternalMessage, error)
 		AttachSignature(*ParamsOfAttachSignature) (*ResultOfAttachSignature, error)
 		DecodeMessage(*ParamsOfDecodeMessage) (*DecodedMessageBody, error)
 		DecodeMessageBody(*ParamsOfDecodeMessageBody) (*DecodedMessageBody, error)

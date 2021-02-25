@@ -6,6 +6,7 @@ type (
 		Network *Network   `toml:"network" json:"network,omitempty"`
 		Crypto  *Crypto    `toml:"crypto" json:"crypto,omitempty"`
 		Abi     *AbiConfig `toml:"abi" json:"abi,omitempty"`
+		Boc     *BocConfig `toml:"boc" json:"boc,omitempty"`
 	}
 
 	// Network ...
@@ -35,6 +36,11 @@ type (
 		MessageExpirationTimeout           int     `toml:"message_expiration_timeout" json:"message_expiration_timeout"`
 		MessageExpirationTimeoutGrowFactor float32 `toml:"message_expiration_timeout_grow_factor" json:"message_expiration_timeout_grow_factor"`
 	}
+
+	// BocConfig ...
+	BocConfig struct {
+		CacheMaxSize int `toml:"cache_max_size" json:"cache_max_size,omitempty"`
+	}
 )
 
 // NewDefaultConfig create new config for connect client. ChanID 0-localhost, 1-devnet, 2-mainnet,
@@ -58,6 +64,9 @@ func NewDefaultConfig(chainID int) Config {
 			Workchain:                          0,
 			MessageExpirationTimeout:           40000, //ms
 			MessageExpirationTimeoutGrowFactor: 1.5},
+		Boc: &BocConfig{
+			CacheMaxSize: 10,
+		},
 	}
 
 	return config

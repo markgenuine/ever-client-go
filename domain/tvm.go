@@ -55,6 +55,8 @@ type (
 		ExecutionOptions     *ExecutionOptions `json:"execution_options,omitempty"`
 		Abi                  Abi               `json:"abi,omitempty"`
 		SkipTransactionCheck bool              `json:"skip_transaction_check,omitempty"`
+		BocCache BocCacheType `json:"boc_cache,omitempty"`
+		ReturnUpdatedAccount bool `json:"return_updated_account"`
 	}
 
 	// ResultOfRunExecuteMessage ...
@@ -72,6 +74,8 @@ type (
 		Account          string            `json:"account"`
 		ExecutionOptions *ExecutionOptions `json:"execution_options,omitempty"`
 		Abi              Abi               `json:"abi,omitempty"`
+		BocCache BocCacheType `json:"boc_cache,omitempty"`
+		ReturnUpdatedAccount bool `json:"return_updated_account"`
 	}
 
 	// ResultOfRunTvm ...
