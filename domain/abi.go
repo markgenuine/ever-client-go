@@ -348,6 +348,7 @@ func init() {
 		"RequiredPublicKeyMissingForFunctionHeader": 309,
 		"InvalidSigner":                             310,
 		"InvalidAbi":                                311,
+		"InvalidFunctionId":						 312,
 	}
 }
 
