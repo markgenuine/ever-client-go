@@ -18,12 +18,11 @@ func NewDebot(config domain.Config, client domain.ClientGateway) domain.DebotUse
 	}
 }
 
-// Start - UNSTABLE Starts an instance of debot.
-// Downloads debot smart contract from blockchain and switches it to context zero.
-// Returns a debot handle which can be used later in execute function.
-// This function must be used by Debot Browser to start a dialog with debot.
-// While the function is executing, several Browser Callbacks can be called, since the debot tries
-//to display all actions from the context 0 to the user.
+//Downloads debot smart contract from blockchain and switches it to context zero.
+//Returns a debot handle which can be used later in execute function.
+//This function must be used by Debot Browser to start a dialog with debot.
+//While the function is executing, several Browser Callbacks can be called,
+//since the debot tries to display all actions from the context 0 to the user.
 func (d *debot) Start(poS *domain.ParamsOfStart, app domain.AppDebotBrowser) (*domain.RegisteredDebot, error) {
 	result := new(domain.RegisteredDebot)
 	responses, err := d.client.Request("debot.start", poS)
@@ -173,7 +172,7 @@ func (d *debot) Execute(pOE *domain.ParamsOfExecute) error {
 
 // Send - UNSTABLE Sends message to Debot.
 // Used by Debot Browser to send response on Dinterface call or from other Debots.
-func (d *debot) Send(pOS *domain.ParamsOfStart) error {
+func (d *debot) Send(pOS *domain.ParamsOfSend) error {
 	_, err := d.client.GetResponse("debot.send", pOS)
 	return err
 }
