@@ -69,7 +69,7 @@ type (
 		Start(*ParamsOfStart, AppDebotBrowser) (*RegisteredDebot, error)
 		Fetch(*ParamsOfFetch, AppDebotBrowser) (*RegisteredDebot, error)
 		Execute(*ParamsOfExecute) error
-		Send(*ParamsOfStart) error
+		Send(*ParamsOfSend) error
 		Remove(*RegisteredDebot) error
 	}
 )

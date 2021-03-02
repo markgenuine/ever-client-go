@@ -261,8 +261,8 @@ type (
 		DeploySet *DeploySet `json:"deploy_set,omitempty"`
 		CallSet   *CallSet   `json:"call_set,omitempty"`
 		Value     string     `json:"value"`
-		Bounce    bool       `json:"bounce"` //?
-		EnableIhr bool       `json:"enable_ihr"` //?
+		Bounce    bool       `json:"bounce"` //? Default is true.
+		EnableIhr bool       `json:"enable_ihr"` //? Default is false.
 	}
 
 	// ResultOfEncodeInternalMessage ...
