@@ -1,9 +1,11 @@
 package client
 
 /*
-#cgo darwin LDFLAGS: -L../../lib/darwin -lton_client
-#cgo linux LDFLAGS: -L../../lib/linux -lton_client
+//#cgo darwin LDFLAGS: -L../../lib/darwin -lton_client
+//#cgo linux LDFLAGS: -L../../lib/linux -lton_client
 //#cgo windows LDFLAGS: -L../../lib/windows -lton_client
+#cgo darwin LDFLAGS: -L${SRCDIR}/lib/darwin -lton_client
+#cgo linux LDFLAGS: -L${SRCDIR}/lib/linux -lton_client
 
 #include "client_method.h"
 void callB(int request_id, tc_string_data_t paramsJson, int response_type, bool finished);
