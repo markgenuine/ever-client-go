@@ -56,7 +56,7 @@ type (
 		Abi                  Abi               `json:"abi,omitempty"`
 		SkipTransactionCheck bool              `json:"skip_transaction_check,omitempty"`
 		BocCache BocCacheType `json:"boc_cache,omitempty"`
-		ReturnUpdatedAccount bool `json:"return_updated_account"`
+		ReturnUpdatedAccount bool `json:"return_updated_account,omitempty"`
 	}
 
 	// ResultOfRunExecuteMessage ...
@@ -91,6 +91,7 @@ type (
 		FunctionName     string            `json:"function_name,omitempty"`
 		Input            interface{}       `json:"input,omitempty"`
 		ExecutionOptions *ExecutionOptions `json:"execution_options,omitempty"`
+		TupleListAsArray bool `json:"tuple_list_as_array,omitempty"`
 	}
 
 	// ResultOfRunGet ...
