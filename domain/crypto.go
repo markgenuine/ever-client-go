@@ -411,6 +411,7 @@ type (
 )
 
 func init() {
+	// List errors crypto module
 	CryptoErrorCode = map[string]int{
 		"InvalidPublicKey":          100,
 		"InvalidSecretKey":          101,
@@ -466,22 +467,24 @@ func NewDefaultParamsOfHDKeyXPrvFromMnemonic() *ParamsOfHDKeyXPrvFromMnemonic {
 	return &ParamsOfHDKeyXPrvFromMnemonic{Phrase: "", Dictionary: DefaultDictionary, WordCount: DefaultWordCount}
 }
 
-// NewParamsOfAppSigningBoxGetPublicKey ...
-func NewParamsOfAppSigningBoxGetPublicKey() *ParamsOfAppSigningBox {
+// ParamsOfAppSigningBoxGetPublicKey - Variant constructor Signing box callbacks from Get public key.
+func ParamsOfAppSigningBoxGetPublicKey() *ParamsOfAppSigningBox {
 	return &ParamsOfAppSigningBox{Type: "GetPublicKey"}
 }
 
-// NewParamsOfAppSigningBoxSign ...
-func NewParamsOfAppSigningBoxSign() *ParamsOfAppSigningBox {
-	return &ParamsOfAppSigningBox{Type: "Sign"}
+// ParamsOfAppSigningBoxSign - Variant constructor Signing box callbacks from Sign.
+func ParamsOfAppSigningBoxSign(unsigned string) *ParamsOfAppSigningBox {
+	return &ParamsOfAppSigningBox{Type: "Sign", Unsigned: unsigned}
 }
 
-// NewResultOfAppSigningBoxGetPublicKey
-func NewResultOfAppSigningBoxGetPublicKey() *ResultOfAppSigningBox {
-	return &ResultOfAppSigningBox{Type: "GetPublicKey"}
+// ResultOfAppSigningBoxGetPublicKey -  Variant constructor Returning values from
+// signing box callbacks Get Public Key.
+func ResultOfAppSigningBoxGetPublicKey(publicKey string) *ResultOfAppSigningBox {
+	return &ResultOfAppSigningBox{Type: "GetPublicKey", PublicKey: publicKey}
 }
 
-// NewResultOfAppSigningBoxSign
-func NewResultOfAppSigningBoxSign() *ResultOfAppSigningBox {
-	return &ResultOfAppSigningBox{Type: "Sign"}
+// ResultOfAppSigningBoxSign -  Variant constructor Returning values from
+// signing box callbacks Get Public Key.
+func ResultOfAppSigningBoxSign(signature string) *ResultOfAppSigningBox {
+	return &ResultOfAppSigningBox{Type: "Sign", Signature: signature}
 }

@@ -25,6 +25,7 @@ type (
 	// RegisteredDebot ...
 	RegisteredDebot struct {
 		DebotHandle DebotHandle `json:"debot_handle"`
+		DebotAbi string `json:"debot_abi"`
 	}
 
 	// ParamsOfAppDebotBrowser ...
@@ -59,9 +60,7 @@ type (
 	// ParamsOfSend ...
 	ParamsOfSend struct {
 		DebotHandle DebotHandle `json:"debot_handle"`
-		Source string `json:"source"`
-		FuncID int `json:"func_id"`
-		Params string `json:"params"`
+		Message string `json:"message"`
 	}
 
 	// DebotUseCase ...
@@ -89,57 +88,57 @@ func init() {
 	}
 }
 
-// ParamsOfAppDebotBrowserLogNew ...
-func ParamsOfAppDebotBrowserLogNew() *ParamsOfAppDebotBrowser {
-	return &ParamsOfAppDebotBrowser{Type: "Log"}
+// ParamsOfAppDebotBrowserLog ...
+func ParamsOfAppDebotBrowserLog(msg string) *ParamsOfAppDebotBrowser {
+	return &ParamsOfAppDebotBrowser{Type: "Log", Msg: msg}
 }
 
-// ParamsOfAppDebotBrowserSwitchNew ...
-func ParamsOfAppDebotBrowserSwitchNew() *ParamsOfAppDebotBrowser {
-	return &ParamsOfAppDebotBrowser{Type: "Switch"}
+// ParamsOfAppDebotBrowserSwitch ...
+func ParamsOfAppDebotBrowserSwitch(contextID int) *ParamsOfAppDebotBrowser {
+	return &ParamsOfAppDebotBrowser{Type: "Switch", ContextID: contextID}
 }
 
-// ParamsOfAppDebotBrowserSwitchCompletedNew ...
-func ParamsOfAppDebotBrowserSwitchCompletedNew() *ParamsOfAppDebotBrowser {
+// ParamsOfAppDebotBrowserSwitchCompleted ...
+func ParamsOfAppDebotBrowserSwitchCompleted() *ParamsOfAppDebotBrowser {
 	return &ParamsOfAppDebotBrowser{Type: "SwitchCompleted"}
 }
 
-// ParamsOfAppDebotBrowserShowActionNew...
-func ParamsOfAppDebotBrowserShowActionNew() *ParamsOfAppDebotBrowser {
-	return &ParamsOfAppDebotBrowser{Type: "ShowAction"}
+// ParamsOfAppDebotBrowserShowAction...
+func ParamsOfAppDebotBrowserShowAction(action *DebotAction) *ParamsOfAppDebotBrowser {
+	return &ParamsOfAppDebotBrowser{Type: "ShowAction", Action: action}
 }
 
-// ParamsOfAppDebotBrowserInputNew
-func ParamsOfAppDebotBrowserInputNew() *ParamsOfAppDebotBrowser {
-	return &ParamsOfAppDebotBrowser{Type: "Input"}
+// ParamsOfAppDebotBrowserInput ...
+func ParamsOfAppDebotBrowserInput(prompt string) *ParamsOfAppDebotBrowser {
+	return &ParamsOfAppDebotBrowser{Type: "Input", Prompt: prompt}
 }
 
-// ParamsOfAppDebotBrowserGetSigningBoxNew
-func ParamsOfAppDebotBrowserGetSigningBoxNew() *ParamsOfAppDebotBrowser {
+// ParamsOfAppDebotBrowserGetSigningBox ...
+func ParamsOfAppDebotBrowserGetSigningBox() *ParamsOfAppDebotBrowser {
 	return &ParamsOfAppDebotBrowser{Type: "GetSigningBox"}
 }
 
-// ParamsOfAppDebotBrowserInvokeDebotNew
-func ParamsOfAppDebotBrowserInvokeDebotNew() *ParamsOfAppDebotBrowser {
-	return &ParamsOfAppDebotBrowser{Type: "InvokeDebot"}
+// ParamsOfAppDebotBrowserInvokeDebot ...
+func ParamsOfAppDebotBrowserInvokeDebot(debotAddr string, action *DebotAction) *ParamsOfAppDebotBrowser {
+	return &ParamsOfAppDebotBrowser{Type: "InvokeDebot", DebotAddr: debotAddr, Action: action}
 }
 
-// ParamsOfAppDebotBrowserSendNew
-func ParamsOfAppDebotBrowserSendNew() *ParamsOfAppDebotBrowser {
-	return &ParamsOfAppDebotBrowser{Type: "Send"}
+// ParamsOfAppDebotBrowserSend ...
+func ParamsOfAppDebotBrowserSend(message string) *ParamsOfAppDebotBrowser {
+	return &ParamsOfAppDebotBrowser{Type: "Send",Message: message}
 }
 
-// ResultOfAppDebotBrowserInput
-func ResultOfAppDebotBrowserInput() *ResultOfAppDebotBrowser {
-	return &ResultOfAppDebotBrowser{Type: "Input"}
+// ResultOfAppDebotBrowserInput ...
+func ResultOfAppDebotBrowserInput(value string) *ResultOfAppDebotBrowser {
+	return &ResultOfAppDebotBrowser{Type: "Input", Value: value}
 }
 
-// ResultOfAppDebotBrowserGetSigningBox
-func ResultOfAppDebotBrowserGetSigningBox() *ResultOfAppDebotBrowser {
-	return &ResultOfAppDebotBrowser{Type: "GetSigningBox"}
+// ResultOfAppDebotBrowserGetSigningBox ...
+func ResultOfAppDebotBrowserGetSigningBox(signingBox *SigningBoxHandle) *ResultOfAppDebotBrowser {
+	return &ResultOfAppDebotBrowser{Type: "GetSigningBox", SigningBox: signingBox}
 }
 
-// ResultOfAppDebotBrowserInvokeDebot
+// ResultOfAppDebotBrowserInvokeDebot ...
 func ResultOfAppDebotBrowserInvokeDebot() *ResultOfAppDebotBrowser {
 	return &ResultOfAppDebotBrowser{Type: "InvokeDebot"}
 }

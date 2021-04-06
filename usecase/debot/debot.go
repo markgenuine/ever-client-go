@@ -53,7 +53,7 @@ func (d *debot) Start(poS *domain.ParamsOfStart, app domain.AppDebotBrowser) (*d
 	return result, nil
 }
 
-//appRequestDebotStart ...
+// appRequestDebotStart ...
 func (d *debot) appRequestDebotStart(payload []byte, app domain.AppDebotBrowser) {
 	var appRequest domain.ParamsOfAppRequest
 	var appParams domain.ParamsOfAppDebotBrowser
@@ -83,7 +83,7 @@ func (d *debot) appRequestDebotStart(payload []byte, app domain.AppDebotBrowser)
 	}
 }
 
-//appNotifyDebotStart ...
+// appNotifyDebotStart ...
 func (d *debot) appNotifyDebotStart(payload []byte, app domain.AppDebotBrowser) {
 	var appParams domain.ParamsOfAppDebotBrowser
 	err := json.Unmarshal(payload, &appParams)
@@ -94,7 +94,8 @@ func (d *debot) appNotifyDebotStart(payload []byte, app domain.AppDebotBrowser) 
 }
 
 // Fetch - UNSTABLE Fetches debot from blockchain.
-//Downloads debot smart contract (code and data) from blockchain and creates an instance of Debot Engine for it.
+// Downloads debot smart contract (code and data) from blockchain and creates an instance of Debot Engine
+// for it. It does not switch debot to context 0. Browser Callbacks are not called.
 func (d *debot) Fetch(pOF *domain.ParamsOfFetch, app domain.AppDebotBrowser) (*domain.RegisteredDebot, error) {
 	result := new(domain.RegisteredDebot)
 	responses, err := d.client.Request("debot.fetch", pOF)
@@ -164,7 +165,8 @@ func (d *debot) appNotifyDebotFetch(payload []byte, app domain.AppDebotBrowser) 
 }
 
 // Execute - UNSTABLE Executes debot action.
-//Calls debot engine referenced by debot handle to execute input action. Calls Debot Browser Callbacks if needed.
+// Calls debot engine referenced by debot handle to execute input action. Calls Debot Browser Callbacks
+// if needed. Chain of actions can be executed if input action generates a list of subactions.
 func (d *debot) Execute(pOE *domain.ParamsOfExecute) error {
 	_, err := d.client.GetResponse("debot.execute", pOE)
 	return err
@@ -178,7 +180,7 @@ func (d *debot) Send(pOS *domain.ParamsOfSend) error {
 }
 
 // Remove - UNSTABLE Destroys debot handle.
-//Removes handle from Client Context and drops debot engine referenced by that handle.
+// Removes handle from Client Context and drops debot engine referenced by that handle.
 func (d *debot) Remove(pOE *domain.RegisteredDebot) error {
 	_, err := d.client.GetResponse("debot.remove", pOE)
 	return err

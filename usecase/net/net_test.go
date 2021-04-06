@@ -33,7 +33,7 @@ func TestNet(t *testing.T) {
 		assert.Equal(t, nil, err)
 		assert.Equal(t, 5, len(valueRes2.Result))
 
-		valueRes3, err := netUC.QueryCollection(&domain.ParamsOfQueryCollection{Collection: "messages", Filter: json.RawMessage(`{"created_at":{"gt":1562342740}}`), Result: "body, created_at", Order: []domain.OrderBy{{Path: "created_at", Direction: domain.SortDirectionASC}}, Limit: 10})
+		valueRes3, err := netUC.QueryCollection(&domain.ParamsOfQueryCollection{Collection: "messages", Filter: json.RawMessage(`{"created_at":{"gt":1562342740}}`), Result: "body, created_at", Order: []*domain.OrderBy{{Path: "created_at", Direction: domain.SortDirectionASC}}, Limit: 10})
 		assert.Equal(t, nil, err)
 		var (
 			objmap    map[string]json.RawMessage

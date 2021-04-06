@@ -35,6 +35,9 @@ type (
 
 	ParamsOfQueryOperation struct {
 		Type ParamsOfQueryOperationType `json:"type"`
+		*ParamsOfQueryCollection `json:",omitempty"`
+		*ParamsOfWaitForCollection `json:",omitempty"`
+		*ParamsOfAggregateCollection `json:",omitempty"`
 	}
 
 	AggregationFnType string
@@ -55,12 +58,12 @@ type (
 		Result json.RawMessage `json:"result"`
 	}
 
-	// ParamsOfBatchQuery
+	// ParamsOfBatchQuery ...
 	ParamsOfBatchQuery struct {
 		Operations []ParamsOfQueryOperation `json:"operations"`
 	}
 
-	// ResultOfBatchQuery
+	// ResultOfBatchQuery ...
 	ResultOfBatchQuery struct {
 		Result []json.RawMessage `json:"result"`
 	}
@@ -70,7 +73,7 @@ type (
 		Collection string      `json:"collection"`
 		Filter     interface{} `json:"filter,omitempty"`
 		Result     string      `json:"result"`
-		Order      []OrderBy   `json:"order,omitempty"`
+		Order      []*OrderBy   `json:"order,omitempty"`
 		Limit      int         `json:"limit,omitempty"`
 	}
 
@@ -83,7 +86,7 @@ type (
 	ParamsOfAggregateCollection struct {
 		Collection string              `json:"collection"`
 		Filter     interface{}         `json:"filter,omitempty"`
-		Fields     []FieldAggregation `json:"fields,omitempty"`
+		Fields     []*FieldAggregation `json:"fields,omitempty"`
 	}
 	// ResultOfAggregateCollection ...
 	ResultOfAggregateCollection struct {
@@ -172,4 +175,16 @@ func getSortDirection() map[int]string {
 		0: "ASC",
 		1: "DESC",
 	}
+}
+
+func ParamsOfQueryOperationQueryCollection(params *ParamsOfQueryCollection) *ParamsOfQueryOperation {
+	return &ParamsOfQueryOperation{Type: ParamsOfQueryOperationTypeQueryCollection}
+}
+
+func ParamsOfQueryOperationWaitForCollection(params *ParamsOfWaitForCollection) *ParamsOfQueryOperation {
+	return &ParamsOfQueryOperation{Type: ParamsOfQueryOperationTypeWaitForCollection}
+}
+
+func ParamsOfQueryOperationAggregateCollection(params *ParamsOfAggregateCollection) *ParamsOfQueryOperation {
+	return &ParamsOfQueryOperation{Type: ParamsOfQueryOperationTypeAggregateCollection}
 }

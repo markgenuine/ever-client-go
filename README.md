@@ -21,35 +21,22 @@ $ git clone https://github.com/move-ton/ton-client-go.git
 $ cd ton-client-go
 ```
 
-## Installation dependency
-### For complited from source code SDK-lib  
+#### Installation for MAC OS 
 ```
-export CGO_LDFLAGS="-L/path-to-installation/TON-SDK/target/release/deps/ -lton_client"
-```
-#### Linux:
-```
-export LD_LIBRARY_PATH=/path-to-installation/TON-SDK/target/release/deps/
-```
-#### MacOS:
-```
-export DYLD_LIBRARY_PATH=/path-to-installation/TON-SDK/target/release/deps/
-```
-and add file to "lib" directory darwin for macOS and linux.
+#Set path to library
+install_name_tool -id PATH_WITH_BINDING/gateway/client/lib/libton_client.dylib PATH_WITH_BINDING/gateway/client/lib/libton_client.dylibs```
 
-### For completed of binary lib complited:
+#Add to ~/.bashrc or execute everytime 
+export CGO_LDFLAGS="-LPATH_WITH_BINDING/gateway/client/lib/ -lton_client"
 ```
-export CGO_LDFLAGS="-L/path-with-lib/ -lton_client"
+#### Installation for Linux
 ```
-#### Linux:
-```
-export LD_LIBRARY_PATH=/path-with-lib/
-```
-#### MacOS:
-```
-export DYLD_LIBRARY_PATH=/path-with-lib/
+#Add to ~/.bashrc or execute everytime 
+export LD_LIBRARY_PATH=PATH_WITH_BINDING/gateway/client/lib/:$LD_LIBRARY_PATH
+export CGO_LDFLAGS="-LPATH_WITH_BINDING/gateway/client/lib/ -lton_client"
 ```
 
-Or use "-exec" for example:
+####Or use "-exec" for example:
 ```
 go build
 go run  -exec "env DYLD_LIBRARY_PATH=/path-with-lib/" main.go

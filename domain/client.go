@@ -133,6 +133,7 @@ type (
 )
 
 func init() {
+	// ClientErrorCode - list with error client.
 	ClientErrorCode = map[string]int{
 		"NotImplemented":                      1,
 		"InvalidHex":                          2,
@@ -237,12 +238,12 @@ func HandleEvents(responses <-chan *ClientResponse, callback EventCallback, resu
 	return nil
 }
 
-//AppRequestResultErrorNew ...
-func AppRequestResultErrorNew() *AppRequestResult {
-	return &AppRequestResult{Type: "Error"}
+//AppRequestResultError - Variant constructor Application request result error.
+func AppRequestResultError(text string) *AppRequestResult {
+	return &AppRequestResult{Type: "Error", Text: text}
 }
 
-//AppRequestResultOkNew ...
-func AppRequestResultOkNew() *AppRequestResult {
-	return &AppRequestResult{Type: "Ok"}
+//AppRequestResultOk - Variant constructor Application request result Ok.
+func AppRequestResultOk(result json.RawMessage) *AppRequestResult {
+	return &AppRequestResult{Type: "Ok", Result: result}
 }

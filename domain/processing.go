@@ -3,29 +3,29 @@ package domain
 import "encoding/json"
 
 const (
-	// PEWillFetchFirstBlock ...
-	PEWillFetchFirstBlock ProcessingEventType = "WillFetchFirstBlock"
+	// WillFetchFirstBlock ...
+	WillFetchFirstBlock ProcessingEventType = "WillFetchFirstBlock"
 
-	// PEWillFetchFirstBlockFailed ...
-	PEWillFetchFirstBlockFailed ProcessingEventType = "FetchFirstBlockFailed"
+	// FetchFirstBlockFailed ...
+	FetchFirstBlockFailed ProcessingEventType = "FetchFirstBlockFailed"
 
-	// PEWillSend ...
-	PEWillSend ProcessingEventType = "WillSend"
+	// WillSend ...
+	WillSend ProcessingEventType = "WillSend"
 
-	// PEDidSend ...
-	PEDidSend ProcessingEventType = "DidSend"
+	// DidSend ...
+	DidSend ProcessingEventType = "DidSend"
 
-	// PESendFailed ...
-	PESendFailed ProcessingEventType = "SendFailed"
+	// SendFailed ...
+	SendFailed ProcessingEventType = "SendFailed"
 
-	// PEWillFetchNextBlock ...
-	PEWillFetchNextBlock ProcessingEventType = "WillFetchNextBlock"
+	// WillFetchNextBlock ...
+	WillFetchNextBlock ProcessingEventType = "WillFetchNextBlock"
 
-	// PEFetchNextBlockFailed ...
-	PEFetchNextBlockFailed ProcessingEventType = "FetchNextBlockFailed"
+	// FetchNextBlockFailed ...
+	FetchNextBlockFailed ProcessingEventType = "FetchNextBlockFailed"
 
-	// PEMessageExpired ...
-	PEMessageExpired ProcessingEventType = "MessageExpired"
+	// MessageExpired ...
+	MessageExpired ProcessingEventType = "MessageExpired"
 )
 
 // ProcessingErrorCode ...
@@ -38,77 +38,16 @@ type (
 	// ProcessingEvent ...
 	ProcessingEvent struct {
 		Type         ProcessingEventType `json:"type"`
-		Error        ClientError         `json:"error"`
-		ShardBlockID string              `json:"shard_block_id"`
-		MessageID    string              `json:"message_id"`
-		Message      string              `json:"message"`
-	}
-
-	//ProcessingEventWFFB - WillFetchFirstBlock
-	ProcessingEventWFFB struct {
-		Type ProcessingEventType `json:"type"`
-	}
-
-	//ProcessingEventFFBF - FetchFirstBlockFailed
-	ProcessingEventFFBF struct {
-		Type  ProcessingEventType `json:"type"`
-		Error ClientError         `json:"error"`
-	}
-
-	//ProcessingEventWS - WillSend
-	ProcessingEventWS struct {
-		Type         ProcessingEventType `json:"type"`
-		ShardBlockID string              `json:"shard_block_id"`
-		MessageID    string              `json:"message_id"`
-		Message      string              `json:"message"`
-	}
-
-	//ProcessingEventDS - DidSend
-	ProcessingEventDS struct {
-		Type         ProcessingEventType `json:"type"`
-		ShardBlockID string              `json:"shard_block_id"`
-		MessageID    string              `json:"message_id"`
-		Message      string              `json:"message"`
-	}
-
-	//ProcessingEventSF - SendFailed
-	ProcessingEventSF struct {
-		Type         ProcessingEventType `json:"type"`
-		ShardBlockID string              `json:"shard_block_id"`
-		MessageID    string              `json:"message_id"`
-		Message      string              `json:"message"`
-		Error        ClientError         `json:"error"`
-	}
-
-	//ProcessingEventWFNB - WillFetchNextBlock
-	ProcessingEventWFNB struct {
-		Type         ProcessingEventType `json:"type"`
-		ShardBlockID string              `json:"shard_block_id"`
-		MessageID    string              `json:"message_id"`
-		Message      string              `json:"message"`
-	}
-
-	//ProcessingEventFNBF - FetchNextBlockFailed
-	ProcessingEventFNBF struct {
-		Type         ProcessingEventType `json:"type"`
-		ShardBlockID string              `json:"shard_block_id"`
-		MessageID    string              `json:"message_id"`
-		Message      string              `json:"message"`
-		Error        ClientError         `json:"error"`
-	}
-
-	//ProcessingEventME - MessageExpired
-	ProcessingEventME struct {
-		Type      ProcessingEventType `json:"type"`
-		MessageID string              `json:"message_id"`
-		Message   string              `json:"message"`
-		Error     ClientError         `json:"error"`
+		Error        *ClientError         `json:"error,omitempty"`
+		ShardBlockID string              `json:"shard_block_id,omitempty"`
+		MessageID    string              `json:"message_id,omitempty"`
+		Message      string              `json:"message,omitempty"`
 	}
 
 	// ParamsOfSendMessage ...
 	ParamsOfSendMessage struct {
 		Message    string `json:"message"`
-		Abi        Abi    `json:"abi,omitempty"`
+		Abi        *Abi    `json:"abi,omitempty"`
 		SendEvents bool   `json:"send_events"`
 	}
 
@@ -119,7 +58,7 @@ type (
 
 	// ParamsOfWaitForTransaction ...
 	ParamsOfWaitForTransaction struct {
-		Abi          Abi    `json:"abi,omitempty"`
+		Abi          *Abi    `json:"abi,omitempty"`
 		Message      string `json:"message"`
 		ShardBlockID string `json:"shard_block_id"`
 		SendEvents   bool   `json:"send_events"`
@@ -174,42 +113,42 @@ func init() {
 	}
 }
 
-// NewProcEventWFFB - ProcessingEvent, type: WillFetchFirstBlock
-func NewProcEventWFFB() ProcessingEventWFFB {
-	return ProcessingEventWFFB{Type: PEWillFetchFirstBlock}
+// ProcessingEventWillFetchFirstBlock variant constructor ProcessingEvent.
+func ProcessingEventWillFetchFirstBlock() *ProcessingEvent {
+	return &ProcessingEvent{Type: WillFetchFirstBlock}
 }
 
-// NewProcEventFFBF - ProcessingEvent, type: FetchFirstBlockFailed
-func NewProcEventFFBF() ProcessingEventFFBF {
-	return ProcessingEventFFBF{Type: PEWillFetchFirstBlockFailed}
+// ProcessingEventFetchFirstBlockFailed variant constructor ProcessingEvent.
+func ProcessingEventFetchFirstBlockFailed(err *ClientError) *ProcessingEvent {
+	return &ProcessingEvent{Type: FetchFirstBlockFailed, Error: err}
 }
 
-// NewProcEventWS - ProcessingEvent, type: WillSend
-func NewProcEventWS() ProcessingEventWS {
-	return ProcessingEventWS{Type: PEWillSend}
+// ProcessingEventWillSend variant constructor ProcessingEvent.
+func ProcessingEventWillSend(shardBlockId, messageID, message string) *ProcessingEvent {
+	return &ProcessingEvent{Type: WillSend, ShardBlockID: shardBlockId, MessageID: messageID, Message: message}
 }
 
-// NewProcEventDS - ProcessingEvent, type: DidSend
-func NewProcEventDS() ProcessingEventDS {
-	return ProcessingEventDS{Type: PEDidSend}
+// ProcessingEventDidSend variant constructor ProcessingEvent.
+func ProcessingEventDidSend(shardBlockId, messageID, message string) *ProcessingEvent {
+	return &ProcessingEvent{Type: DidSend, ShardBlockID: shardBlockId, MessageID: messageID, Message: message}
 }
 
-// NewProcEventSF - ProcessingEvent, type: SendFailed
-func NewProcEventSF() ProcessingEventSF {
-	return ProcessingEventSF{Type: PESendFailed}
+// ProcessingEventSendFailed variant constructor ProcessingEvent.
+func ProcessingEventSendFailed(shardBlockId, messageID, message string, err *ClientError) *ProcessingEvent {
+	return &ProcessingEvent{Type: SendFailed, ShardBlockID: shardBlockId, MessageID: messageID, Message: message, Error: err}
 }
 
-// NewProcEventWFNB - ProcessingEvent, type: WillFetchNextBlock
-func NewProcEventWFNB() ProcessingEventWFNB {
-	return ProcessingEventWFNB{Type: PEWillFetchNextBlock}
+// ProcessingEventWillFetchNextBlock variant constructor ProcessingEvent.
+func ProcessingEventWillFetchNextBlock(shardBlockId, messageID, message string) *ProcessingEvent{
+	return &ProcessingEvent{Type: WillFetchNextBlock, ShardBlockID: shardBlockId, MessageID: messageID, Message: message}
 }
 
-// NewProcEventFNBF - ProcessingEvent, type: FetchNextBlockFailed
-func NewProcEventFNBF() ProcessingEventFNBF {
-	return ProcessingEventFNBF{Type: PEFetchNextBlockFailed}
+// ProcessingEventFetchNextBlockFailed variant constructor ProcessingEvent.
+func ProcessingEventFetchNextBlockFailed(shardBlockId, messageID, message string, err *ClientError) *ProcessingEvent{
+	return &ProcessingEvent{Type: FetchNextBlockFailed, ShardBlockID: shardBlockId, MessageID: messageID, Message: message, Error: err}
 }
 
-// NewProcEventME - ProcessingEvent, type: MessageExpired
-func NewProcEventME() ProcessingEventME {
-	return ProcessingEventME{Type: PEMessageExpired}
+// ProcessingEventMessageExpired variant constructor ProcessingEvent.
+func ProcessingEventMessageExpired(messageID, message string, err *ClientError) *ProcessingEvent{
+	return &ProcessingEvent{Type: MessageExpired, MessageID: messageID, Message: message, Error: err}
 }

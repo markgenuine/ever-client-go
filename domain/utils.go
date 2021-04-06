@@ -2,43 +2,32 @@ package domain
 
 const (
 
-	// ASFAccountID ...
-	ASFAccountID AddressStringFormatType = "AccountId"
+	// AddressStringFormatTypeID ...
+	AddressStringFormatTypeID AddressStringFormatType = "AccountId"
 
-	// ASFHex ...
-	ASFHex AddressStringFormatType = "Hex"
+	// AddressStringFormatTypeHex ...
+	AddressStringFormatTypeHex AddressStringFormatType = "Hex"
 
-	// ASFBase64 ...
-	ASFBase64 AddressStringFormatType = "Base64"
+	// AddressStringFormatTypeBase64 ...
+	AddressStringFormatTypeBase64 AddressStringFormatType = "Base64"
 )
 
 type (
-
 	// AddressStringFormatType ...
 	AddressStringFormatType string
 
-	// AddressStringFormatAccountID ...
-	AddressStringFormatAccountID struct {
+	// AddressStringFormat
+	AddressStringFormat struct {
 		Type AddressStringFormatType `json:"type"`
-	}
-
-	// AddressStringFormatHex ...
-	AddressStringFormatHex struct {
-		Type AddressStringFormatType `json:"type"`
-	}
-
-	// AddressStringFormatBase64 ...
-	AddressStringFormatBase64 struct {
-		Type   AddressStringFormatType `json:"type"`
-		URL    bool                    `json:"url"`
-		Test   bool                    `json:"test"`
-		Bounce bool                    `json:"bounce"`
+		URL    bool                    `json:"url,omitempty"`
+		Test   bool                    `json:"test,omitempty"`
+		Bounce bool                    `json:"bounce,omitempty"`
 	}
 
 	// ParamsOfConvertAddress ...
 	ParamsOfConvertAddress struct {
 		Address      string      `json:"address"`
-		OutputFormat interface{} `json:"output_format"`
+		OutputFormat *AddressStringFormat `json:"output_format"`
 	}
 
 	// ResultOfConvertAddress ...
@@ -52,17 +41,17 @@ type (
 	}
 )
 
-// NewAddressStringFormatAccountID ...
-func NewAddressStringFormatAccountID() AddressStringFormatAccountID {
-	return AddressStringFormatAccountID{Type: ASFAccountID}
+// AddressStringFormatAccountId ...
+func AddressStringFormatAccountId() *AddressStringFormat {
+	return &AddressStringFormat{Type: AddressStringFormatTypeID}
 }
 
-// NewAddressStringFormatHex ...
-func NewAddressStringFormatHex() AddressStringFormatHex {
-	return AddressStringFormatHex{Type: ASFHex}
+// AddressStringFormatHex ...
+func AddressStringFormatHex() *AddressStringFormat {
+	return &AddressStringFormat{Type: AddressStringFormatTypeHex}
 }
 
-// NewAddressStringFormatBase64 ...
-func NewAddressStringFormatBase64() AddressStringFormatBase64 {
-	return AddressStringFormatBase64{Type: ASFBase64}
+// AddressStringFormatBase64 ...
+func AddressStringFormatBase64(url, test, bounce bool) *AddressStringFormat {
+	return &AddressStringFormat{Type: AddressStringFormatTypeBase64, URL: url, Test: test, Bounce: bounce}
 }

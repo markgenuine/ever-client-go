@@ -20,21 +20,22 @@ func NewAbi(
 	}
 }
 
-// EncodeMessageBody Encode message body according to ABI function call.
+// EncodeMessageBody - Encode message body according to ABI function call.
 func (a *abi) EncodeMessageBody(pOEMB *domain.ParamsOfEncodeMessageBody) (*domain.ResultOfEncodeMessageBody, error) {
 	result := new(domain.ResultOfEncodeMessageBody)
 	err := a.client.GetResult("abi.encode_message_body", pOEMB, result)
 	return result, err
 }
 
-// AttachSignatureToMessageBody method attach_signature_to_message_body.
+// AttachSignatureToMessageBody - method attach_signature_to_message_body
 func (a *abi) AttachSignatureToMessageBody(pOASTMB *domain.ParamsOfAttachSignatureToMessageBody) (*domain.ResultOfAttachSignatureToMessageBody, error) {
 	result := new(domain.ResultOfAttachSignatureToMessageBody)
 	err := a.client.GetResult("abi.attach_signature_to_message_body", pOASTMB, result)
 	return result, err
 }
 
-// EncodeMessage encodes an ABI-compatible message.
+// EncodeMessage - Encodes an ABI-compatible message.
+// Allows to encode deploy and function call messages, both signed and unsigned.
 func (a *abi) EncodeMessage(pOEM *domain.ParamsOfEncodeMessage) (*domain.ResultOfEncodeMessage, error) {
 	result := new(domain.ResultOfEncodeMessage)
 	err := a.client.GetResult("abi.encode_message", pOEM, result)
@@ -42,7 +43,7 @@ func (a *abi) EncodeMessage(pOEM *domain.ParamsOfEncodeMessage) (*domain.ResultO
 }
 
 // EncodeInternalMessage - Encodes an internal ABI-compatible message
-//Allows to encode deploy and function call messages.
+// Allows to encode deploy and function call messages.
 func (a *abi) EncodeInternalMessage(pOEIM *domain.ParamsOfEncodeInternalMessage) (*domain.ResultOfEncodeInternalMessage, error) {
 	result := new(domain.ResultOfEncodeInternalMessage)
 	err := a.client.GetResult("abi.encode_internal_message", pOEIM, result)

@@ -9,7 +9,7 @@ type (
 		Boc     *BocConfig `toml:"boc" json:"boc,omitempty"`
 	}
 
-	// Network ...
+	// Network - Network config.
 	Network struct {
 		ServerAddress            string   `toml:"server_address" json:"server_address,omitempty"`
 		Endpoints                []string `toml:"endpoints" json:"endpoints,omitempty"`

@@ -18,7 +18,8 @@ func NewCrypto(config domain.Config, client domain.ClientGateway) domain.CryptoU
 	}
 }
 
-// Factorize - Performs prime factorization – decomposition of a composite number into a product of smaller prime integers (factors).
+// Factorize - Performs prime factorization – decomposition of a composite number into a product
+// of smaller prime integers (factors).
 func (c *crypto) Factorize(poF *domain.ParamsOfFactorize) (*domain.ResultOfFactorize, error) {
 	result := new(domain.ResultOfFactorize)
 	err := c.client.GetResult("crypto.factorize", poF, result)
@@ -147,14 +148,16 @@ func (c *crypto) NaclBoxKeypairFromSecretKey(pONKPFS *domain.ParamsOfNaclBoxKeyP
 	return result, err
 }
 
-// NaclBox - Public key authenticated encryption.
+// NaclBox - Public key authenticated encryption. Encrypt and authenticate a message using
+// the senders secret key, the receivers public key, and a nonce.
 func (c *crypto) NaclBox(pONB *domain.ParamsOfNaclBox) (*domain.ResultOfNaclBox, error) {
 	result := new(domain.ResultOfNaclBox)
 	err := c.client.GetResult("crypto.nacl_box", pONB, result)
 	return result, err
 }
 
-// NaclBoxOpen - Decrypt and verify the cipher text using the recievers secret key, the senders public key, and the nonce.
+// NaclBoxOpen - Decrypt and verify the cipher text using the recievers secret key, the senders public
+// key, and the nonce.
 func (c *crypto) NaclBoxOpen(pONBO *domain.ParamsOfNaclBoxOpen) (*domain.ResultOfNaclBoxOpen, error) {
 	result := new(domain.ResultOfNaclBoxOpen)
 	err := c.client.GetResult("crypto.nacl_box_open", pONBO, result)
@@ -196,14 +199,16 @@ func (c *crypto) MnemonicFromEntropy(pOMFE *domain.ParamsOfMnemonicFromEntropy) 
 	return result, err
 }
 
-// MnemonicVerify - The phrase supplied will be checked for word length and validated according to the checksum specified in BIP0039.
+// MnemonicVerify - The phrase supplied will be checked for word length and validated according to the
+// checksum specified in BIP0039.
 func (c *crypto) MnemonicVerify(pOMV *domain.ParamsOfMnemonicVerify) (*domain.ResultOfMnemonicVerify, error) {
 	result := new(domain.ResultOfMnemonicVerify)
 	err := c.client.GetResult("crypto.mnemonic_verify", pOMV, result)
 	return result, err
 }
 
-// MnemonicDeriveSignKeys - Validates the seed phrase, generates master key and then derives the key pair from the master key and the specified path.
+// MnemonicDeriveSignKeys - Validates the seed phrase, generates master key and then derives the key pair from
+// the master key and the specified path.
 func (c *crypto) MnemonicDeriveSignKeys(pOMDSK *domain.ParamsOfMnemonicDeriveSignKeys) (*domain.KeyPair, error) {
 	result := new(domain.KeyPair)
 	err := c.client.GetResult("crypto.mnemonic_derive_sign_keys", pOMDSK, result)

@@ -22,7 +22,7 @@ import (
 
 const (
 	// VersionLibSDK ...
-	VersionLibSDK = "1.9.0"
+	VersionLibSDK = "1.10.0"
 )
 
 var mainStore = NewStore()

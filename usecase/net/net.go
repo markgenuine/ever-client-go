@@ -46,7 +46,8 @@ func (n *net) QueryCollection(pOQC *domain.ParamsOfQueryCollection) (*domain.Res
 }
 
 // AggregateCollection - Aggregates collection data.
-// Aggregates values from the specified fields for records that satisfies the filter conditions, aggregate_collection.
+// Aggregates values from the specified fields for records that satisfies the filter conditions,
+// aggregate_collection.
 func (n *net) AggregateCollection(pOAC *domain.ParamsOfAggregateCollection) (*domain.ResultOfAggregateCollection, error) {
 	result := new(domain.ResultOfAggregateCollection)
 	err := n.client.GetResult("net.aggregate_collection", pOAC, result)

@@ -58,7 +58,7 @@ func (b *boc) ParseShardstate(pOPS *domain.ParamsOfParseShardstate) (*domain.Res
 	return result, err
 }
 
-// GetBlockhainConfig
+// GetBlockhainConfig - Extract blockchain configuration from key block and also from zerostate.
 func (b *boc) GetBlockhainConfig(pOGBC *domain.ParamsOfGetBlockchainConfig) (*domain.ResultOfGetBlockchainConfig, error) {
 	result := new(domain.ResultOfGetBlockchainConfig)
 	err := b.client.GetResult("boc.get_blockchain_config", pOGBC, result)
@@ -80,14 +80,14 @@ func (b *boc) GetCodeFromTvc(pOGCFT *domain.ParamsOfGetCodeFromTvc) (*domain.Res
 }
 
 // CacheGet - Get BOC from cache.
-func (b *boc) CacheGet(pOBCG *domain.ParamsOfBocCacheGet)(*domain.ResultOfBocCacheGet,error){
+func (b *boc) CacheGet(pOBCG *domain.ParamsOfBocCacheGet)(*domain.ResultOfBocCacheGet, error){
 	result := new(domain.ResultOfBocCacheGet)
 	err := b.client.GetResult("boc.cache_get", pOBCG, result)
 	return result, err
 }
 
 // CacheSet - Save BOC into cache.
-func (b *boc) CacheSet(pOBCS *domain.ParamsOfBocCacheSet)(*domain.ResultOfBocCacheSet,error){
+func (b *boc) CacheSet(pOBCS *domain.ParamsOfBocCacheSet)(*domain.ResultOfBocCacheSet, error){
 	result := new(domain.ResultOfBocCacheSet)
 	err := b.client.GetResult("boc.cache_set", pOBCS, result)
 	return result, err
@@ -98,4 +98,11 @@ func (b *boc) CacheSet(pOBCS *domain.ParamsOfBocCacheSet)(*domain.ResultOfBocCac
 func (b *boc) CacheUnpin(pOBCU *domain.ParamsOfBocCacheUnpin)(error){
 	_, err := b.client.GetResponse("boc.cache_unpin", pOBCU)
 	return err
+}
+
+// EncodeBoc - Encodes BOC from builder operations.
+func(b *boc) EncodeBoc(pOEB *domain.ParamsOfEncodeBoc) (*domain.ResultOfEncodeBoc, error){
+	result := new(domain.ResultOfEncodeBoc)
+	err := b.client.GetResult("boc.encode_boc", pOEB, result)
+	return result, err
 }

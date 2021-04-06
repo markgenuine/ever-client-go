@@ -148,7 +148,7 @@ func TestTvm(t *testing.T) {
 		})
 		assert.Equal(t, nil, err)
 
-		result, err := tvmUC.RunExecutor(&domain.ParamsOfRunExecutor{Message: encodeMessage.Message, Account: domain.AccountForExecutorAccount{Type: "Account", Boc: bocV, UnlimitedBalance: true}, Abi: abiValue})
+		result, err := tvmUC.RunExecutor(&domain.ParamsOfRunExecutor{Message: encodeMessage.Message, Account: domain.AccountForExecutorAccount(bocV, true), Abi: &abiValue})
 		assert.Equal(t, nil, err)
 
 		// # Get account balance again
@@ -162,7 +162,7 @@ func TestTvm(t *testing.T) {
 		assert.Equal(t, origBalance, parsedBalanced)
 
 		// # Run executor in standard mode (limited balance)
-		result, err = tvmUC.RunExecutor(&domain.ParamsOfRunExecutor{Message: encodeMessage.Message, Account: domain.AccountForExecutorAccount{Type: "Account", Boc: bocV, UnlimitedBalance: false}, Abi: abiValue})
+		result, err = tvmUC.RunExecutor(&domain.ParamsOfRunExecutor{Message: encodeMessage.Message, Account: domain.AccountForExecutorAccount(bocV, false), Abi: &abiValue})
 		assert.Equal(t, nil, err)
 
 		err = json.Unmarshal(result.Transaction, &objmap)
@@ -186,7 +186,7 @@ func TestTvm(t *testing.T) {
 		})
 		assert.Equal(t, nil, err)
 
-		result2, err := tvmUC.RunTvm(&domain.ParamsOfRunTvm{Message: encodedMessage.Message, Account: result.Account, Abi: abiValue})
+		result2, err := tvmUC.RunTvm(&domain.ParamsOfRunTvm{Message: encodedMessage.Message, Account: result.Account, Abi: &abiValue})
 		assert.Equal(t, nil, err)
 
 		err = json.Unmarshal(result2.Decoded.Output, &objmap)
@@ -245,7 +245,7 @@ func TestTvm(t *testing.T) {
 
 	t.Run("TestRunExecutorAccNone", func(t *testing.T) {
 		message := "te6ccgEBAQEAXAAAs0gAV2lB0HI8/VEO/pBKDJJJeoOcIh+dL9JzpmRzM8PfdicAPGNEGwRWGaJsR6UYmnsFVC2llSo1ZZN5mgUnCiHf7ZaUBKgXyAAGFFhgAAAB69+UmQS/LjmiQA=="
-		result, err := tvmUC.RunExecutor(&domain.ParamsOfRunExecutor{Message: message, Account: domain.AccountForExecutorNone{Type: "None"}, SkipTransactionCheck: true})
+		result, err := tvmUC.RunExecutor(&domain.ParamsOfRunExecutor{Message: message, Account: domain.AccountForExecutorNone(), SkipTransactionCheck: true})
 		assert.Equal(t, nil, err)
 
 		parsed, err := bocUC.ParseAccount(&domain.ParamsOfParse{Boc: result.Account})
@@ -293,8 +293,7 @@ func TestTvm(t *testing.T) {
 			CallSet:   &callSet,
 		})
 		assert.Equal(t, nil, err)
-		accountForExecutor := domain.AccountForExecutorUninit{Type: domain.AccountForExecutorTypeUninit}
-		result, err := tvmUC.RunExecutor(&domain.ParamsOfRunExecutor{Message: deployMessage.Message, Account: accountForExecutor})
+		result, err := tvmUC.RunExecutor(&domain.ParamsOfRunExecutor{Message: deployMessage.Message, Account: domain.AccountForExecutorUninit()})
 		assert.Equal(t, nil, err)
 
 		// # Parse account

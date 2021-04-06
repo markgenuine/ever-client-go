@@ -31,31 +31,21 @@ type (
 	// AccountForExecutorType ...
 	AccountForExecutorType string
 
-	// AccountForExecutorNone ...
-	AccountForExecutorNone struct {
+	// AccountForExecutor
+	AccountForExecutor struct {
 		Type AccountForExecutorType `json:"type"`
-	}
-
-	// AccountForExecutorUninit ...
-	AccountForExecutorUninit struct {
-		Type AccountForExecutorType `json:"type"`
-	}
-
-	// AccountForExecutorAccount ...
-	AccountForExecutorAccount struct {
-		Type             AccountForExecutorType `json:"type"`
-		Boc              string                 `json:"boc,omitempty"`
-		UnlimitedBalance bool                   `json:"unlimited_balance,omitempty"`
+		Boc string `json:"boc,omitempty"`
+		UnlimitedBalance bool `json:"unlimited_balance,omitempty"`
 	}
 
 	// ParamsOfRunExecutor ...
 	ParamsOfRunExecutor struct {
 		Message              string            `json:"message"`
-		Account              interface{}       `json:"account"` // AccountForExecutor
+		Account              *AccountForExecutor       `json:"account"`
 		ExecutionOptions     *ExecutionOptions `json:"execution_options,omitempty"`
-		Abi                  Abi               `json:"abi,omitempty"`
+		Abi                  *Abi               `json:"abi,omitempty"`
 		SkipTransactionCheck bool              `json:"skip_transaction_check,omitempty"`
-		BocCache BocCacheType `json:"boc_cache,omitempty"`
+		BocCache *BocCacheType `json:"boc_cache,omitempty"`
 		ReturnUpdatedAccount bool `json:"return_updated_account,omitempty"`
 	}
 
@@ -63,9 +53,9 @@ type (
 	ResultOfRunExecuteMessage struct {
 		Transaction json.RawMessage `json:"transaction,omitempty"`
 		OutMessages []string        `json:"out_messages"`
-		Decoded     DecodedOutput   `json:"decoded,omitempty"`
+		Decoded     *DecodedOutput   `json:"decoded,omitempty"`
 		Account     string          `json:"account"`
-		Fees        TransactionFees `json:"fees"`
+		Fees        *TransactionFees `json:"fees"`
 	}
 
 	// ParamsOfRunTvm ...
@@ -73,8 +63,8 @@ type (
 		Message          string            `json:"message"`
 		Account          string            `json:"account"`
 		ExecutionOptions *ExecutionOptions `json:"execution_options,omitempty"`
-		Abi              Abi               `json:"abi,omitempty"`
-		BocCache BocCacheType `json:"boc_cache,omitempty"`
+		Abi              *Abi               `json:"abi,omitempty"`
+		BocCache *BocCacheType `json:"boc_cache,omitempty"`
 		ReturnUpdatedAccount bool `json:"return_updated_account"`
 	}
 
@@ -134,4 +124,19 @@ func init() {
 		"InvalidMessageType         ": 413,
 		"ContractExecutionError     ": 414,
 	}
+}
+
+// AccountForExecutorNone variant constructor AccountForExecutor.
+func AccountForExecutorNone() *AccountForExecutor {
+	return &AccountForExecutor{Type: AccountForExecutorTypeNone}
+}
+
+// AccountForExecutorUninit variant constructor AccountForExecutor.
+func AccountForExecutorUninit() *AccountForExecutor {
+	return &AccountForExecutor{Type: AccountForExecutorTypeUninit}
+}
+
+// AccountForExecutorAccount variant constructor AccountForExecutor.
+func AccountForExecutorAccount(boc string, unlimitedBalance bool) *AccountForExecutor {
+	return &AccountForExecutor{Type: AccountForExecutorTypeUninit, Boc: boc, UnlimitedBalance: unlimitedBalance}
 }
