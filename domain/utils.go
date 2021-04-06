@@ -18,7 +18,7 @@ type (
 
 	// AddressStringFormat
 	AddressStringFormat struct {
-		Type AddressStringFormatType `json:"type"`
+		Type   AddressStringFormatType `json:"type"`
 		URL    bool                    `json:"url,omitempty"`
 		Test   bool                    `json:"test,omitempty"`
 		Bounce bool                    `json:"bounce,omitempty"`
@@ -26,7 +26,7 @@ type (
 
 	// ParamsOfConvertAddress ...
 	ParamsOfConvertAddress struct {
-		Address      string      `json:"address"`
+		Address      string               `json:"address"`
 		OutputFormat *AddressStringFormat `json:"output_format"`
 	}
 
@@ -35,9 +35,21 @@ type (
 		Address string `json:"address"`
 	}
 
+	// ParamsOfCalcStorageFee ...
+	ParamsOfCalcStorageFee struct {
+		Account string `json:"account"`
+		Period  int    `json:"period"`
+	}
+
+	// ResultOfCalcStorageFee ...
+	ResultOfCalcStorageFee struct {
+		Fee string `json:"fee"`
+	}
+
 	//UtilsUseCase ...
 	UtilsUseCase interface {
 		ConvertAddress(*ParamsOfConvertAddress) (*ResultOfConvertAddress, error)
+		CalcStorageFee(pOCA *ParamsOfCalcStorageFee) (*ResultOfCalcStorageFee, error)
 	}
 )
 
