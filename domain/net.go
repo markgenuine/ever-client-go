@@ -34,9 +34,9 @@ type (
 	ParamsOfQueryOperationType string
 
 	ParamsOfQueryOperation struct {
-		Type ParamsOfQueryOperationType `json:"type"`
-		*ParamsOfQueryCollection `json:",omitempty"`
-		*ParamsOfWaitForCollection `json:",omitempty"`
+		Type                         ParamsOfQueryOperationType `json:"type"`
+		*ParamsOfQueryCollection     `json:",omitempty"`
+		*ParamsOfWaitForCollection   `json:",omitempty"`
 		*ParamsOfAggregateCollection `json:",omitempty"`
 	}
 
@@ -73,7 +73,7 @@ type (
 		Collection string      `json:"collection"`
 		Filter     interface{} `json:"filter,omitempty"`
 		Result     string      `json:"result"`
-		Order      []*OrderBy   `json:"order,omitempty"`
+		Order      []*OrderBy  `json:"order,omitempty"`
 		Limit      int         `json:"limit,omitempty"`
 	}
 

@@ -80,14 +80,14 @@ func (b *boc) GetCodeFromTvc(pOGCFT *domain.ParamsOfGetCodeFromTvc) (*domain.Res
 }
 
 // CacheGet - Get BOC from cache.
-func (b *boc) CacheGet(pOBCG *domain.ParamsOfBocCacheGet)(*domain.ResultOfBocCacheGet, error){
+func (b *boc) CacheGet(pOBCG *domain.ParamsOfBocCacheGet) (*domain.ResultOfBocCacheGet, error) {
 	result := new(domain.ResultOfBocCacheGet)
 	err := b.client.GetResult("boc.cache_get", pOBCG, result)
 	return result, err
 }
 
 // CacheSet - Save BOC into cache.
-func (b *boc) CacheSet(pOBCS *domain.ParamsOfBocCacheSet)(*domain.ResultOfBocCacheSet, error){
+func (b *boc) CacheSet(pOBCS *domain.ParamsOfBocCacheSet) (*domain.ResultOfBocCacheSet, error) {
 	result := new(domain.ResultOfBocCacheSet)
 	err := b.client.GetResult("boc.cache_set", pOBCS, result)
 	return result, err
@@ -95,13 +95,13 @@ func (b *boc) CacheSet(pOBCS *domain.ParamsOfBocCacheSet)(*domain.ResultOfBocCac
 
 // CacheUnpin - Unpin BOCs with specified pin.
 //BOCs which don't have another pins will be removed from cache.
-func (b *boc) CacheUnpin(pOBCU *domain.ParamsOfBocCacheUnpin)(error){
+func (b *boc) CacheUnpin(pOBCU *domain.ParamsOfBocCacheUnpin) error {
 	_, err := b.client.GetResponse("boc.cache_unpin", pOBCU)
 	return err
 }
 
 // EncodeBoc - Encodes BOC from builder operations.
-func(b *boc) EncodeBoc(pOEB *domain.ParamsOfEncodeBoc) (*domain.ResultOfEncodeBoc, error){
+func (b *boc) EncodeBoc(pOEB *domain.ParamsOfEncodeBoc) (*domain.ResultOfEncodeBoc, error) {
 	result := new(domain.ResultOfEncodeBoc)
 	err := b.client.GetResult("boc.encode_boc", pOEB, result)
 	return result, err

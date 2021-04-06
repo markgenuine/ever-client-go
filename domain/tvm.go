@@ -33,39 +33,39 @@ type (
 
 	// AccountForExecutor
 	AccountForExecutor struct {
-		Type AccountForExecutorType `json:"type"`
-		Boc string `json:"boc,omitempty"`
-		UnlimitedBalance bool `json:"unlimited_balance,omitempty"`
+		Type             AccountForExecutorType `json:"type"`
+		Boc              string                 `json:"boc,omitempty"`
+		UnlimitedBalance bool                   `json:"unlimited_balance,omitempty"`
 	}
 
 	// ParamsOfRunExecutor ...
 	ParamsOfRunExecutor struct {
-		Message              string            `json:"message"`
-		Account              *AccountForExecutor       `json:"account"`
-		ExecutionOptions     *ExecutionOptions `json:"execution_options,omitempty"`
-		Abi                  *Abi               `json:"abi,omitempty"`
-		SkipTransactionCheck bool              `json:"skip_transaction_check,omitempty"`
-		BocCache *BocCacheType `json:"boc_cache,omitempty"`
-		ReturnUpdatedAccount bool `json:"return_updated_account,omitempty"`
+		Message              string              `json:"message"`
+		Account              *AccountForExecutor `json:"account"`
+		ExecutionOptions     *ExecutionOptions   `json:"execution_options,omitempty"`
+		Abi                  *Abi                `json:"abi,omitempty"`
+		SkipTransactionCheck bool                `json:"skip_transaction_check,omitempty"`
+		BocCache             *BocCacheType       `json:"boc_cache,omitempty"`
+		ReturnUpdatedAccount bool                `json:"return_updated_account,omitempty"`
 	}
 
 	// ResultOfRunExecuteMessage ...
 	ResultOfRunExecuteMessage struct {
-		Transaction json.RawMessage `json:"transaction,omitempty"`
-		OutMessages []string        `json:"out_messages"`
+		Transaction json.RawMessage  `json:"transaction,omitempty"`
+		OutMessages []string         `json:"out_messages"`
 		Decoded     *DecodedOutput   `json:"decoded,omitempty"`
-		Account     string          `json:"account"`
+		Account     string           `json:"account"`
 		Fees        *TransactionFees `json:"fees"`
 	}
 
 	// ParamsOfRunTvm ...
 	ParamsOfRunTvm struct {
-		Message          string            `json:"message"`
-		Account          string            `json:"account"`
-		ExecutionOptions *ExecutionOptions `json:"execution_options,omitempty"`
-		Abi              *Abi               `json:"abi,omitempty"`
-		BocCache *BocCacheType `json:"boc_cache,omitempty"`
-		ReturnUpdatedAccount bool `json:"return_updated_account"`
+		Message              string            `json:"message"`
+		Account              string            `json:"account"`
+		ExecutionOptions     *ExecutionOptions `json:"execution_options,omitempty"`
+		Abi                  *Abi              `json:"abi,omitempty"`
+		BocCache             *BocCacheType     `json:"boc_cache,omitempty"`
+		ReturnUpdatedAccount bool              `json:"return_updated_account"`
 	}
 
 	// ResultOfRunTvm ...
@@ -81,7 +81,7 @@ type (
 		FunctionName     string            `json:"function_name,omitempty"`
 		Input            interface{}       `json:"input,omitempty"`
 		ExecutionOptions *ExecutionOptions `json:"execution_options,omitempty"`
-		TupleListAsArray bool `json:"tuple_list_as_array,omitempty"`
+		TupleListAsArray bool              `json:"tuple_list_as_array,omitempty"`
 	}
 
 	// ResultOfRunGet ...

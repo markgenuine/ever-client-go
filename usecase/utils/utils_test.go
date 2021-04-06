@@ -34,7 +34,7 @@ func TestUtils(t *testing.T) {
 		assert.Equal(t, nil, err)
 		assert.Equal(t, AccountID, valueConv2.Address)
 
-		valueConv3, err := utilsUC.ConvertAddress(&domain.ParamsOfConvertAddress{Address: Hex, OutputFormat: domain.AddressStringFormatBase64(false,false,false)})
+		valueConv3, err := utilsUC.ConvertAddress(&domain.ParamsOfConvertAddress{Address: Hex, OutputFormat: domain.AddressStringFormatBase64(false, false, false)})
 		assert.Equal(t, nil, err)
 		assert.Equal(t, Base64, valueConv3.Address)
 

@@ -25,7 +25,7 @@ type (
 	// RegisteredDebot ...
 	RegisteredDebot struct {
 		DebotHandle DebotHandle `json:"debot_handle"`
-		DebotAbi string `json:"debot_abi"`
+		DebotAbi    string      `json:"debot_abi"`
 	}
 
 	// ParamsOfAppDebotBrowser ...
@@ -36,7 +36,7 @@ type (
 		Action    *DebotAction `json:"action,omitempty"`
 		Prompt    string       `json:"prompt,omitempty"`
 		DebotAddr string       `json:"debot_addr,omitempty"`
-		Message string `json:"message,omitempty"`
+		Message   string       `json:"message,omitempty"`
 	}
 
 	// ResultOfAppDebotBrowser ...
@@ -60,7 +60,7 @@ type (
 	// ParamsOfSend ...
 	ParamsOfSend struct {
 		DebotHandle DebotHandle `json:"debot_handle"`
-		Message string `json:"message"`
+		Message     string      `json:"message"`
 	}
 
 	// DebotUseCase ...
@@ -75,16 +75,16 @@ type (
 
 func init() {
 	DebotErrorCode = map[string]int{
-		"DebotStartFailed":     801,
-		"DebotFetchFailed":     802,
-		"DebotExecutionFailed": 803,
-		"DebotInvalidHandle":   804,
-		"DebotInvalidJsonParams" : 805,
-		"DebotInvalidFunctionId" : 806,
-		"DebotInvalidAbi" : 807,
-		"DebotGetMethodFailed" : 808,
-		"DebotInvalidMsg" : 809,
-		"DebotExternalCallFailed" : 810,
+		"DebotStartFailed":        801,
+		"DebotFetchFailed":        802,
+		"DebotExecutionFailed":    803,
+		"DebotInvalidHandle":      804,
+		"DebotInvalidJsonParams":  805,
+		"DebotInvalidFunctionId":  806,
+		"DebotInvalidAbi":         807,
+		"DebotGetMethodFailed":    808,
+		"DebotInvalidMsg":         809,
+		"DebotExternalCallFailed": 810,
 	}
 }
 
@@ -125,7 +125,7 @@ func ParamsOfAppDebotBrowserInvokeDebot(debotAddr string, action *DebotAction) *
 
 // ParamsOfAppDebotBrowserSend ...
 func ParamsOfAppDebotBrowserSend(message string) *ParamsOfAppDebotBrowser {
-	return &ParamsOfAppDebotBrowser{Type: "Send",Message: message}
+	return &ParamsOfAppDebotBrowser{Type: "Send", Message: message}
 }
 
 // ResultOfAppDebotBrowserInput ...
@@ -142,4 +142,3 @@ func ResultOfAppDebotBrowserGetSigningBox(signingBox *SigningBoxHandle) *ResultO
 func ResultOfAppDebotBrowserInvokeDebot() *ResultOfAppDebotBrowser {
 	return &ResultOfAppDebotBrowser{Type: "InvokeDebot"}
 }
-

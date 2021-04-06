@@ -261,7 +261,7 @@ type (
 		DeploySet *DeploySet `json:"deploy_set,omitempty"`
 		CallSet   *CallSet   `json:"call_set,omitempty"`
 		Value     string     `json:"value"`
-		Bounce    bool       `json:"bounce"` //? Default is true.
+		Bounce    bool       `json:"bounce"`     //? Default is true.
 		EnableIhr bool       `json:"enable_ihr"` //? Default is false.
 	}
 
@@ -309,11 +309,11 @@ type (
 
 	// ParamsOfEncodeAccount ...
 	ParamsOfEncodeAccount struct {
-		StateInit   interface{} `json:"state_init"`
-		Balance     *big.Int    `json:"balance,omitempty"`
-		LastTransLt *big.Int    `json:"last_trans_lt,omitempty"`
-		LastPaid    int         `json:"last_paid,omitempty"`
-		BocCache *BocCacheType `json:"boc_cache,omitempty"`
+		StateInit   interface{}   `json:"state_init"`
+		Balance     *big.Int      `json:"balance,omitempty"`
+		LastTransLt *big.Int      `json:"last_trans_lt,omitempty"`
+		LastPaid    int           `json:"last_paid,omitempty"`
+		BocCache    *BocCacheType `json:"boc_cache,omitempty"`
 	}
 
 	// ResultOfEncodeAccount ...
@@ -348,7 +348,7 @@ func init() {
 		"RequiredPublicKeyMissingForFunctionHeader": 309,
 		"InvalidSigner":                             310,
 		"InvalidAbi":                                311,
-		"InvalidFunctionId":						 312,
+		"InvalidFunctionId":                         312,
 	}
 }
 

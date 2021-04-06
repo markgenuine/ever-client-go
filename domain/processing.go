@@ -38,7 +38,7 @@ type (
 	// ProcessingEvent ...
 	ProcessingEvent struct {
 		Type         ProcessingEventType `json:"type"`
-		Error        *ClientError         `json:"error,omitempty"`
+		Error        *ClientError        `json:"error,omitempty"`
 		ShardBlockID string              `json:"shard_block_id,omitempty"`
 		MessageID    string              `json:"message_id,omitempty"`
 		Message      string              `json:"message,omitempty"`
@@ -47,7 +47,7 @@ type (
 	// ParamsOfSendMessage ...
 	ParamsOfSendMessage struct {
 		Message    string `json:"message"`
-		Abi        *Abi    `json:"abi,omitempty"`
+		Abi        *Abi   `json:"abi,omitempty"`
 		SendEvents bool   `json:"send_events"`
 	}
 
@@ -58,7 +58,7 @@ type (
 
 	// ParamsOfWaitForTransaction ...
 	ParamsOfWaitForTransaction struct {
-		Abi          *Abi    `json:"abi,omitempty"`
+		Abi          *Abi   `json:"abi,omitempty"`
 		Message      string `json:"message"`
 		ShardBlockID string `json:"shard_block_id"`
 		SendEvents   bool   `json:"send_events"`
@@ -139,16 +139,16 @@ func ProcessingEventSendFailed(shardBlockId, messageID, message string, err *Cli
 }
 
 // ProcessingEventWillFetchNextBlock variant constructor ProcessingEvent.
-func ProcessingEventWillFetchNextBlock(shardBlockId, messageID, message string) *ProcessingEvent{
+func ProcessingEventWillFetchNextBlock(shardBlockId, messageID, message string) *ProcessingEvent {
 	return &ProcessingEvent{Type: WillFetchNextBlock, ShardBlockID: shardBlockId, MessageID: messageID, Message: message}
 }
 
 // ProcessingEventFetchNextBlockFailed variant constructor ProcessingEvent.
-func ProcessingEventFetchNextBlockFailed(shardBlockId, messageID, message string, err *ClientError) *ProcessingEvent{
+func ProcessingEventFetchNextBlockFailed(shardBlockId, messageID, message string, err *ClientError) *ProcessingEvent {
 	return &ProcessingEvent{Type: FetchNextBlockFailed, ShardBlockID: shardBlockId, MessageID: messageID, Message: message, Error: err}
 }
 
 // ProcessingEventMessageExpired variant constructor ProcessingEvent.
-func ProcessingEventMessageExpired(messageID, message string, err *ClientError) *ProcessingEvent{
+func ProcessingEventMessageExpired(messageID, message string, err *ClientError) *ProcessingEvent {
 	return &ProcessingEvent{Type: MessageExpired, MessageID: messageID, Message: message, Error: err}
 }
