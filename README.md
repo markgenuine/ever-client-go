@@ -36,7 +36,7 @@ export LD_LIBRARY_PATH=PATH_WITH_BINDING/gateway/client/lib/linux/:$LD_LIBRARY_P
 export CGO_LDFLAGS="-LPATH_WITH_BINDING/gateway/client/lib/linux -lton_client"
 ```
 
-####Or use "-exec" for example:
+#### Or use "-exec" for example:
 ```
 go build
 go run  -exec "env DYLD_LIBRARY_PATH=/path-with-lib/" main.go
