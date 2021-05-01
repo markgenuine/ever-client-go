@@ -35,12 +35,11 @@ func TestProcessing(t *testing.T) {
 	byteAbi, err := ioutil.ReadAll(fileAbi)
 	assert.Equal(t, nil, err)
 
-	eventsAbi := domain.AbiContract{}
+	eventsAbi := &domain.AbiContract{}
 	err = json.Unmarshal(byteAbi, &eventsAbi)
 	assert.Equal(t, nil, err)
 
-	abiValue := domain.NewAbiContract()
-	abiValue.Value = eventsAbi
+	abiValue := domain.NewAbiContract(eventsAbi)
 
 	fileTvc, err := os.Open("../samples/Events.tvc")
 	assert.Equal(t, nil, err)
@@ -52,8 +51,7 @@ func TestProcessing(t *testing.T) {
 		// # Prepare data for deployment message
 		keypair, err := cryptoUC.GenerateRandomSignKeys()
 		assert.Equal(t, nil, err)
-		signer := domain.NewSignerKeys()
-		signer.Keys = *keypair
+		signer := domain.NewSignerKeys(keypair)
 		callSet := domain.CallSet{FunctionName: "constructor", Header: &domain.FunctionHeader{PubKey: keypair.Public}}
 
 		// # Encode deployment message
@@ -66,12 +64,11 @@ func TestProcessing(t *testing.T) {
 		byteAbiG, err := ioutil.ReadAll(fileAbiG)
 		assert.Equal(t, nil, err)
 
-		eventsAbiG := domain.AbiContract{}
+		eventsAbiG := &domain.AbiContract{}
 		err = json.Unmarshal(byteAbiG, &eventsAbiG)
 		assert.Equal(t, nil, err)
 
-		giverAbi := domain.NewAbiContract()
-		giverAbi.Value = eventsAbiG
+		giverAbi := domain.NewAbiContract(eventsAbiG)
 		callSetN := domain.CallSet{}
 		callSetN.FunctionName = "grant"
 		callSetN.Input = json.RawMessage(`{"dest":"` + encoded.Address + `"}`)
@@ -119,8 +116,7 @@ func TestProcessing(t *testing.T) {
 		// # Prepare data for deployment message
 		keypair, err := cryptoUC.GenerateRandomSignKeys()
 		assert.Equal(t, nil, err)
-		signer := domain.NewSignerKeys()
-		signer.Keys = *keypair
+		signer := domain.NewSignerKeys(keypair)
 		callSet := domain.CallSet{FunctionName: "constructor", Header: &domain.FunctionHeader{PubKey: keypair.Public}}
 
 		// # Encode deployment message
@@ -133,12 +129,11 @@ func TestProcessing(t *testing.T) {
 		byteAbiG, err := ioutil.ReadAll(fileAbiG)
 		assert.Equal(t, nil, err)
 
-		eventsAbiG := domain.AbiContract{}
+		eventsAbiG := &domain.AbiContract{}
 		err = json.Unmarshal(byteAbiG, &eventsAbiG)
 		assert.Equal(t, nil, err)
 
-		giverAbi := domain.NewAbiContract()
-		giverAbi.Value = eventsAbiG
+		giverAbi := domain.NewAbiContract(eventsAbiG)
 		callSetN := domain.CallSet{}
 		callSetN.FunctionName = "grant"
 		callSetN.Input = json.RawMessage(`{"dest":"` + encoded.Address + `"}`)
@@ -194,8 +189,7 @@ func TestProcessing(t *testing.T) {
 		// # Create deploy message
 		keypair, err := cryptoUC.GenerateRandomSignKeys()
 		assert.Equal(t, nil, err)
-		signer := domain.NewSignerKeys()
-		signer.Keys = *keypair
+		signer := domain.NewSignerKeys(keypair)
 		callSet := domain.CallSet{FunctionName: "constructor", Header: &domain.FunctionHeader{PubKey: keypair.Public}}
 
 		// # Encode deployment message
@@ -208,12 +202,11 @@ func TestProcessing(t *testing.T) {
 		byteAbiG, err := ioutil.ReadAll(fileAbiG)
 		assert.Equal(t, nil, err)
 
-		eventsAbiG := domain.AbiContract{}
+		eventsAbiG := &domain.AbiContract{}
 		err = json.Unmarshal(byteAbiG, &eventsAbiG)
 		assert.Equal(t, nil, err)
 
-		giverAbi := domain.NewAbiContract()
-		giverAbi.Value = eventsAbiG
+		giverAbi := domain.NewAbiContract(eventsAbiG)
 		callSetN := domain.CallSet{}
 		callSetN.FunctionName = "grant"
 		callSetN.Input = json.RawMessage(`{"dest":"` + encoded.Address + `"}`)
@@ -228,11 +221,11 @@ func TestProcessing(t *testing.T) {
 		assert.Equal(t, nil, err)
 
 		// # Send message
-		shardBlockID, err := procUC.SendMessage(&domain.ParamsOfSendMessage{Message: encoded.Message, SendEvents: false, Abi: &abiValue}, nil)
+		shardBlockID, err := procUC.SendMessage(&domain.ParamsOfSendMessage{Message: encoded.Message, SendEvents: false, Abi: abiValue}, nil)
 		assert.Equal(t, nil, err)
 
 		//  # Wait for transaction
-		result, err := procUC.WaitForTransaction(&domain.ParamsOfWaitForTransaction{Message: encoded.Message, ShardBlockID: shardBlockID.ShardBlockID, SendEvents: false, Abi: &abiValue}, nil)
+		result, err := procUC.WaitForTransaction(&domain.ParamsOfWaitForTransaction{Message: encoded.Message, ShardBlockID: shardBlockID.ShardBlockID, SendEvents: false, Abi: abiValue}, nil)
 		assert.Equal(t, nil, err)
 		assert.Equal(t, 0, len(result.OutMessages))
 		assert.Equal(t, 0, len(result.Decoded.OutMessages))
@@ -243,8 +236,7 @@ func TestProcessing(t *testing.T) {
 		// # Create deploy message
 		keypair, err := cryptoUC.GenerateRandomSignKeys()
 		assert.Equal(t, nil, err)
-		signer := domain.NewSignerKeys()
-		signer.Keys = *keypair
+		signer := domain.NewSignerKeys(keypair)
 		callSet := domain.CallSet{FunctionName: "constructor", Header: &domain.FunctionHeader{PubKey: keypair.Public}}
 
 		// # Encode deployment message
@@ -257,12 +249,11 @@ func TestProcessing(t *testing.T) {
 		byteAbiG, err := ioutil.ReadAll(fileAbiG)
 		assert.Equal(t, nil, err)
 
-		eventsAbiG := domain.AbiContract{}
+		eventsAbiG := &domain.AbiContract{}
 		err = json.Unmarshal(byteAbiG, &eventsAbiG)
 		assert.Equal(t, nil, err)
 
-		giverAbi := domain.NewAbiContract()
-		giverAbi.Value = eventsAbiG
+		giverAbi := domain.NewAbiContract(eventsAbiG)
 		callSetN := domain.CallSet{}
 		callSetN.FunctionName = "grant"
 		callSetN.Input = json.RawMessage(`{"dest":"` + encoded.Address + `"}`)
@@ -279,7 +270,7 @@ func TestProcessing(t *testing.T) {
 		events := make(chan *domain.ProcessingEvent, 10)
 
 		// # Send message
-		shardBlockID, err := procUC.SendMessage(&domain.ParamsOfSendMessage{Message: encoded.Message, SendEvents: true, Abi: &abiValue}, func(event *domain.ProcessingEvent) { events <- event })
+		shardBlockID, err := procUC.SendMessage(&domain.ParamsOfSendMessage{Message: encoded.Message, SendEvents: true, Abi: abiValue}, func(event *domain.ProcessingEvent) { events <- event })
 		assert.Equal(t, nil, err)
 		close(events)
 
@@ -291,7 +282,7 @@ func TestProcessing(t *testing.T) {
 
 		events = make(chan *domain.ProcessingEvent, 10)
 		//  # Wait for transaction
-		result, err := procUC.WaitForTransaction(&domain.ParamsOfWaitForTransaction{Message: encoded.Message, ShardBlockID: shardBlockID.ShardBlockID, SendEvents: true, Abi: &abiValue}, func(event *domain.ProcessingEvent) { events <- event })
+		result, err := procUC.WaitForTransaction(&domain.ParamsOfWaitForTransaction{Message: encoded.Message, ShardBlockID: shardBlockID.ShardBlockID, SendEvents: true, Abi: abiValue}, func(event *domain.ProcessingEvent) { events <- event })
 		assert.Equal(t, nil, err)
 		close(events)
 

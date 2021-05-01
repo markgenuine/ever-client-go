@@ -126,7 +126,7 @@ type (
 
 	// ParamsOfEncodeBoc ...
 	ParamsOfEncodeBoc struct {
-		Builder  []BuilderOp
+		Builder  []*BuilderOp  `json:"builder"`
 		BocCache *BocCacheType `json:"boc_cache,omitempty"`
 	}
 	// ResultOfEncodeBoc ...

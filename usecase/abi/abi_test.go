@@ -32,7 +32,7 @@ func TestAbi(t *testing.T) {
 	byteAbi, err := ioutil.ReadAll(fileAbi)
 	assert.Equal(t, nil, err)
 
-	eventsAbi := domain.AbiContract{}
+	eventsAbi := &domain.AbiContract{}
 	err = json.Unmarshal(byteAbi, &eventsAbi)
 	assert.Equal(t, nil, err)
 
@@ -46,8 +46,7 @@ func TestAbi(t *testing.T) {
 	eventsExpire := 1599458404
 	keyPair := domain.KeyPair{Public: "4c7c408ff1ddebb8d6405ee979c716a14fdd6cc08124107a61d3c25597099499", Secret: "cc8929d635719612a9478b9cd17675a39cfad52d8959e8a177389b8c0b9122a7"}
 
-	abiValue := domain.NewAbiContract()
-	abiValue.Value = eventsAbi
+	abiValue := domain.NewAbiContract(eventsAbi)
 
 	t.Run("TestDecodeMessage", func(t *testing.T) {
 		var (
@@ -139,8 +138,8 @@ func TestAbi(t *testing.T) {
 	t.Run("TestEncodeMessage", func(t *testing.T) {
 		deploySet := domain.DeploySet(domain.DeploySet{Tvc: eventsTvc})
 		callSet := domain.CallSet{FunctionName: "constructor", Header: &domain.FunctionHeader{Expire: eventsExpire, Time: eventsTime, PubKey: keyPair.Public}}
-		signer := domain.NewSignerExternal()
-		signer.PublicKey = keyPair.Public
+
+		signer := domain.NewSignerExternal(keyPair.Public)
 
 		valueUnsigned, err := abiUC.EncodeMessage(&domain.ParamsOfEncodeMessage{Abi: abiValue, DeploySet: &deploySet, CallSet: &callSet, Signer: signer})
 		assert.Equal(t, nil, err)
@@ -150,7 +149,7 @@ func TestAbi(t *testing.T) {
 		cryptoUC := crypto.NewCrypto(abiUC.config, abiUC.client)
 
 		// # Create detached signature
-		valueSignature, err := cryptoUC.Sign(&domain.ParamsOfSign{Unsigned: valueUnsigned.DataToSign, Keys: keyPair})
+		valueSignature, err := cryptoUC.Sign(&domain.ParamsOfSign{Unsigned: valueUnsigned.DataToSign, Keys: &keyPair})
 		assert.Equal(t, nil, err)
 		assert.Equal(t, "6272357bccb601db2b821cb0f5f564ab519212d242cf31961fe9a3c50a30b236012618296b4f769355c0e9567cd25b366f3c037435c498c82e5305622adbc70e", valueSignature.Signature)
 
@@ -160,8 +159,7 @@ func TestAbi(t *testing.T) {
 		assert.Equal(t, "te6ccgECGAEAA6wAA0eIAAt9aqvShfTon7Lei1PVOhUEkEEZQkhDKPgNyzeTL6YSEbAHAgEA4bE5Gr3mWwDtlcEOWHr6slWoyQlpIWeYyw/00eKFGFkbAJMMFLWnu0mq4HSrPmktmzeeAboa4kxkFymCsRVt44dTHxAj/Hd67jWQF7peccWoU/dbMCBJBB6YdPCVZcJlJkAAAF0ZyXLg19VzGRotV8/gAQHAAwIDzyAGBAEB3gUAA9AgAEHaY+IEf47vXcayAvdLzji1Cn7rZgQJIIPTDp4SrLhMpMwCJv8A9KQgIsABkvSg4YrtU1gw9KEKCAEK9KQg9KEJAAACASANCwHI/38h7UTQINdJwgGOENP/0z/TANF/+GH4Zvhj+GKOGPQFcAGAQPQO8r3XC//4YnD4Y3D4Zn/4YeLTAAGOHYECANcYIPkBAdMAAZTT/wMBkwL4QuIg+GX5EPKoldMAAfJ64tM/AQwAao4e+EMhuSCfMCD4I4ED6KiCCBt3QKC53pL4Y+CANPI02NMfAfgjvPK50x8B8AH4R26S8jzeAgEgEw4CASAQDwC9uotV8/+EFujjXtRNAg10nCAY4Q0//TP9MA0X/4Yfhm+GP4Yo4Y9AVwAYBA9A7yvdcL//hicPhjcPhmf/hh4t74RvJzcfhm0fgA+ELIy//4Q88LP/hGzwsAye1Uf/hngCASASEQDluIAGtb8ILdHCfaiaGn/6Z/pgGi//DD8M3wx/DFvfSDK6mjofSBv6PwikDdJGDhvfCFdeXAyfABkZP2CEGRnwoRnRoIEB9AAAAAAAAAAAAAAAAAAIGeLZMCAQH2AGHwhZGX//CHnhZ/8I2eFgGT2qj/8M8ADFuZPCot8ILdHCfaiaGn/6Z/pgGi//DD8M3wx/DFva4b/yupo6Gn/7+j8AGRF7gAAAAAAAAAAAAAAAAhni2fA58jjyxi9EOeF/+S4/YAYfCFkZf/8IeeFn/wjZ4WAZPaqP/wzwAgFIFxQBCbi3xYJQFQH8+EFujhPtRNDT/9M/0wDRf/hh+Gb4Y/hi3tcN/5XU0dDT/9/R+ADIi9wAAAAAAAAAAAAAAAAQzxbPgc+Rx5YxeiHPC//JcfsAyIvcAAAAAAAAAAAAAAAAEM8Wz4HPklb4sEohzwv/yXH7ADD4QsjL//hDzws/+EbPCwDJ7VR/FgAE+GcActxwItDWAjHSADDcIccAkvI74CHXDR+S8jzhUxGS8jvhwQQighD////9vLGS8jzgAfAB+EdukvI83g==", valueSigned.Message)
 
 		// # Create initially signed message
-		signerKeys := domain.NewSignerKeys()
-		signerKeys.Keys = keyPair
+		signerKeys := domain.NewSignerKeys(&keyPair)
 		valueSigned2, err := abiUC.EncodeMessage(&domain.ParamsOfEncodeMessage{Abi: abiValue, DeploySet: &deploySet, CallSet: &callSet, Signer: signerKeys})
 		assert.Equal(t, nil, err)
 		assert.Equal(t, "te6ccgECGAEAA6wAA0eIAAt9aqvShfTon7Lei1PVOhUEkEEZQkhDKPgNyzeTL6YSEbAHAgEA4bE5Gr3mWwDtlcEOWHr6slWoyQlpIWeYyw/00eKFGFkbAJMMFLWnu0mq4HSrPmktmzeeAboa4kxkFymCsRVt44dTHxAj/Hd67jWQF7peccWoU/dbMCBJBB6YdPCVZcJlJkAAAF0ZyXLg19VzGRotV8/gAQHAAwIDzyAGBAEB3gUAA9AgAEHaY+IEf47vXcayAvdLzji1Cn7rZgQJIIPTDp4SrLhMpMwCJv8A9KQgIsABkvSg4YrtU1gw9KEKCAEK9KQg9KEJAAACASANCwHI/38h7UTQINdJwgGOENP/0z/TANF/+GH4Zvhj+GKOGPQFcAGAQPQO8r3XC//4YnD4Y3D4Zn/4YeLTAAGOHYECANcYIPkBAdMAAZTT/wMBkwL4QuIg+GX5EPKoldMAAfJ64tM/AQwAao4e+EMhuSCfMCD4I4ED6KiCCBt3QKC53pL4Y+CANPI02NMfAfgjvPK50x8B8AH4R26S8jzeAgEgEw4CASAQDwC9uotV8/+EFujjXtRNAg10nCAY4Q0//TP9MA0X/4Yfhm+GP4Yo4Y9AVwAYBA9A7yvdcL//hicPhjcPhmf/hh4t74RvJzcfhm0fgA+ELIy//4Q88LP/hGzwsAye1Uf/hngCASASEQDluIAGtb8ILdHCfaiaGn/6Z/pgGi//DD8M3wx/DFvfSDK6mjofSBv6PwikDdJGDhvfCFdeXAyfABkZP2CEGRnwoRnRoIEB9AAAAAAAAAAAAAAAAAAIGeLZMCAQH2AGHwhZGX//CHnhZ/8I2eFgGT2qj/8M8ADFuZPCot8ILdHCfaiaGn/6Z/pgGi//DD8M3wx/DFva4b/yupo6Gn/7+j8AGRF7gAAAAAAAAAAAAAAAAhni2fA58jjyxi9EOeF/+S4/YAYfCFkZf/8IeeFn/wjZ4WAZPaqP/wzwAgFIFxQBCbi3xYJQFQH8+EFujhPtRNDT/9M/0wDRf/hh+Gb4Y/hi3tcN/5XU0dDT/9/R+ADIi9wAAAAAAAAAAAAAAAAQzxbPgc+Rx5YxeiHPC//JcfsAyIvcAAAAAAAAAAAAAAAAEM8Wz4HPklb4sEohzwv/yXH7ADD4QsjL//hDzws/+EbPCwDJ7VR/FgAE+GcActxwItDWAjHSADDcIccAkvI74CHXDR+S8jzhUxGS8jvhwQQighD////9vLGS8jzgAfAB+EdukvI83g==", valueSigned2.Message)
@@ -176,7 +174,7 @@ func TestAbi(t *testing.T) {
 		assert.Equal(t, "i4Hs3PB12QA9UBFbOIpkG3JerHHqjm4LgvF4MA7TDsY=", valueUnsigned.DataToSign)
 
 		// # Create detached signature
-		valueSignature, err = cryptoUC.Sign(&domain.ParamsOfSign{Unsigned: valueUnsigned.DataToSign, Keys: keyPair})
+		valueSignature, err = cryptoUC.Sign(&domain.ParamsOfSign{Unsigned: valueUnsigned.DataToSign, Keys: &keyPair})
 		assert.Equal(t, nil, err)
 		assert.Equal(t, "5bbfb7f184f2cb5f019400b9cd497eeaa41f3d5885619e9f7d4fab8dd695f4b3a02159a1422996c1dd7d1be67898bc79c6adba6c65a18101ac5f0a2a2bb8910b", valueSignature.Signature)
 
@@ -194,8 +192,7 @@ func TestAbi(t *testing.T) {
 	t.Run("TestEncodeMessageBody", func(t *testing.T) {
 		header := domain.FunctionHeader{Expire: eventsExpire, Time: eventsTime, PubKey: keyPair.Public}
 		callSet := domain.CallSet{FunctionName: "returnValue", Header: &header, Input: json.RawMessage(`{"id":"0"}`)}
-		signer := domain.NewSignerKeys()
-		signer.Keys = keyPair
+		signer := domain.NewSignerKeys(&keyPair)
 		result, err := abiUC.EncodeMessageBody(&domain.ParamsOfEncodeMessageBody{Abi: abiValue, CallSet: callSet, IsInternal: false, Signer: signer})
 		assert.Equal(t, nil, err)
 		assert.Equal(t, "", result.DataToSign)
@@ -204,11 +201,8 @@ func TestAbi(t *testing.T) {
 	t.Run("TestEncodeAccount", func(t *testing.T) {
 		// # Encode account from encoded deploy message
 		encodedDeployMessage := "te6ccgECFwEAA2gAAqeIAAt9aqvShfTon7Lei1PVOhUEkEEZQkhDKPgNyzeTL6YSEZTHxAj/Hd67jWQF7peccWoU/dbMCBJBB6YdPCVZcJlJkAAAF0ZyXLg19VzGRotV8/gGAQEBwAICA88gBQMBAd4EAAPQIABB2mPiBH+O713GsgL3S844tQp+62YECSCD0w6eEqy4TKTMAib/APSkICLAAZL0oOGK7VNYMPShCQcBCvSkIPShCAAAAgEgDAoByP9/Ie1E0CDXScIBjhDT/9M/0wDRf/hh+Gb4Y/hijhj0BXABgED0DvK91wv/+GJw+GNw+GZ/+GHi0wABjh2BAgDXGCD5AQHTAAGU0/8DAZMC+ELiIPhl+RDyqJXTAAHyeuLTPwELAGqOHvhDIbkgnzAg+COBA+iogggbd0Cgud6S+GPggDTyNNjTHwH4I7zyudMfAfAB+EdukvI83gIBIBINAgEgDw4AvbqLVfP/hBbo417UTQINdJwgGOENP/0z/TANF/+GH4Zvhj+GKOGPQFcAGAQPQO8r3XC//4YnD4Y3D4Zn/4YeLe+Ebyc3H4ZtH4APhCyMv/+EPPCz/4Rs8LAMntVH/4Z4AgEgERAA5biABrW/CC3Rwn2omhp/+mf6YBov/ww/DN8Mfwxb30gyupo6H0gb+j8IpA3SRg4b3whXXlwMnwAZGT9ghBkZ8KEZ0aCBAfQAAAAAAAAAAAAAAAAACBni2TAgEB9gBh8IWRl//wh54Wf/CNnhYBk9qo//DPAAxbmTwqLfCC3Rwn2omhp/+mf6YBov/ww/DN8Mfwxb2uG/8rqaOhp/+/o/ABkRe4AAAAAAAAAAAAAAAAIZ4tnwOfI48sYvRDnhf/kuP2AGHwhZGX//CHnhZ/8I2eFgGT2qj/8M8AIBSBYTAQm4t8WCUBQB/PhBbo4T7UTQ0//TP9MA0X/4Yfhm+GP4Yt7XDf+V1NHQ0//f0fgAyIvcAAAAAAAAAAAAAAAAEM8Wz4HPkceWMXohzwv/yXH7AMiL3AAAAAAAAAAAAAAAABDPFs+Bz5JW+LBKIc8L/8lx+wAw+ELIy//4Q88LP/hGzwsAye1UfxUABPhnAHLccCLQ1gIx0gAw3CHHAJLyO+Ah1w0fkvI84VMRkvI74cEEIoIQ/////byxkvI84AHwAfhHbpLyPN4="
-		messageSource := domain.NewMessageSourceEncoded()
-		messageSource.Abi = &abiValue
-		messageSource.Message = encodedDeployMessage
-		stateInitSource := domain.NewStateInitSourceMessageEncoded()
-		stateInitSource.Source = messageSource
+		messageSource := domain.NewMessageSourceEncoded(encodedDeployMessage, abiValue)
+		stateInitSource := domain.StateInitSourceMessageEncoded(messageSource)
 
 		valueEncoded, err := abiUC.EncodeAccount(&domain.ParamsOfEncodeAccount{StateInit: stateInitSource})
 		assert.Equal(t, nil, err)
@@ -217,13 +211,9 @@ func TestAbi(t *testing.T) {
 		// # Encode account from encoding params
 		deploySet := domain.DeploySet(domain.DeploySet{Tvc: eventsTvc})
 		callSet := domain.CallSet{FunctionName: "constructor", Header: &domain.FunctionHeader{Expire: eventsExpire, Time: eventsTime, PubKey: keyPair.Public}}
-		signerKeys := domain.NewSignerKeys()
-		signerKeys.Keys = keyPair
-		messageSourceEnconing := domain.NewMessageSourceEncodingParams()
-		messageSourceEnconing.Abi = abiValue
-		messageSourceEnconing.Signer = signerKeys
-		messageSourceEnconing.DeploySet = &deploySet
-		messageSourceEnconing.CallSet = &callSet
+		signerKeys := domain.NewSignerKeys(&keyPair)
+
+		messageSourceEnconing := domain.NewMessageSourceEncodingParams(&domain.ParamsOfEncodeMessage{Abi: abiValue, Signer: signerKeys, DeploySet: &deploySet, CallSet: &callSet})
 		stateInitSource.Source = messageSourceEnconing
 
 		valueEncoded, err = abiUC.EncodeAccount(&domain.ParamsOfEncodeAccount{StateInit: stateInitSource})
@@ -231,20 +221,14 @@ func TestAbi(t *testing.T) {
 		assert.Equal(t, "05beb555e942fa744fd96f45a9ea9d0a8248208ca12421947c06e59bc997d309", valueEncoded.ID)
 
 		// # Test exception (external signer)
-		signerExt := domain.NewSignerExternal()
-		signerExt.PublicKey = keyPair.Public
-		msEP := domain.NewMessageSourceEncodingParams()
-		msEP.Abi = abiValue
-		msEP.Signer = signerExt
-		msEP.DeploySet = &deploySet
-		msEP.CallSet = &callSet
+		signerExt := domain.NewSignerExternal(keyPair.Public)
+		msEP := domain.NewMessageSourceEncodingParams(&domain.ParamsOfEncodeMessage{Abi: abiValue, Signer: signerExt, DeploySet: &deploySet, CallSet: &callSet})
 		stateInitSource.Source = msEP
 		_, err = abiUC.EncodeAccount(&domain.ParamsOfEncodeAccount{StateInit: stateInitSource})
 		assert.NotEqual(t, nil, err)
 
 		// # Encode account from TVC
-		stateSI := domain.NewStateInitTvc()
-		stateSI.Tvc = eventsTvc
+		stateSI := domain.StateInitTvc(eventsTvc, "", nil)
 		encoded, err := abiUC.EncodeAccount(&domain.ParamsOfEncodeAccount{StateInit: stateSI})
 		assert.NotEqual(t, nil, err)
 		assert.NotEqual(t, "05beb555e942fa744fd96f45a9ea9d0a8248208ca12421947c06e59bc997d309", encoded.ID)

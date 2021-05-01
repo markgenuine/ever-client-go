@@ -75,8 +75,8 @@ type (
 
 	// ParamsOfSign ...
 	ParamsOfSign struct {
-		Unsigned string  `json:"unsigned"`
-		Keys     KeyPair `json:"keys"`
+		Unsigned string   `json:"unsigned"`
+		Keys     *KeyPair `json:"keys"`
 	}
 
 	// ResultOfSign ...
@@ -352,9 +352,6 @@ type (
 	ResultOfSigningBoxGetPublicKey struct {
 		PubKey string `json:"pubkey"`
 	}
-
-	// EventCallbackRegisterSigningBox ...
-	//EventCallbackRegisterSigningBox func(event *ParamsOfAppSigningBox)
 
 	// ParamsOfSigningBoxSign ...
 	ParamsOfSigningBoxSign struct {

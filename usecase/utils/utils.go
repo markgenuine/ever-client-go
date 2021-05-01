@@ -31,3 +31,17 @@ func (u *utils) CalcStorageFee(pOCA *domain.ParamsOfCalcStorageFee) (*domain.Res
 	err := u.client.GetResult("utils.calc_storage_fee", pOCA, result)
 	return result, err
 }
+
+// CompressZstd - Compresses data using Zstandard algorithm.
+func (u *utils) CompressZstd(pOCA *domain.ParamsOfCompressZstd) (*domain.ResultOfCompressZstd, error) {
+	result := new(domain.ResultOfCompressZstd)
+	err := u.client.GetResult("utils.compress_zstd", pOCA, result)
+	return result, err
+}
+
+// DecompressZstd - Decompresses data using Zstandard algorithm.
+func (u *utils) DecompressZstd(pOCA *domain.ParamsOfDecompressZstd) (*domain.ResultOfDecompressZstd, error) {
+	result := new(domain.ResultOfDecompressZstd)
+	err := u.client.GetResult("utils.decompress_zstd", pOCA, result)
+	return result, err
+}

@@ -46,10 +46,33 @@ type (
 		Fee string `json:"fee"`
 	}
 
+	// ParamsOfCompressZstd ...
+	ParamsOfCompressZstd struct {
+		Uncompressed string `json:"uncompressed"`
+		Level        int    `json:"level"`
+	}
+
+	// ResultOfCompressZstd ...
+	ResultOfCompressZstd struct {
+		Compressed string `json:"compressed"`
+	}
+
+	// ParamsOfDecompressZstd ...
+	ParamsOfDecompressZstd struct {
+		Compressed string `json:"compressed"`
+	}
+
+	//ResultOfDecompressZstd ...
+	ResultOfDecompressZstd struct {
+		Decompressed string `json:"decompressed"`
+	}
+
 	//UtilsUseCase ...
 	UtilsUseCase interface {
 		ConvertAddress(*ParamsOfConvertAddress) (*ResultOfConvertAddress, error)
 		CalcStorageFee(pOCA *ParamsOfCalcStorageFee) (*ResultOfCalcStorageFee, error)
+		CompressZstd(pOCA *ParamsOfCompressZstd) (*ResultOfCompressZstd, error)
+		DecompressZstd(pOCA *ParamsOfDecompressZstd) (*ResultOfDecompressZstd, error)
 	}
 )
 

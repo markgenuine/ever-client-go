@@ -27,12 +27,12 @@ type (
 	Crypto struct {
 		MnemonicDictionary  int    `toml:"mnemonic_dictionary" json:"mnemonic_dictionary,omitempty"`
 		MnemonicWordCount   int    `toml:"mnemonic_word_count" json:"mnemonic_word_count,omitempty"`
-		HdkeyDerivationPath string `toml:"hdkey_derivation_path" json:"hdkey_derivation_path,omitempty"`
+		HdKeyDerivationPath string `toml:"hdkey_derivation_path" json:"hdkey_derivation_path,omitempty"`
 	}
 
 	// AbiConfig ...
 	AbiConfig struct {
-		Workchain                          int     `toml:"workchain" json:"workchain,omitempty"`
+		WorkChain                          int     `toml:"workchain" json:"workchain,omitempty"`
 		MessageExpirationTimeout           int     `toml:"message_expiration_timeout" json:"message_expiration_timeout"`
 		MessageExpirationTimeoutGrowFactor float32 `toml:"message_expiration_timeout_grow_factor" json:"message_expiration_timeout_grow_factor"`
 	}
@@ -58,10 +58,10 @@ func NewDefaultConfig(chainID int) Config {
 		Crypto: &Crypto{
 			MnemonicDictionary:  1,
 			MnemonicWordCount:   12,
-			HdkeyDerivationPath: "",
+			HdKeyDerivationPath: "",
 		},
 		Abi: &AbiConfig{
-			Workchain:                          0,
+			WorkChain:                          0,
 			MessageExpirationTimeout:           40000, //ms
 			MessageExpirationTimeoutGrowFactor: 1.5},
 		Boc: &BocConfig{
@@ -77,8 +77,8 @@ func Chains() map[int]string {
 	return map[int]string{0: "localhost", 1: "net.ton.dev", 2: "main.ton.dev"}
 }
 
-// WordCounList list length mnemonic phrases
-func WordCounList() map[int]int {
+// WordCountList list length mnemonic phrases
+func WordCountList() map[int]int {
 	return map[int]int{12: 12, 15: 15, 18: 18, 21: 21, 24: 24}
 }
 

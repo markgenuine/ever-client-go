@@ -22,9 +22,7 @@ func NewProcessing(
 	}
 }
 
-// SendMessage - Sends message to the network
-// Sends message to the network and returns the last generated shard block of the destination account before the message was sent.
-// It will be required later for message processing.
+// SendMessage - Sends message to the network.
 func (p *processing) SendMessage(pOSM *domain.ParamsOfSendMessage, callback domain.EventCallback) (*domain.ResultOfSendMessage, error) {
 	if pOSM.SendEvents && callback == nil {
 		return nil, errors.New("Don't find callback")

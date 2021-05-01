@@ -4,10 +4,10 @@ import "encoding/json"
 
 const (
 	// SortDirectionASC ...
-	SortDirectionASC = "ASC"
+	SortDirectionASC SortDirection = "ASC"
 
 	// SortDirectionDESC ...
-	SortDirectionDESC = "DESC"
+	SortDirectionDESC SortDirection = "DESC"
 
 	ParamsOfQueryOperationTypeQueryCollection     ParamsOfQueryOperationType = "QueryCollection"
 	ParamsOfQueryOperationTypeWaitForCollection   ParamsOfQueryOperationType = "WaitForCollection"
@@ -25,10 +25,13 @@ var NetErrorCode map[string]int
 
 type (
 
+	// SortDirection ...
+	SortDirection string
+
 	// OrderBy ...
 	OrderBy struct {
 		Path      string `json:"path"`
-		Direction string `json:"direction"`
+		Direction SortDirection `json:"direction"`
 	}
 
 	ParamsOfQueryOperationType string
@@ -170,21 +173,17 @@ func init() {
 	}
 }
 
-func getSortDirection() map[int]string {
-	return map[int]string{
-		0: "ASC",
-		1: "DESC",
-	}
-}
-
+// ParamsOfQueryOperationQueryCollection variant construction ParamsOfQueryOperation
 func ParamsOfQueryOperationQueryCollection(params *ParamsOfQueryCollection) *ParamsOfQueryOperation {
-	return &ParamsOfQueryOperation{Type: ParamsOfQueryOperationTypeQueryCollection}
+	return &ParamsOfQueryOperation{Type: ParamsOfQueryOperationTypeQueryCollection, ParamsOfQueryCollection: params}
 }
 
+// ParamsOfQueryOperationWaitForCollection variant construction ParamsOfQueryOperation
 func ParamsOfQueryOperationWaitForCollection(params *ParamsOfWaitForCollection) *ParamsOfQueryOperation {
-	return &ParamsOfQueryOperation{Type: ParamsOfQueryOperationTypeWaitForCollection}
+	return &ParamsOfQueryOperation{Type: ParamsOfQueryOperationTypeWaitForCollection, ParamsOfWaitForCollection: params}
 }
 
+// ParamsOfQueryOperationAggregateCollection variant construction ParamsOfQueryOperation
 func ParamsOfQueryOperationAggregateCollection(params *ParamsOfAggregateCollection) *ParamsOfQueryOperation {
-	return &ParamsOfQueryOperation{Type: ParamsOfQueryOperationTypeAggregateCollection}
+	return &ParamsOfQueryOperation{Type: ParamsOfQueryOperationTypeAggregateCollection, ParamsOfAggregateCollection: params}
 }

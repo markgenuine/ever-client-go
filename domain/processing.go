@@ -74,7 +74,7 @@ type (
 
 	// DecodedOutput ...
 	DecodedOutput struct {
-		OutMessages []DecodedMessageBody `json:"out_messages,omitempty"`
+		OutMessages []*DecodedMessageBody `json:"out_messages,omitempty"`
 		Output      json.RawMessage      `json:"output,omitempty"`
 	}
 

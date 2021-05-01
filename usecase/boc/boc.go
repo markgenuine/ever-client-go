@@ -19,7 +19,6 @@ func NewBoc(
 }
 
 // ParseMessage - Parses message boc into a JSON.
-//JSON structure is compatible with GraphQL API message object.
 func (b *boc) ParseMessage(pOP *domain.ParamsOfParse) (*domain.ResultOfParse, error) {
 	result := new(domain.ResultOfParse)
 	err := b.client.GetResult("boc.parse_message", pOP, result)
@@ -27,7 +26,6 @@ func (b *boc) ParseMessage(pOP *domain.ParamsOfParse) (*domain.ResultOfParse, er
 }
 
 // ParseTransaction - Parses transaction boc into a JSON.
-//JSON structure is compatible with GraphQL API transaction object.
 func (b *boc) ParseTransaction(pOP *domain.ParamsOfParse) (*domain.ResultOfParse, error) {
 	result := new(domain.ResultOfParse)
 	err := b.client.GetResult("boc.parse_transaction", pOP, result)
@@ -35,7 +33,6 @@ func (b *boc) ParseTransaction(pOP *domain.ParamsOfParse) (*domain.ResultOfParse
 }
 
 // ParseAccount - Parses account boc into a JSON.
-//JSON structure is compatible with GraphQL API account object.
 func (b *boc) ParseAccount(pOP *domain.ParamsOfParse) (*domain.ResultOfParse, error) {
 	result := new(domain.ResultOfParse)
 	err := b.client.GetResult("boc.parse_account", pOP, result)
@@ -43,7 +40,6 @@ func (b *boc) ParseAccount(pOP *domain.ParamsOfParse) (*domain.ResultOfParse, er
 }
 
 // ParseBlock - Parses block boc into a JSON.
-//JSON structure is compatible with GraphQL API block object.
 func (b *boc) ParseBlock(pOP *domain.ParamsOfParse) (*domain.ResultOfParse, error) {
 	result := new(domain.ResultOfParse)
 	err := b.client.GetResult("boc.parse_block", pOP, result)
@@ -51,7 +47,6 @@ func (b *boc) ParseBlock(pOP *domain.ParamsOfParse) (*domain.ResultOfParse, erro
 }
 
 // ParseShardstate - Parses shardstate boc into a JSON.
-//JSON structure is compatible with GraphQL API shardstate object.
 func (b *boc) ParseShardstate(pOPS *domain.ParamsOfParseShardstate) (*domain.ResultOfParse, error) {
 	result := new(domain.ResultOfParse)
 	err := b.client.GetResult("boc.parse_shardstate", pOPS, result)

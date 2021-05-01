@@ -36,9 +36,7 @@ func (n *net) BatchQuery(pOBQ *domain.ParamsOfBatchQuery) (*domain.ResultOfBatch
 	return result, err
 }
 
-// QueryCollection - Queries collection data
-// Queries data that satisfies the filter conditions, limits the number of returned records and orders them.
-// The projection fields are limited to result fields.
+// QueryCollection - Queries collection data.
 func (n *net) QueryCollection(pOQC *domain.ParamsOfQueryCollection) (*domain.ResultOfQueryCollection, error) {
 	result := new(domain.ResultOfQueryCollection)
 	err := n.client.GetResult("net.query_collection", pOQC, result)
@@ -46,18 +44,13 @@ func (n *net) QueryCollection(pOQC *domain.ParamsOfQueryCollection) (*domain.Res
 }
 
 // AggregateCollection - Aggregates collection data.
-// Aggregates values from the specified fields for records that satisfies the filter conditions,
-// aggregate_collection.
 func (n *net) AggregateCollection(pOAC *domain.ParamsOfAggregateCollection) (*domain.ResultOfAggregateCollection, error) {
 	result := new(domain.ResultOfAggregateCollection)
 	err := n.client.GetResult("net.aggregate_collection", pOAC, result)
 	return result, err
 }
 
-// WaitForCollection - Returns an object that fulfills the conditions or waits for its appearance
-// Triggers only once. If object that satisfies the filter conditions already exists - returns it immediately.
-// If not - waits for insert/update of data within the specified timeout, and returns it.
-//The projection fields are limited to result fields.
+// WaitForCollection - Returns an object that fulfills the conditions or waits for its appearance.
 func (n *net) WaitForCollection(pOWFC *domain.ParamsOfWaitForCollection) (*domain.ResultOfWaitForCollection, error) {
 	result := new(domain.ResultOfWaitForCollection)
 	err := n.client.GetResult("net.wait_for_collection", pOWFC, result)
@@ -65,15 +58,12 @@ func (n *net) WaitForCollection(pOWFC *domain.ParamsOfWaitForCollection) (*domai
 }
 
 // Unsubscribe - Cancels a subscription.
-// Cancels a subscription specified by its handle.
 func (n *net) Unsubscribe(rOSC *domain.ResultOfSubscribeCollection) error {
 	_, err := n.client.GetResponse("net.unsubscribe", rOSC)
 	return err
 }
 
 // SubscribeCollection - Creates a subscription
-// Triggers for each insert/update of data that satisfies the filter conditions.
-// The projection fields are limited to result fields.
 func (n *net) SubscribeCollection(pOSC *domain.ParamsOfSubscribeCollection) (<-chan interface{}, *domain.ResultOfSubscribeCollection, error) {
 	result := new(domain.ResultOfSubscribeCollection)
 	responses, err := n.client.Request("net.subscribe_collection", pOSC)

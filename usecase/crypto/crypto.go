@@ -299,7 +299,7 @@ func (c *crypto) appRequestCryptoRegisterSigningBox(payload []byte, app domain.A
 		panic(err)
 	}
 	appResponse, err := app.Request(appParams)
-	appRequestResult := domain.AppRequestResult{}
+	appRequestResult := &domain.AppRequestResult{}
 	if err != nil {
 		appRequestResult.Type = domain.AppRequestResultTypeError
 		appRequestResult.Text = err.Error()

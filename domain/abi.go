@@ -111,7 +111,7 @@ type (
 	// SignerKeys Key pair is provided for signing
 	SignerKeys struct {
 		Type SignerType `json:"type"`
-		Keys KeyPair    `json:"keys"`
+		Keys *KeyPair   `json:"keys"`
 	}
 
 	// SignerSigningBox Signing Box interface is provided for signing, allows Dapps to sign messages using external APIs, such as HSM, cold wallet, etc.
@@ -135,9 +135,9 @@ type (
 
 	// AbiEvent ...
 	AbiEvent struct {
-		Name   string     `json:"name"`
-		Inputs []AbiParam `json:"inputs"`
-		ID     string     `json:"id,omitempty"`
+		Name   string      `json:"name"`
+		Inputs []*AbiParam `json:"inputs"`
+		ID     string      `json:"id,omitempty"`
 	}
 
 	// AbiData ...
@@ -150,20 +150,19 @@ type (
 
 	// AbiFunctions ...
 	AbiFunctions struct {
-		Name    string     `json:"name"`
-		Inputs  []AbiParam `json:"inputs"`
-		Outputs []AbiParam `json:"outputs"`
-		ID      string     `json:"id,omitempty"`
+		Name    string      `json:"name"`
+		Inputs  []*AbiParam `json:"inputs"`
+		Outputs []*AbiParam `json:"outputs"`
+		ID      string      `json:"id,omitempty"`
 	}
 
 	// AbiContract ...
 	AbiContract struct {
-		AbiVersion int `json:"ABI version,omitempty"`
-		//AbiVersion int `json:"abi_version,omitempty"`
-		Header    []string        `json:"header,omitempty"`
-		Functions []*AbiFunctions `json:"functions,omitempty"`
-		Events    []*AbiEvent     `json:"events,omitempty"`
-		Data      []*AbiData      `json:"data,omitempty"`
+		AbiVersion int             `json:"ABI version,omitempty"`
+		Header     []string        `json:"header,omitempty"`
+		Functions  []*AbiFunctions `json:"functions,omitempty"`
+		Events     []*AbiEvent     `json:"events,omitempty"`
+		Data       []*AbiData      `json:"data,omitempty"`
 	}
 
 	// StateInitSourceM Deploy message.
@@ -185,7 +184,7 @@ type (
 		Type       StateInitSourceType `json:"type"`
 		Tvc        string              `json:"tvc"`
 		PublicKey  string              `json:"public_key,omitempty"`
-		InitParams StateInitParams     `json:"init_params,omitempty"`
+		InitParams *StateInitParams    `json:"init_params,omitempty"`
 	}
 
 	// MessageSourceEncoded ...
@@ -198,7 +197,7 @@ type (
 	// MessageSourceEncodingParams ...
 	MessageSourceEncodingParams struct {
 		Type MessageSourceType `json:"type"`
-		ParamsOfEncodeMessage
+		*ParamsOfEncodeMessage
 	}
 
 	// StateInitParams ...
@@ -209,7 +208,7 @@ type (
 
 	// ParamsOfEncodeMessageBody ...
 	ParamsOfEncodeMessageBody struct {
-		Abi                Abi         `json:"abi"`
+		Abi                *Abi        `json:"abi"`
 		CallSet            CallSet     `json:"call_set"`
 		IsInternal         bool        `json:"is_internal"`
 		Signer             interface{} `json:"signer"`
@@ -224,7 +223,7 @@ type (
 
 	// ParamsOfAttachSignatureToMessageBody ...
 	ParamsOfAttachSignatureToMessageBody struct {
-		Abi       Abi    `json:"abi"`
+		Abi       *Abi   `json:"abi"`
 		PublicKey string `json:"public_key"`
 		Message   string `json:"message"`
 		Signature string `json:"signature"`
@@ -238,7 +237,7 @@ type (
 	// ParamsOfEncodeMessage ...
 	ParamsOfEncodeMessage struct {
 		Type               MessageSourceType `json:"type,omitempty"`
-		Abi                Abi               `json:"abi"`
+		Abi                *Abi              `json:"abi"`
 		Address            string            `json:"address,omitempty"`
 		DeploySet          *DeploySet        `json:"deploy_set,omitempty"`
 		CallSet            *CallSet          `json:"call_set,omitempty"`
@@ -256,13 +255,14 @@ type (
 
 	// ParamsOfEncodeInternalMessage ...
 	ParamsOfEncodeInternalMessage struct {
-		Abi       Abi        `json:"abi"`
-		Address   string     `json:"address,omitempty"`
-		DeploySet *DeploySet `json:"deploy_set,omitempty"`
-		CallSet   *CallSet   `json:"call_set,omitempty"`
-		Value     string     `json:"value"`
-		Bounce    bool       `json:"bounce"`     //? Default is true.
-		EnableIhr bool       `json:"enable_ihr"` //? Default is false.
+		Abi        *Abi       `json:"abi,omitempty"`
+		Address    string     `json:"address,omitempty"`
+		SrcAddress string     `json:"src_address,omitempty"`
+		DeploySet  *DeploySet `json:"deploy_set,omitempty"`
+		CallSet    *CallSet   `json:"call_set,omitempty"`
+		Value      string     `json:"value"`
+		Bounce     bool       `json:"bounce"`     //? Default is true.
+		EnableIhr  bool       `json:"enable_ihr"` //? Default is false.
 	}
 
 	// ResultOfEncodeInternalMessage ...
@@ -274,7 +274,7 @@ type (
 
 	// ParamsOfAttachSignature ...
 	ParamsOfAttachSignature struct {
-		Abi       Abi    `json:"abi"`
+		Abi       *Abi   `json:"abi"`
 		PublicKey string `json:"public_key"`
 		Message   string `json:"message"`
 		Signature string `json:"signature"`
@@ -288,7 +288,7 @@ type (
 
 	// ParamsOfDecodeMessage ...
 	ParamsOfDecodeMessage struct {
-		Abi     Abi    `json:"abi"`
+		Abi     *Abi   `json:"abi"`
 		Message string `json:"message"`
 	}
 
@@ -302,7 +302,7 @@ type (
 
 	// ParamsOfDecodeMessageBody ...
 	ParamsOfDecodeMessageBody struct {
-		Abi        Abi    `json:"abi"`
+		Abi        *Abi   `json:"abi"`
 		Body       string `json:"body"`
 		IsInternal bool   `json:"is_internal"`
 	}
@@ -353,71 +353,66 @@ func init() {
 }
 
 // NewAbiContract Abi type Contract
-func NewAbiContract() Abi {
-	return Abi{Type: "Contract"}
+func NewAbiContract(value *AbiContract) *Abi {
+	return &Abi{Type: "Contract", Value: value}
 }
 
 // NewAbiJSON Abi type Json
-func NewAbiJSON() Abi {
-	return Abi{Type: "Json"}
+func NewAbiJSON(value string) *Abi {
+	return &Abi{Type: "Json", Value: value}
 }
 
 // NewAbiHandle Abi type Handle
-func NewAbiHandle() Abi {
-	return Abi{Type: "Handle"}
+func NewAbiHandle(value AbiHandle) *Abi {
+	return &Abi{Type: "Handle", Value: value}
 }
 
 // NewAbiSerialized Abi type Serialized
-func NewAbiSerialized() Abi {
-	return Abi{Type: "Serialized"}
+func NewAbiSerialized(value *AbiContract) *Abi {
+	return &Abi{Type: "Serialized", Value: value}
 }
 
 // NewSignerNone Signer type None
-func NewSignerNone() SignerNone {
-	return SignerNone{Type: SignNone}
+func NewSignerNone() *SignerNone {
+	return &SignerNone{Type: SignNone}
 }
 
 // NewSignerExternal Signer type External
-func NewSignerExternal() SignerExternal {
-	return SignerExternal{Type: SignExternal}
+func NewSignerExternal(publicKey string) *SignerExternal {
+	return &SignerExternal{Type: SignExternal, PublicKey: publicKey}
 }
 
 // NewSignerKeys Signer type Keys
-func NewSignerKeys() SignerKeys {
-	return SignerKeys{Type: SignKeys}
+func NewSignerKeys(keys *KeyPair) *SignerKeys {
+	return &SignerKeys{Type: SignKeys, Keys: keys}
 }
 
 // NewSignerSigningBox Signer type SigningBox
-func NewSignerSigningBox() SignerSigningBox {
-	return SignerSigningBox{Type: SignSigningBox}
+func NewSignerSigningBox(handle SigningBoxHandle) *SignerSigningBox {
+	return &SignerSigningBox{Type: SignSigningBox, Handle: handle}
 }
 
-// NewStateInitSourceMessageEncoded ..
-func NewStateInitSourceMessageEncoded() StateInitSourceM {
-	return StateInitSourceM{Type: StateInitSourceTypeMessage}
+// StateInitSourceMessage ..
+func StateInitSourceMessageEncoded(source interface{}) *StateInitSourceM {
+	return &StateInitSourceM{Type: StateInitSourceTypeMessage, Source: source}
 }
 
-// NewStateInitSourceMessageEncodingParams ..
-func NewStateInitSourceMessageEncodingParams() StateInitSourceM {
-	return StateInitSourceM{Type: StateInitSourceTypeMessage}
+// StateInitSourceStateInit ...
+func StateInitSourceStateInit(code, data, library string) *StateInitSourceSI {
+	return &StateInitSourceSI{Type: StateInitSourceTypeStateInit, Code: code, Data: data, Library: library}
 }
 
-// NewStateInitSourceStateInit ...
-func NewStateInitSourceStateInit() StateInitSourceSI {
-	return StateInitSourceSI{Type: StateInitSourceTypeStateInit}
-}
-
-// NewStateInitTvc ...
-func NewStateInitTvc() StateInitSourceT {
-	return StateInitSourceT{Type: StateInitSourceTypeTvc}
+// StateInitTvc ...
+func StateInitTvc(tvc, publicKey string, initParams *StateInitParams) *StateInitSourceT {
+	return &StateInitSourceT{Type: StateInitSourceTypeTvc, PublicKey: publicKey, InitParams: initParams}
 }
 
 // NewMessageSourceEncoded ...
-func NewMessageSourceEncoded() MessageSourceEncoded {
-	return MessageSourceEncoded{Type: MessageSourceTypeEncoded}
+func NewMessageSourceEncoded(message string, abi *Abi) *MessageSourceEncoded {
+	return &MessageSourceEncoded{Type: MessageSourceTypeEncoded, Message: message, Abi: abi}
 }
 
 // NewMessageSourceEncodingParams ...
-func NewMessageSourceEncodingParams() ParamsOfEncodeMessage {
-	return ParamsOfEncodeMessage{Type: MessageSourceTypeEncodingParams}
+func NewMessageSourceEncodingParams(params *ParamsOfEncodeMessage) *MessageSourceEncodingParams {
+	return &MessageSourceEncodingParams{Type: MessageSourceTypeEncodingParams, ParamsOfEncodeMessage: params}
 }

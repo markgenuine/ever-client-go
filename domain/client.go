@@ -49,7 +49,7 @@ type (
 
 	// ResultOfGetAPIReference ...
 	ResultOfGetAPIReference struct {
-		API API `json:"api"`
+		API *API `json:"api"`
 	}
 
 	// API ...
@@ -85,8 +85,8 @@ type (
 
 	// ResultOfBuildInfo ...
 	ResultOfBuildInfo struct {
-		BuildNumber  int                   `json:"build_number"`
-		Dependencies []BuildInfoDependency `json:"dependencies"`
+		BuildNumber  int                    `json:"build_number"`
+		Dependencies []*BuildInfoDependency `json:"dependencies"`
 	}
 
 	// BuildInfoDependency ...
@@ -97,8 +97,8 @@ type (
 
 	// ParamsOfResolveAppRequest ...
 	ParamsOfResolveAppRequest struct {
-		AppRequestID int              `json:"app_request_id"`
-		Result       AppRequestResult `json:"result"`
+		AppRequestID int               `json:"app_request_id"`
+		Result       *AppRequestResult `json:"result"`
 	}
 
 	//ParamsOfAppRequest ...
