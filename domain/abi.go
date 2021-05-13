@@ -2,27 +2,23 @@ package domain
 
 import (
 	"encoding/json"
+	"fmt"
 	"math/big"
 )
 
 const (
-	// SignNone ...
-	SignNone SignerType = "None"
 
-	// SignExternal ...
-	SignExternal SignerType = "External"
+	// ContractAbiType ...
+	ContractAbiType AbiType = "Contract"
 
-	// SignKeys ...
-	SignKeys SignerType = "Keys"
+	// JSONAbiType ...
+	JSONAbiType AbiType = "Json"
 
-	// SignSigningBox ...
-	SignSigningBox SignerType = "SigningBox"
+	// HandleAbiType ...
+	HandleAbiType AbiType = "Handle"
 
-	// TypeS ...
-	TypeS AbiType = "Serialized"
-
-	// TypeH ...
-	TypeH AbiType = "Handle"
+	// SerializedAbiType ...
+	SerializedAbiType AbiType = "Serialized"
 
 	// MessageBodyTypeInput - Message contains the input of the ABI function.
 	MessageBodyTypeInput MessageBodyType = "Input"
@@ -36,44 +32,24 @@ const (
 
 	// MessageBodyTypeEvent - Message contains the input of the ABI event.
 	MessageBodyTypeEvent MessageBodyType = "Event"
-
-	// StateInitSourceTypeMessage ...
-	StateInitSourceTypeMessage StateInitSourceType = "Message"
-
-	// StateInitSourceTypeStateInit ...
-	StateInitSourceTypeStateInit StateInitSourceType = "StateInit"
-
-	// StateInitSourceTypeTvc ...
-	StateInitSourceTypeTvc StateInitSourceType = "Tvc"
-
-	// MessageSourceTypeEncoded ...
-	MessageSourceTypeEncoded MessageSourceType = "Encoded"
-
-	// MessageSourceTypeEncodingParams ...
-	MessageSourceTypeEncodingParams MessageSourceType = "EncodingParams"
 )
 
 // AbiErrorCode ...
 var AbiErrorCode map[string]int
 
 type (
-	// AbiHandle ...
-	AbiHandle int
-
-	// SignerType ...
-	SignerType string
 
 	// AbiType ...
 	AbiType string
 
-	// MessageBodyType ...
-	MessageBodyType string
+	// Abi ...
+	Abi struct {
+		Type  AbiType     `json:"type"`
+		Value interface{} `json:"value"`
+	}
 
-	// StateInitSourceType ...
-	StateInitSourceType string
-
-	// MessageSourceType ...
-	MessageSourceType string
+	// AbiHandle ...
+	AbiHandle int
 
 	// FunctionHeader ...
 	FunctionHeader struct {
@@ -92,38 +68,80 @@ type (
 	// DeploySet ...
 	DeploySet struct {
 		Tvc           string      `json:"tvc"`
-		WorkchainID   int         `json:"workchain_id"`
-		InitialData   interface{} `json:"initial_data"`
+		WorkchainID   int         `json:"workchain_id"` //Default 0
+		InitialData   interface{} `json:"initial_data,omitempty"`
 		InitialPubKey string      `json:"initial_pubkey,omitempty"`
 	}
 
 	// SignerNone No keys are provided. Creates an unsigned message.
-	SignerNone struct {
-		Type SignerType `json:"type"`
-	}
+	SignerNone struct{}
 
 	// SignerExternal Only public key is provided to generate unsigned message and data_to_sign which can be signed later.
 	SignerExternal struct {
-		Type      SignerType `json:"type"`
-		PublicKey string     `json:"public_key"`
+		PublicKey string `json:"public_key"`
 	}
 
 	// SignerKeys Key pair is provided for signing
 	SignerKeys struct {
-		Type SignerType `json:"type"`
-		Keys *KeyPair   `json:"keys"`
+		Keys *KeyPair `json:"keys"`
 	}
 
 	// SignerSigningBox Signing Box interface is provided for signing, allows Dapps to sign messages using external APIs, such as HSM, cold wallet, etc.
 	SignerSigningBox struct {
-		Type   SignerType       `json:"type"`
 		Handle SigningBoxHandle `json:"handle"`
 	}
 
-	//Abi ...
-	Abi struct {
-		Type  AbiType     `json:"type"`
+	// Signer ...
+	Signer struct {
+		ValueEnumType interface{}
+	}
+
+	// MessageBodyType ...
+	MessageBodyType string
+
+	// StateInitSourceMessage Deploy message.
+	StateInitSourceMessage struct {
+		Source *MessageSource `json:"source"`
+	}
+
+	// StateInitSourceStateInit State init data
+	StateInitSourceStateInit struct {
+		Code    string `json:"code"`
+		Data    string `json:"data"`
+		Library string `json:"library,omitempty"`
+	}
+
+	// StateInitSourceTvc Content of the TVC file. Encoded in base64.
+	StateInitSourceTvc struct {
+		Tvc        string           `json:"tvc"`
+		PublicKey  string           `json:"public_key,omitempty"`
+		InitParams *StateInitParams `json:"init_params,omitempty"`
+	}
+
+	StateInitSource struct {
+		ValueEnumType interface{}
+	}
+
+	// StateInitParams ...
+	StateInitParams struct {
+		Abi   Abi         `json:"abi"`
 		Value interface{} `json:"value"`
+	}
+
+	// MessageSourceEncoded ...
+	MessageSourceEncoded struct {
+		Message string `json:"message"`
+		Abi     *Abi   `json:"abi,omitempty"`
+	}
+
+	// MessageSourceEncodingParams ...
+	MessageSourceEncodingParams struct {
+		*ParamsOfEncodeMessage
+	}
+
+	// MessageSource ...
+	MessageSource struct {
+		ValueEnumType interface{}
 	}
 
 	// AbiParam ...
@@ -137,7 +155,7 @@ type (
 	AbiEvent struct {
 		Name   string      `json:"name"`
 		Inputs []*AbiParam `json:"inputs"`
-		ID     string      `json:"id,omitempty"`
+		ID     string      `json:"id,omitempty"` //?
 	}
 
 	// AbiData ...
@@ -153,7 +171,7 @@ type (
 		Name    string      `json:"name"`
 		Inputs  []*AbiParam `json:"inputs"`
 		Outputs []*AbiParam `json:"outputs"`
-		ID      string      `json:"id,omitempty"`
+		ID      string      `json:"id,omitempty"` //?
 	}
 
 	// AbiContract ...
@@ -165,54 +183,13 @@ type (
 		Data       []*AbiData      `json:"data,omitempty"`
 	}
 
-	// StateInitSourceM Deploy message.
-	StateInitSourceM struct {
-		Type   StateInitSourceType `json:"type"`
-		Source interface{}         `json:"source"` //MessageSource
-	}
-
-	// StateInitSourceSI State init data
-	StateInitSourceSI struct {
-		Type    StateInitSourceType `json:"type"`
-		Code    string              `json:"code"`
-		Data    string              `json:"data"`
-		Library string              `json:"library,omitempty"`
-	}
-
-	// StateInitSourceT Content of the TVC file. Encoded in base64.
-	StateInitSourceT struct {
-		Type       StateInitSourceType `json:"type"`
-		Tvc        string              `json:"tvc"`
-		PublicKey  string              `json:"public_key,omitempty"`
-		InitParams *StateInitParams    `json:"init_params,omitempty"`
-	}
-
-	// MessageSourceEncoded ...
-	MessageSourceEncoded struct {
-		Type    MessageSourceType `json:"type"`
-		Message string            `json:"message,omitempty"` //omitempty?s
-		Abi     *Abi              `json:"abi,omitempty"`
-	}
-
-	// MessageSourceEncodingParams ...
-	MessageSourceEncodingParams struct {
-		Type MessageSourceType `json:"type"`
-		*ParamsOfEncodeMessage
-	}
-
-	// StateInitParams ...
-	StateInitParams struct {
-		Abi   Abi         `json:"abi"`
-		Value interface{} `json:"value"`
-	}
-
 	// ParamsOfEncodeMessageBody ...
 	ParamsOfEncodeMessageBody struct {
-		Abi                *Abi        `json:"abi"`
-		CallSet            CallSet     `json:"call_set"`
-		IsInternal         bool        `json:"is_internal"`
-		Signer             interface{} `json:"signer"`
-		ProcessingTryIndex int         `json:"processing_try_index"`
+		Abi                *Abi     `json:"abi"`
+		CallSet            *CallSet `json:"call_set"`
+		IsInternal         bool     `json:"is_internal"`
+		Signer             *Signer  `json:"signer"`
+		ProcessingTryIndex int      `json:"processing_try_index"`
 	}
 
 	// ResultOfEncodeMessageBody ...
@@ -236,13 +213,12 @@ type (
 
 	// ParamsOfEncodeMessage ...
 	ParamsOfEncodeMessage struct {
-		Type               MessageSourceType `json:"type,omitempty"`
-		Abi                *Abi              `json:"abi"`
-		Address            string            `json:"address,omitempty"`
-		DeploySet          *DeploySet        `json:"deploy_set,omitempty"`
-		CallSet            *CallSet          `json:"call_set,omitempty"`
-		Signer             interface{}       `json:"signer"`
-		ProcessingTryIndex int               `json:"processing_try_index"`
+		Abi                *Abi       `json:"abi"`
+		Address            string     `json:"address,omitempty"`
+		DeploySet          *DeploySet `json:"deploy_set,omitempty"`
+		CallSet            *CallSet   `json:"call_set,omitempty"`
+		Signer             *Signer    `json:"signer"`
+		ProcessingTryIndex int        `json:"processing_try_index"`
 	}
 
 	// ResultOfEncodeMessage ...
@@ -309,11 +285,11 @@ type (
 
 	// ParamsOfEncodeAccount ...
 	ParamsOfEncodeAccount struct {
-		StateInit   interface{}   `json:"state_init"`
-		Balance     *big.Int      `json:"balance,omitempty"`
-		LastTransLt *big.Int      `json:"last_trans_lt,omitempty"`
-		LastPaid    int           `json:"last_paid,omitempty"`
-		BocCache    *BocCacheType `json:"boc_cache,omitempty"`
+		StateInit   *StateInitSource `json:"state_init"`
+		Balance     *big.Int         `json:"balance,omitempty"`
+		LastTransLt *big.Int         `json:"last_trans_lt,omitempty"`
+		LastPaid    int              `json:"last_paid,omitempty"`
+		BocCache    *BocCacheType    `json:"boc_cache,omitempty"`
 	}
 
 	// ResultOfEncodeAccount ...
@@ -352,67 +328,192 @@ func init() {
 	}
 }
 
-// NewAbiContract Abi type Contract
 func NewAbiContract(value *AbiContract) *Abi {
-	return &Abi{Type: "Contract", Value: value}
+	return &Abi{Type: ContractAbiType, Value: value}
 }
 
-// NewAbiJSON Abi type Json
 func NewAbiJSON(value string) *Abi {
-	return &Abi{Type: "Json", Value: value}
+	return &Abi{Type: JSONAbiType, Value: value}
 }
 
-// NewAbiHandle Abi type Handle
-func NewAbiHandle(value AbiHandle) *Abi {
-	return &Abi{Type: "Handle", Value: value}
+func NewAbiHandle(value *AbiHandle) *Abi {
+	return &Abi{Type: HandleAbiType, Value: value}
 }
 
-// NewAbiSerialized Abi type Serialized
 func NewAbiSerialized(value *AbiContract) *Abi {
-	return &Abi{Type: "Serialized", Value: value}
+	return &Abi{Type: SerializedAbiType, Value: value}
 }
 
-// NewSignerNone Signer type None
-func NewSignerNone() *SignerNone {
-	return &SignerNone{Type: SignNone}
+func (s *Signer) MarshalJSON() ([]byte, error) {
+	switch value := (s.ValueEnumType).(type) {
+	case SignerNone:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			SignerNone
+		}{"None", value})
+	case SignerExternal:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			SignerExternal
+		}{"External", value})
+	case SignerKeys:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			SignerKeys
+		}{"Keys", value})
+	case SignerSigningBox:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			SignerSigningBox
+		}{"SigningBox", value})
+	default:
+		return nil, fmt.Errorf("unsupported type for Signer %v", s.ValueEnumType)
+	}
 }
 
-// NewSignerExternal Signer type External
-func NewSignerExternal(publicKey string) *SignerExternal {
-	return &SignerExternal{Type: SignExternal, PublicKey: publicKey}
+func (s *Signer) UnmarshalJSON(b []byte) error {
+	var typeD EnumType
+	if err := json.Unmarshal(b, &typeD); err != nil {
+		return err
+	}
+
+	switch typeD.Type {
+	case "None":
+		var valueEnum SignerNone
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		s.ValueEnumType = valueEnum
+	case "External":
+		var valueEnum SignerExternal
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		s.ValueEnumType = valueEnum
+	case "Keys":
+		var valueEnum SignerKeys
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		s.ValueEnumType = valueEnum
+	case "Serialized":
+		var valueEnum SignerSigningBox
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		s.ValueEnumType = valueEnum
+	default:
+		return fmt.Errorf("unsupported type for Signer %v", typeD.Type)
+	}
+	return nil
 }
 
-// NewSignerKeys Signer type Keys
-func NewSignerKeys(keys *KeyPair) *SignerKeys {
-	return &SignerKeys{Type: SignKeys, Keys: keys}
+// NewSigner ...
+func NewSigner(value interface{}) *Signer {
+	return &Signer{ValueEnumType: value}
 }
 
-// NewSignerSigningBox Signer type SigningBox
-func NewSignerSigningBox(handle SigningBoxHandle) *SignerSigningBox {
-	return &SignerSigningBox{Type: SignSigningBox, Handle: handle}
+func (s *StateInitSource) MarshalJSON() ([]byte, error) {
+	switch value := (s.ValueEnumType).(type) {
+	case StateInitSourceMessage:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			StateInitSourceMessage
+		}{"Message", value})
+	case StateInitSourceStateInit:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			StateInitSourceStateInit
+		}{"StateInit", value})
+	case StateInitSourceTvc:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			StateInitSourceTvc
+		}{"Tvc", value})
+	default:
+		return nil, fmt.Errorf("unsupported type for StateInitSource %v", s.ValueEnumType)
+	}
 }
 
-// StateInitSourceMessage ..
-func StateInitSourceMessageEncoded(source interface{}) *StateInitSourceM {
-	return &StateInitSourceM{Type: StateInitSourceTypeMessage, Source: source}
+func (s *StateInitSource) UnmarshalJSON(b []byte) error {
+	var typeD EnumType
+	if err := json.Unmarshal(b, &typeD); err != nil {
+		return err
+	}
+
+	switch typeD.Type {
+	case "Message":
+		var valueEnum StateInitSourceMessage
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		s.ValueEnumType = valueEnum
+	case "StateInit":
+		var valueEnum StateInitSourceStateInit
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		s.ValueEnumType = valueEnum
+	case "Tvc":
+		var valueEnum StateInitSourceTvc
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		s.ValueEnumType = valueEnum
+	default:
+		return fmt.Errorf("unsupported type for StateInitSource %v", typeD.Type)
+	}
+	return nil
 }
 
-// StateInitSourceStateInit ...
-func StateInitSourceStateInit(code, data, library string) *StateInitSourceSI {
-	return &StateInitSourceSI{Type: StateInitSourceTypeStateInit, Code: code, Data: data, Library: library}
+// NewStateInitSource ...
+func NewStateInitSource(value interface{}) *StateInitSource {
+	return &StateInitSource{ValueEnumType: value}
 }
 
-// StateInitTvc ...
-func StateInitTvc(tvc, publicKey string, initParams *StateInitParams) *StateInitSourceT {
-	return &StateInitSourceT{Type: StateInitSourceTypeTvc, PublicKey: publicKey, InitParams: initParams}
+func (ms *MessageSource) MarshalJSON() ([]byte, error) {
+	switch value := (ms.ValueEnumType).(type) {
+	case MessageSourceEncoded:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			MessageSourceEncoded
+		}{"Encoded", value})
+	case MessageSourceEncodingParams:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			MessageSourceEncodingParams
+		}{"EncodingParams", value})
+	default:
+		return nil, fmt.Errorf("unsupported type for MessageSource %v", ms.ValueEnumType)
+	}
 }
 
-// NewMessageSourceEncoded ...
-func NewMessageSourceEncoded(message string, abi *Abi) *MessageSourceEncoded {
-	return &MessageSourceEncoded{Type: MessageSourceTypeEncoded, Message: message, Abi: abi}
+func (ms *MessageSource) UnmarshalJSON(b []byte) error {
+	var typeD EnumType
+	if err := json.Unmarshal(b, &typeD); err != nil {
+		return err
+	}
+
+	switch typeD.Type {
+	case "Encoded":
+		var valueEnum MessageSourceEncoded
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		ms.ValueEnumType = valueEnum
+	case "EncodingParams":
+		var valueEnum MessageSourceEncodingParams
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		ms.ValueEnumType = valueEnum
+	default:
+		return fmt.Errorf("unsupported type for MessageSource %v", typeD.Type)
+	}
+	return nil
 }
 
-// NewMessageSourceEncodingParams ...
-func NewMessageSourceEncodingParams(params *ParamsOfEncodeMessage) *MessageSourceEncodingParams {
-	return &MessageSourceEncodingParams{Type: MessageSourceTypeEncodingParams, ParamsOfEncodeMessage: params}
+// NewStateInitSource ...
+func NewMessageSource(value interface{}) *MessageSource {
+	return &MessageSource{ValueEnumType: value}
 }
