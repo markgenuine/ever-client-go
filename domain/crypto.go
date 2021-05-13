@@ -332,7 +332,7 @@ type (
 
 	// RegisteredSigningBox ...
 	RegisteredSigningBox struct {
-		Handle SigningBoxHandle
+		Handle SigningBoxHandle `json:"handle"`
 	}
 
 	// ParamsOfAppSigningBox ...
