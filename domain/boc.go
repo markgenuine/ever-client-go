@@ -2,43 +2,26 @@ package domain
 
 import (
 	"encoding/json"
+	"fmt"
 )
 
 // BocErrorCode ...
 var BocErrorCode map[string]int
 
-const (
-	// BocCacheTypePinned ...
-	BocCacheTypeTypePinned BocCacheTypeType = "Pinned"
-
-	//BocCacheTypeUnpinned ...
-	BocCacheTypeTypeUnpinned BocCacheTypeType = "Unpinned"
-
-	// BuilderOpTypeTypeInteger ...
-	BuilderOpTypeTypeInteger BuilderOpTypeType = "Integer"
-
-	// BuilderOpTypeTypeBitString ...
-	BuilderOpTypeTypeBitString BuilderOpTypeType = "BitString"
-
-	// BuilderOpTypeTypeCell ...
-	BuilderOpTypeTypeCell BuilderOpTypeType = "Cell"
-
-	// BuilderOpTypeTypeCellBoc ...
-	BuilderOpTypeTypeCellBoc BuilderOpTypeType = "CellBoc"
-)
-
 type (
-	// BocCacheTypeType ...
-	BocCacheTypeType string
-
-	// BuilderOpTypeType ...
-	BuilderOpTypeType string
 
 	// BocCacheType ...
 	BocCacheType struct {
-		Type BocCacheTypeType `json:"type"`
-		Pin  string           `json:"pin,omitempty"`
+		ValueEnumType interface{}
 	}
+
+	// BocCacheTypePinned ...
+	BocCacheTypePinned struct {
+		Pin string `json:"pin"`
+	}
+
+	// BocCacheTypeUnpinned ...
+	BocCacheTypeUnpinned struct{}
 
 	// ParamsOfParse ...
 	ParamsOfParse struct {
@@ -116,12 +99,28 @@ type (
 
 	// BuilderOp - Cell builder operation.
 	BuilderOp struct {
-		Type           BuilderOpTypeType `json:"type"`
-		Size           int               `json:"size,omitempty"`
-		Value          json.RawMessage   `json:"value,omitempty"`
-		ValueBitString string            `json:"value,omitempty"`
-		Builder        []*BuilderOp      `json:"builder,omitempty"`
-		Boc            string            `json:"boc,omitempty"`
+		ValueEnumType interface{}
+	}
+
+	// BuilderOpInteger ...
+	BuilderOpInteger struct {
+		Size  int             `json:"size"`
+		Value interface{} `json:"value"`
+	}
+
+	// BuilderOpBitString ...
+	BuilderOpBitString struct {
+		Value string `json:"value"`
+	}
+
+	// BuilderOpCell ...
+	BuilderOpCell struct {
+		Builder []*BuilderOp `json:"builder"`
+	}
+
+	// BuilderOpCellBoc ...
+	BuilderOpCellBoc struct {
+		Boc string `json:"boc"`
 	}
 
 	// ParamsOfEncodeBoc ...
@@ -163,32 +162,118 @@ func init() {
 	}
 }
 
-// BocCacheTypePinned - First variant constructors boc cache type
-func BocCacheTypePinned(pin string) *BocCacheType {
-	return &BocCacheType{Type: BocCacheTypeTypePinned, Pin: pin}
+func (bCT *BocCacheType) MarshalJSON() ([]byte, error) {
+	switch value := (bCT.ValueEnumType).(type) {
+	case BocCacheTypePinned:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			BocCacheTypePinned
+		}{"Pinned", value})
+	case BocCacheTypeUnpinned:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			BocCacheTypeUnpinned
+		}{"Unpinned", value})
+	default:
+		return nil, fmt.Errorf("unsupported type for BocCacheType %v", bCT.ValueEnumType)
+	}
 }
 
-// BocCacheTypeUnpinned - Second variant constructors boc cache type
-func BocCacheTypeUnpinned() *BocCacheType {
-	return &BocCacheType{Type: BocCacheTypeTypeUnpinned}
+func (bCT *BocCacheType) UnmarshalJSON(b []byte) error {
+	var typeD EnumType
+	if err := json.Unmarshal(b, &typeD); err != nil {
+		return err
+	}
+
+	switch typeD.Type {
+	case "Pinned":
+		var valueEnum BocCacheTypePinned
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		bCT.ValueEnumType = valueEnum
+	case "Unpinned":
+		var valueEnum BocCacheTypeUnpinned
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		bCT.ValueEnumType = valueEnum
+	default:
+		return fmt.Errorf("unsupported type for BocCacheType %v", typeD.Type)
+	}
+	return nil
 }
 
-// BuilderOpInteger - Variant construction Integer
-func BuilderOpInteger(size int, value json.RawMessage) *BuilderOp {
-	return &BuilderOp{Type: BuilderOpTypeTypeInteger, Size: size, Value: value}
+// NewBocCacheType ...
+func NewBocCacheType(value interface{}) *BocCacheType {
+	return &BocCacheType{ValueEnumType: value}
 }
 
-// BuilderOpBitString - Variant construction BitString
-func BuilderOpBitString(value string) *BuilderOp {
-	return &BuilderOp{Type: BuilderOpTypeTypeBitString, ValueBitString: value}
+func (bO *BuilderOp) MarshalJSON() ([]byte, error) {
+	switch value := (bO.ValueEnumType).(type) {
+	case BuilderOpInteger:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			BuilderOpInteger
+		}{"Integer", value})
+	case BuilderOpBitString:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			BuilderOpBitString
+		}{"BitString", value})
+	case BuilderOpCell:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			BuilderOpCell
+		}{"Cell", value})
+	case BuilderOpCellBoc:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			BuilderOpCellBoc
+		}{"CellBoc", value})
+	default:
+		return nil, fmt.Errorf("unsupported type for BuilderOp %v", bO.ValueEnumType)
+	}
 }
 
-// BuilderOpCell - Variant construction Cell
-func BuilderOpCell(builder []*BuilderOp) *BuilderOp {
-	return &BuilderOp{Type: BuilderOpTypeTypeCell, Builder: builder}
+func (bO *BuilderOp) UnmarshalJSON(b []byte) error {
+	var typeD EnumType
+	if err := json.Unmarshal(b, &typeD); err != nil {
+		return err
+	}
+
+	switch typeD.Type {
+	case "Integer":
+		var valueEnum BuilderOpInteger
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		bO.ValueEnumType = valueEnum
+	case "BitString":
+		var valueEnum BuilderOpBitString
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		bO.ValueEnumType = valueEnum
+	case "Cell":
+		var valueEnum BuilderOpCell
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		bO.ValueEnumType = valueEnum
+	case "CellBoc":
+		var valueEnum BuilderOpCellBoc
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		bO.ValueEnumType = valueEnum
+	default:
+		return fmt.Errorf("unsupported type for BuilderOp %v", typeD.Type)
+	}
+	return nil
 }
 
-// BuilderOpCellBoc - Variant construction CellBoc
-func BuilderOpCellBoc(boc string) *BuilderOp {
-	return &BuilderOp{Type: BuilderOpTypeTypeCellBoc, Boc: boc}
+// NewBuilderOp ...
+func NewBuilderOp(value interface{}) *BuilderOp {
+	return &BuilderOp{ValueEnumType: value}
 }
