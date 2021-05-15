@@ -5,14 +5,6 @@ import (
 	"fmt"
 )
 
-const (
-	// AppRequestResultTypeError ...
-	AppRequestResultTypeError AppRequestResultType = "Error"
-
-	// AppRequestResultTypeOk ...
-	AppRequestResultTypeOk AppRequestResultType = "Ok"
-)
-
 //ClientErrorCode ...
 var ClientErrorCode map[string]int
 
@@ -32,15 +24,22 @@ type (
 		Error error
 	}
 
-	// AppRequestResultType ...
-	AppRequestResultType string
-
 	// AppRequestResult ...
 	AppRequestResult struct {
-		Type   AppRequestResultType `json:"type"`
-		Text   string               `json:"text,omitempty"`
-		Result interface{}          `json:"result,omitempty"`
+		ValueEnumType interface{}
 	}
+
+	// AppRequestResultError ...
+	AppRequestResultError struct {
+		Text string `json:"text"`
+	}
+
+	// AppRequestResultOk ...
+	AppRequestResultOk struct {
+		Result json.RawMessage `json:"result"`
+	}
+
+
 
 	// ResultOfVersion ...
 	ResultOfVersion struct {
@@ -101,10 +100,15 @@ type (
 		Result       *AppRequestResult `json:"result"`
 	}
 
-	//ParamsOfAppRequest ...
+	// ParamsOfAppRequest ...
 	ParamsOfAppRequest struct {
 		AppRequestID int             `json:"app_request_id"`
 		RequestData  json.RawMessage `json:"request_data"`
+	}
+
+	// EnumType ...
+	EnumType struct {
+		Type string `json"type"`
 	}
 
 	// ClientGateway ...
@@ -238,12 +242,49 @@ func HandleEvents(responses <-chan *ClientResponse, callback EventCallback, resu
 	return nil
 }
 
-//AppRequestResultError - Variant constructor Application request result error.
-func AppRequestResultError(text string) *AppRequestResult {
-	return &AppRequestResult{Type: "Error", Text: text}
+func (aRR *AppRequestResult) MarshalJSON() ([]byte, error) {
+	switch value := (aRR.ValueEnumType).(type) {
+	case AppRequestResultError:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			AppRequestResultError
+		}{"Error", value})
+	case AppRequestResultOk:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			AppRequestResultOk
+		}{"Ok", value})
+	default:
+		return nil, fmt.Errorf("unsupported type for AppRequestResult %v", aRR.ValueEnumType)
+	}
 }
 
-//AppRequestResultOk - Variant constructor Application request result Ok.
-func AppRequestResultOk(result json.RawMessage) *AppRequestResult {
-	return &AppRequestResult{Type: "Ok", Result: result}
+func (aRR *AppRequestResult) UnmarshalJSON(b []byte) error {
+	var typeD EnumType
+	if err := json.Unmarshal(b, &typeD); err != nil {
+		return err
+	}
+
+	switch typeD.Type {
+	case "Error":
+		var valueEnum AppRequestResultError
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		aRR.ValueEnumType = valueEnum
+	case "Ok":
+		var valueEnum AppRequestResultOk
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		aRR.ValueEnumType = valueEnum
+	default:
+		return fmt.Errorf("unsupported type for AppRequestResult %v", typeD.Type)
+	}
+	return nil
+}
+
+// NewAppRequestResult ...
+func NewAppRequestResult(value interface{}) *AppRequestResult {
+	return &AppRequestResult{ValueEnumType: value}
 }
