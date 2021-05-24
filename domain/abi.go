@@ -236,7 +236,6 @@ type (
 
 	// ParamsOfEncodeMessage ...
 	ParamsOfEncodeMessage struct {
-		Type               MessageSourceType `json:"type,omitempty"`
 		Abi                *Abi              `json:"abi"`
 		Address            string            `json:"address,omitempty"`
 		DeploySet          *DeploySet        `json:"deploy_set,omitempty"`
