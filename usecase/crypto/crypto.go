@@ -348,6 +348,6 @@ func (c *crypto) SigningBoxSign(pOSBS *domain.ParamsOfSigningBoxSign) (*domain.R
 
 // SigningBoxSign - Removes signing box from SDK.
 func (c *crypto) RemoveSigningBox(rSB *domain.RegisteredSigningBox) error {
-	_, err := c.client.GetResponse("crypto.remove_signing_box", rSB)
+	_, err := c.client.GetResponse("client.resolve_app_request", rSB)
 	return err
 }
