@@ -76,7 +76,6 @@ func TestProcessing(t *testing.T) {
 
 		_, err = procUC.ProcessMessage(&domain.ParamsOfProcessMessage{
 			MessageEncodeParams: &domain.ParamsOfEncodeMessage{
-				Type:    "EncodingParams",
 				Abi:     giverAbi,
 				Signer:  domain.NewSignerNone(),
 				Address: "0:b61cf024cda7dad90e556d0fafb72c08579d5ebf73a67737317d9f3fc73521c5",
@@ -86,7 +85,6 @@ func TestProcessing(t *testing.T) {
 		// # Deploy account
 		result, err := procUC.ProcessMessage(&domain.ParamsOfProcessMessage{
 			MessageEncodeParams: &domain.ParamsOfEncodeMessage{
-				Type:      "EncodingParams",
 				Abi:       abiValue,
 				Signer:    signer,
 				DeploySet: &deploySet,
@@ -103,7 +101,6 @@ func TestProcessing(t *testing.T) {
 		callSetErr := domain.CallSet{FunctionName: "returnValue", Input: json.RawMessage(`{"id": -1}`)}
 		_, err = procUC.ProcessMessage(&domain.ParamsOfProcessMessage{
 			MessageEncodeParams: &domain.ParamsOfEncodeMessage{
-				Type:    "EncodingParams",
 				Abi:     abiValue,
 				Signer:  signer,
 				Address: encoded.Address,
@@ -141,7 +138,6 @@ func TestProcessing(t *testing.T) {
 
 		_, err = procUC.ProcessMessage(&domain.ParamsOfProcessMessage{
 			MessageEncodeParams: &domain.ParamsOfEncodeMessage{
-				Type:    "EncodingParams",
 				Abi:     giverAbi,
 				Signer:  domain.NewSignerNone(),
 				Address: "0:b61cf024cda7dad90e556d0fafb72c08579d5ebf73a67737317d9f3fc73521c5",
@@ -153,7 +149,6 @@ func TestProcessing(t *testing.T) {
 		// # Deploy account
 		generator, err := procUC.ProcessMessage(&domain.ParamsOfProcessMessage{
 			MessageEncodeParams: &domain.ParamsOfEncodeMessage{
-				Type:      "EncodingParams",
 				Abi:       abiValue,
 				Signer:    signer,
 				DeploySet: &deploySet,
@@ -213,7 +208,6 @@ func TestProcessing(t *testing.T) {
 		assert.Equal(t, nil, err)
 		_, err = procUC.ProcessMessage(&domain.ParamsOfProcessMessage{
 			MessageEncodeParams: &domain.ParamsOfEncodeMessage{
-				Type:    "EncodingParams",
 				Abi:     giverAbi,
 				Signer:  domain.NewSignerNone(),
 				Address: "0:b61cf024cda7dad90e556d0fafb72c08579d5ebf73a67737317d9f3fc73521c5",
@@ -260,7 +254,6 @@ func TestProcessing(t *testing.T) {
 		assert.Equal(t, nil, err)
 		_, err = procUC.ProcessMessage(&domain.ParamsOfProcessMessage{
 			MessageEncodeParams: &domain.ParamsOfEncodeMessage{
-				Type:    "EncodingParams",
 				Abi:     giverAbi,
 				Signer:  domain.NewSignerNone(),
 				Address: "0:b61cf024cda7dad90e556d0fafb72c08579d5ebf73a67737317d9f3fc73521c5",
