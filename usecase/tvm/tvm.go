@@ -21,6 +21,8 @@ func NewTvm(
 }
 
 // RunExecutor - Emulates all the phases of contract execution locally.
+// Performs all the phases of contract execution on Transaction Executor
+// - the same component that is used on Validator Nodes.
 func (t *tvm) RunExecutor(pORE *domain.ParamsOfRunExecutor) (*domain.ResultOfRunExecuteMessage, error) {
 	result := new(domain.ResultOfRunExecuteMessage)
 	err := t.client.GetResult("tvm.run_executor", pORE, result)

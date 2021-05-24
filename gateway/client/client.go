@@ -60,9 +60,9 @@ func NewClientGateway(config domain.Config) (domain.ClientGateway, error) {
 		return nil, err
 	}
 
-	hadler := C.tc_create_context(tcStringData(configTrf))
-	defer C.tc_destroy_string(hadler)
-	response := tcStringToByte(C.tc_read_string(hadler))
+	handler := C.tc_create_context(tcStringData(configTrf))
+	defer C.tc_destroy_string(handler)
+	response := tcStringToByte(C.tc_read_string(handler))
 
 	var skdResponse SDKResponse
 	err = json.Unmarshal(response, &skdResponse)

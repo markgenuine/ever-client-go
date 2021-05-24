@@ -1,6 +1,9 @@
 package domain
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 const (
 	// SortDirectionASC ...
@@ -8,10 +11,6 @@ const (
 
 	// SortDirectionDESC ...
 	SortDirectionDESC SortDirection = "DESC"
-
-	ParamsOfQueryOperationTypeQueryCollection     ParamsOfQueryOperationType = "QueryCollection"
-	ParamsOfQueryOperationTypeWaitForCollection   ParamsOfQueryOperationType = "WaitForCollection"
-	ParamsOfQueryOperationTypeAggregateCollection ParamsOfQueryOperationType = "AggregateCollection"
 
 	AggregationFnTypeCount   AggregationFnType = "COUNT"
 	AggregationFnTypeMin     AggregationFnType = "MIN"
@@ -30,21 +29,19 @@ type (
 
 	// OrderBy ...
 	OrderBy struct {
-		Path      string `json:"path"`
+		Path      string        `json:"path"`
 		Direction SortDirection `json:"direction"`
 	}
 
-	ParamsOfQueryOperationType string
-
+	// ParamsOfQueryOperation
 	ParamsOfQueryOperation struct {
-		Type                         ParamsOfQueryOperationType `json:"type"`
-		*ParamsOfQueryCollection     `json:",omitempty"`
-		*ParamsOfWaitForCollection   `json:",omitempty"`
-		*ParamsOfAggregateCollection `json:",omitempty"`
+		ValueEnumType interface{}
 	}
 
+	// AggregationFnType ...
 	AggregationFnType string
 
+	// FieldAggregation ...
 	FieldAggregation struct {
 		Field string            `json:"field"`
 		Fn    AggregationFnType `json:"fn"`
@@ -74,7 +71,7 @@ type (
 	// ParamsOfQueryCollection ...
 	ParamsOfQueryCollection struct {
 		Collection string      `json:"collection"`
-		Filter     interface{} `json:"filter,omitempty"`
+		Filter     json.RawMessage `json:"filter,omitempty"`
 		Result     string      `json:"result"`
 		Order      []*OrderBy  `json:"order,omitempty"`
 		Limit      int         `json:"limit,omitempty"`
@@ -88,7 +85,7 @@ type (
 	// ParamsOfAggregateCollection ...
 	ParamsOfAggregateCollection struct {
 		Collection string              `json:"collection"`
-		Filter     interface{}         `json:"filter,omitempty"`
+		Filter     json.RawMessage         `json:"filter,omitempty"`
 		Fields     []*FieldAggregation `json:"fields,omitempty"`
 	}
 	// ResultOfAggregateCollection ...
@@ -99,7 +96,7 @@ type (
 	// ParamsOfWaitForCollection ...
 	ParamsOfWaitForCollection struct {
 		Collection string      `json:"collection"`
-		Filter     interface{} `json:"filter,omitempty"`
+		Filter     json.RawMessage `json:"filter,omitempty"`
 		Result     string      `json:"result"`
 		Timeout    int         `json:"timeout,omitempty"`
 	}
@@ -117,7 +114,7 @@ type (
 	// ParamsOfSubscribeCollection ...
 	ParamsOfSubscribeCollection struct {
 		Collection string      `json:"collection"`
-		Filter     interface{} `json:"filter,omitempty"`
+		Filter     json.RawMessage `json:"filter,omitempty"`
 		Result     string      `json:"result"`
 	}
 
@@ -136,6 +133,14 @@ type (
 		Endpoints []string `json:"endpoints"`
 	}
 
+	// ParamsOfQueryCounterparties
+	ParamsOfQueryCounterparties struct {
+		Account string `json:"account"`
+		Result string `json:"result"`
+		First int `json:"first,omitempty"`
+		After string `json:"after,omitempty"`
+	}
+
 	// NetUseCase ...
 	NetUseCase interface {
 		Query(*ParamsOfQuery) (*ResultOfQuery, error)
@@ -144,12 +149,13 @@ type (
 		AggregateCollection(*ParamsOfAggregateCollection) (*ResultOfAggregateCollection, error)
 		WaitForCollection(*ParamsOfWaitForCollection) (*ResultOfWaitForCollection, error)
 		Unsubscribe(*ResultOfSubscribeCollection) error
-		SubscribeCollection(*ParamsOfSubscribeCollection) (<-chan interface{}, *ResultOfSubscribeCollection, error)
+		SubscribeCollection(*ParamsOfSubscribeCollection) (<-chan json.RawMessage, *ResultOfSubscribeCollection, error)
 		Suspend() error
 		Resume() error
 		FindLastShardBlock(*ParamsOfFindLastShardBlock) (*ResultOfFindLastShardBlock, error)
 		FetchEndpoints() (*EndpointsSet, error)
 		SetEndpoints(*EndpointsSet) error
+		QueryCounterparties(*ParamsOfQueryCounterparties) (*ResultOfQueryCollection, error)
 	}
 )
 
@@ -173,17 +179,71 @@ func init() {
 	}
 }
 
-// ParamsOfQueryOperationQueryCollection variant construction ParamsOfQueryOperation
-func ParamsOfQueryOperationQueryCollection(params *ParamsOfQueryCollection) *ParamsOfQueryOperation {
-	return &ParamsOfQueryOperation{Type: ParamsOfQueryOperationTypeQueryCollection, ParamsOfQueryCollection: params}
+func (pOQO *ParamsOfQueryOperation) MarshalJSON()([]byte, error){
+	switch value := (pOQO.ValueEnumType).(type) {
+	case ParamsOfQueryCollection:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			ParamsOfQueryCollection
+		}{"QueryCollection", value})
+	case ParamsOfWaitForCollection:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			ParamsOfWaitForCollection
+		}{"WaitForCollection", value})
+	case ParamsOfAggregateCollection:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			ParamsOfAggregateCollection
+		}{"AggregateCollection", value})
+	case ParamsOfQueryCounterparties:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			ParamsOfQueryCounterparties
+		}{"QueryCounterparties", value})
+	default:
+		return nil, fmt.Errorf("unsupported type for ParamsOfQueryOperation %v", pOQO.ValueEnumType)
+	}
 }
 
-// ParamsOfQueryOperationWaitForCollection variant construction ParamsOfQueryOperation
-func ParamsOfQueryOperationWaitForCollection(params *ParamsOfWaitForCollection) *ParamsOfQueryOperation {
-	return &ParamsOfQueryOperation{Type: ParamsOfQueryOperationTypeWaitForCollection, ParamsOfWaitForCollection: params}
+func (pOQO *ParamsOfQueryOperation) UnmarshalJSON(b []byte) error {
+	var typeD EnumType
+	if err := json.Unmarshal(b, &typeD); err != nil {
+		return err
+	}
+
+	switch typeD.Type {
+	case "QueryCollection":
+		var valueEnum ParamsOfQueryCollection
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		pOQO.ValueEnumType = valueEnum
+	case "WaitForCollection":
+		var valueEnum ParamsOfWaitForCollection
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		pOQO.ValueEnumType = valueEnum
+	case "AggregateCollection":
+		var valueEnum ParamsOfAggregateCollection
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		pOQO.ValueEnumType = valueEnum
+	case "QueryCounterparties":
+		var valueEnum ParamsOfQueryCounterparties
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		pOQO.ValueEnumType = valueEnum
+	default:
+		return fmt.Errorf("unsupported type for ParamsOfQueryOperation %v", typeD.Type)
+	}
+	return nil
 }
 
-// ParamsOfQueryOperationAggregateCollection variant construction ParamsOfQueryOperation
-func ParamsOfQueryOperationAggregateCollection(params *ParamsOfAggregateCollection) *ParamsOfQueryOperation {
-	return &ParamsOfQueryOperation{Type: ParamsOfQueryOperationTypeAggregateCollection, ParamsOfAggregateCollection: params}
+// NewParamsOfQueryOperation ...
+func NewParamsOfQueryOperation(value interface{}) ParamsOfQueryOperation {
+	return ParamsOfQueryOperation{ValueEnumType: value}
 }

@@ -5,17 +5,9 @@ import "math/big"
 // DebotErrorCode ...
 var DebotErrorCode map[string]int
 
-const (
-	// DebotActivityTransactionType is DebotActivityType with value "Transaction"
-	DebotActivityTransactionType DebotActivityType = "Transaction"
-)
-
 type (
 	// DebotHandle - Handle of registered in SDK debot.
 	DebotHandle = int
-
-	// DebotActivityType - mode for DebotActivity
-	DebotActivityType string
 
 	// DebotAction - Describes a debot action in a Debot Context.
 	DebotAction struct {
@@ -42,9 +34,12 @@ type (
 		interfaces []string `json:"interfaces"`
 	}
 
-	// DebotActivity - Describes the operation that the DeBot wants to perform.
 	DebotActivity struct {
-		Type    DebotActivityType `json:"type"`
+		ValueEnumType interface{}
+	}
+
+	// DebotActivityTransaction ...
+	DebotActivityTransaction struct {
 		Msg     string            `json:"msg"`
 		Dst     string            `json:"dst"`
 		Out     []Spending        `json:"Out"`
@@ -78,21 +73,72 @@ type (
 
 	// ParamsOfAppDebotBrowser - Debot Browser callbacks.
 	ParamsOfAppDebotBrowser struct {
-		Type      string         `json:"type"`
-		Msg       string         `json:"msg,omitempty"`
-		ContextID int            `json:"context_id,omitempty"`
-		Action    *DebotAction   `json:"action,omitempty"`
-		Prompt    string         `json:"prompt,omitempty"`
-		DebotAddr string         `json:"debot_addr,omitempty"`
-		Message   string         `json:"message,omitempty"`
-		Activity    *DebotActivity `json:"activity,omitempty"`
+		ValueEnumType interface{}
+	}
+
+	// ParamsOfAppDebotBrowserLog ...
+	ParamsOfAppDebotBrowserLog struct {
+		Msg       string         `json:"msg"`
+	}
+
+	// ParamsOfAppDebotBrowserSwitch ...
+	ParamsOfAppDebotBrowserSwitch struct {
+		ContextID int            `json:"context_id"`
+	}
+
+	// ParamsOfAppDebotBrowserSwitchCompleted ...
+	ParamsOfAppDebotBrowserSwitchCompleted struct {}
+
+	// ParamsOfAppDebotBrowserShowAction ...
+	ParamsOfAppDebotBrowserShowAction struct {
+		Action    *DebotAction   `json:"action"`
+	}
+
+	// ParamsOfAppDebotBrowserInput ...
+	ParamsOfAppDebotBrowserInput struct {
+		Prompt    string         `json:"prompt"`
+	}
+
+	// ParamsOfAppDebotBrowserGetSigningBox ...
+	ParamsOfAppDebotBrowserGetSigningBox struct {}
+
+	// ParamsOfAppDebotBrowserInvokeDebot ...
+	ParamsOfAppDebotBrowserInvokeDebot struct {
+		DebotAddr string         `json:"debot_addr"`
+		Action    *DebotAction   `json:"action"`
+	}
+
+	// ParamsOfAppDebotBrowserSend ...
+	ParamsOfAppDebotBrowserSend struct {
+		Message   string         `json:"message"`
+	}
+
+	// ParamsOfAppDebotBrowserApprove ...
+	ParamsOfAppDebotBrowserApprove struct {
+		Activity  *DebotActivity `json:"activity"`
 	}
 
 	// ResultOfAppDebotBrowser - Returning values from Debot Browser callbacks.
 	ResultOfAppDebotBrowser struct {
-		Type       string            `json:"type"`
-		Value      string            `json:"value,omitmepty"`
-		SigningBox *SigningBoxHandle `json:"signing_box,omitempty"`
+		ValueEnumType interface{}
+	}
+
+	// ResultOfAppDebotBrowserInput ...
+	ResultOfAppDebotBrowserInput struct {
+		Value      string            `json:"value"`
+	}
+
+	// ResultOfAppDebotBrowserGetSigningBox ...
+	ResultOfAppDebotBrowserGetSigningBox struct {
+		SigningBox SigningBoxHandle `json:"signing_box"`
+	}
+
+	// ResultOfAppDebotBrowserInvokeDebot ...
+	ResultOfAppDebotBrowserInvokeDebot struct {}
+
+	// ResultOfAppDebotBrowserApprove ...
+	ResultOfAppDebotBrowserApprove struct {
+		Approved bool `json:"approved"`
 	}
 
 	// ParamsOfFetch - Parameters to fetch DeBot metadata.
@@ -148,69 +194,4 @@ func init() {
 		"DebotBrowserCallbackFailed": 811,
 		"DebotOperationRejected":     812,
 	}
-}
-
-// DebotActivityTransaction - Variant constructors transaction.
-func DebotActivityTransaction(msg, dst string, out []Spending, fee *big.Int, setcode bool, signkey string) *DebotActivity {
-	return &DebotActivity{Type: DebotActivityTransactionType, Msg: msg, Dst: dst, Out: out, Fee: fee, Setcode: setcode, Signkey: signkey}
-}
-
-// ParamsOfAppDebotBrowserLog variant constructor ParamsOfAppDebotBrowser.
-func ParamsOfAppDebotBrowserLog(msg string) *ParamsOfAppDebotBrowser {
-	return &ParamsOfAppDebotBrowser{Type: "Log", Msg: msg}
-}
-
-// ParamsOfAppDebotBrowserSwitch variant constructor ParamsOfAppDebotBrowser.
-func ParamsOfAppDebotBrowserSwitch(contextID int) *ParamsOfAppDebotBrowser {
-	return &ParamsOfAppDebotBrowser{Type: "Switch", ContextID: contextID}
-}
-
-// ParamsOfAppDebotBrowserSwitchCompleted variant constructor ParamsOfAppDebotBrowser.
-func ParamsOfAppDebotBrowserSwitchCompleted() *ParamsOfAppDebotBrowser {
-	return &ParamsOfAppDebotBrowser{Type: "SwitchCompleted"}
-}
-
-// ParamsOfAppDebotBrowserShowAction variant constructor ParamsOfAppDebotBrowser.
-func ParamsOfAppDebotBrowserShowAction(action *DebotAction) *ParamsOfAppDebotBrowser {
-	return &ParamsOfAppDebotBrowser{Type: "ShowAction", Action: action}
-}
-
-// ParamsOfAppDebotBrowserInput variant constructor ParamsOfAppDebotBrowser.
-func ParamsOfAppDebotBrowserInput(prompt string) *ParamsOfAppDebotBrowser {
-	return &ParamsOfAppDebotBrowser{Type: "Input", Prompt: prompt}
-}
-
-// ParamsOfAppDebotBrowserGetSigningBox variant constructor ParamsOfAppDebotBrowser.
-func ParamsOfAppDebotBrowserGetSigningBox() *ParamsOfAppDebotBrowser {
-	return &ParamsOfAppDebotBrowser{Type: "GetSigningBox"}
-}
-
-// ParamsOfAppDebotBrowserInvokeDebot variant constructor ParamsOfAppDebotBrowser.
-func ParamsOfAppDebotBrowserInvokeDebot(debotAddr string, action *DebotAction) *ParamsOfAppDebotBrowser {
-	return &ParamsOfAppDebotBrowser{Type: "InvokeDebot", DebotAddr: debotAddr, Action: action}
-}
-
-// ParamsOfAppDebotBrowserSend variant constructor ParamsOfAppDebotBrowser.
-func ParamsOfAppDebotBrowserSend(message string) *ParamsOfAppDebotBrowser {
-	return &ParamsOfAppDebotBrowser{Type: "Send", Message: message}
-}
-
-// ParamsOfAppDebotBrowserApprove variant constructor ParamsOfAppDebotBrowser.
-func ParamsOfAppDebotBrowserApprove(activity *DebotActivity) *ParamsOfAppDebotBrowser {
-	return &ParamsOfAppDebotBrowser{Type: "Approve", Activity: activity}
-}
-
-// ResultOfAppDebotBrowserInput ...
-func ResultOfAppDebotBrowserInput(value string) *ResultOfAppDebotBrowser {
-	return &ResultOfAppDebotBrowser{Type: "Input", Value: value}
-}
-
-// ResultOfAppDebotBrowserGetSigningBox ...
-func ResultOfAppDebotBrowserGetSigningBox(signingBox *SigningBoxHandle) *ResultOfAppDebotBrowser {
-	return &ResultOfAppDebotBrowser{Type: "GetSigningBox", SigningBox: signingBox}
-}
-
-// ResultOfAppDebotBrowserInvokeDebot ...
-func ResultOfAppDebotBrowserInvokeDebot() *ResultOfAppDebotBrowser {
-	return &ResultOfAppDebotBrowser{Type: "InvokeDebot"}
 }

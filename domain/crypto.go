@@ -1,5 +1,10 @@
 package domain
 
+import (
+	"encoding/json"
+	"fmt"
+)
+
 const (
 	// DefaultWordCount Word count in mnemonic phrase on default
 	DefaultWordCount = 12
@@ -212,7 +217,7 @@ type (
 
 	// ParamsOfMnemonicWords ...
 	ParamsOfMnemonicWords struct {
-		Dictionary int `json:"dictionary,omitempty"`
+		Dictionary int `json:"dictionary"`
 	}
 
 	// ResultOfMnemonicWords ...
@@ -222,7 +227,7 @@ type (
 
 	// ParamsOfMnemonicFromRandom ...
 	ParamsOfMnemonicFromRandom struct {
-		Dictionary int `json:"dictionary,omitempty"`
+		Dictionary int `json:"dictionary"`
 		WordCount  int `json:"word_count,omitempty"`
 	}
 
@@ -234,7 +239,7 @@ type (
 	// ParamsOfMnemonicFromEntropy ...
 	ParamsOfMnemonicFromEntropy struct {
 		Entropy    string `json:"entropy"`
-		Dictionary int    `json:"dictionary,omitempty"`
+		Dictionary int    `json:"dictionary"`
 		WordCount  int    `json:"word_count,omitempty"`
 	}
 
@@ -246,7 +251,7 @@ type (
 	// ParamsOfMnemonicVerify ...
 	ParamsOfMnemonicVerify struct {
 		Phrase     string `json:"phrase"`
-		Dictionary int    `json:"dictionary,omitempty"`
+		Dictionary int    `json:"dictionary"`
 		WordCount  int    `json:"word_count,omitempty"`
 	}
 
@@ -259,14 +264,14 @@ type (
 	ParamsOfMnemonicDeriveSignKeys struct {
 		Phrase     string `json:"phrase"`
 		Path       string `json:"path,omitempty"`
-		Dictionary int    `json:"dictionary,omitempty"`
+		Dictionary int    `json:"dictionary"`
 		WordCount  int    `json:"word_count,omitempty"`
 	}
 
 	// ParamsOfHDKeyXPrvFromMnemonic ...
 	ParamsOfHDKeyXPrvFromMnemonic struct {
 		Phrase     string `json:"phrase"`
-		Dictionary int    `json:"dictionary,omitempty"`
+		Dictionary int    `json:"dictionary"`
 		WordCount  int    `json:"word_count,omitempty"`
 	}
 
@@ -332,25 +337,40 @@ type (
 
 	// RegisteredSigningBox ...
 	RegisteredSigningBox struct {
-		Handle SigningBoxHandle
+		Handle SigningBoxHandle `json:"handle"`
 	}
 
 	// ParamsOfAppSigningBox ...
 	ParamsOfAppSigningBox struct {
-		Type     string `json:"type"`
-		Unsigned string `json:"unsigned,omitempty"`
+		ValueEnumType interface{}
+	}
+
+	// ParamsOfAppSigningBoxGetPublicKey ...
+	ParamsOfAppSigningBoxGetPublicKey struct{}
+
+	// ParamsOfAppSigningBoxSign ...
+	ParamsOfAppSigningBoxSign struct {
+		Unsigned string `json:"unsigned"`
 	}
 
 	// ResultOfAppSigningBox ...
 	ResultOfAppSigningBox struct {
-		Type      string `json:"type"`
-		PublicKey string `json:"public_key,omitempty"`
-		Signature string `json:"signature,omitempty"`
+		ValueEnumType interface{}
+	}
+
+	// ResultOfAppSigningBoxGetPublicKey ...
+	ResultOfAppSigningBoxGetPublicKey struct {
+		PublicKey string `json:"public_key"`
+	}
+
+	// ResultOfAppSigningBoxSign...
+	ResultOfAppSigningBoxSign struct {
+		Signature string `json:"signature"`
 	}
 
 	// ResultOfSigningBoxGetPublicKey ...
 	ResultOfSigningBoxGetPublicKey struct {
-		PubKey string `json:"pubkey"`
+		PubKey string `json:"PubKey"`
 	}
 
 	// ParamsOfSigningBoxSign ...
@@ -393,11 +413,11 @@ type (
 		MnemonicFromEntropy(*ParamsOfMnemonicFromEntropy) (*ResultOfMnemonicFromEntropy, error)
 		MnemonicVerify(*ParamsOfMnemonicVerify) (*ResultOfMnemonicVerify, error)
 		MnemonicDeriveSignKeys(*ParamsOfMnemonicDeriveSignKeys) (*KeyPair, error)
-		HdkeyXprvFromMnemonic(*ParamsOfHDKeyXPrvFromMnemonic) (*ResultOfHDKeyXPrvFromMnemonic, error)
-		HdkeyDeriveFromXprv(*ParamsOfHDKeyDeriveFromXPrv) (*ResultOfHDKeyDeriveFromXPrv, error)
-		HdkeyDeriveFromXprvPath(*ParamsOfHDKeyDeriveFromXPrvPath) (*ResultOfHDKeyDeriveFromXPrvPath, error)
-		HdkeySecretFromXprv(*ParamsOfHDKeySecretFromXPrv) (*ResultOfHDKeySecretFromXPrv, error)
-		HdkeyPublicFromXprv(*ParamsOfHDKeyPublicFromXPrv) (*ResultOfHDKeyPublicFromXPrv, error)
+		HDKeyXprvFromMnemonic(*ParamsOfHDKeyXPrvFromMnemonic) (*ResultOfHDKeyXPrvFromMnemonic, error)
+		HDKeyDeriveFromXprv(*ParamsOfHDKeyDeriveFromXPrv) (*ResultOfHDKeyDeriveFromXPrv, error)
+		HDKeyDeriveFromXprvPath(*ParamsOfHDKeyDeriveFromXPrvPath) (*ResultOfHDKeyDeriveFromXPrvPath, error)
+		HDKeySecretFromXprv(*ParamsOfHDKeySecretFromXPrv) (*ResultOfHDKeySecretFromXPrv, error)
+		HDKeyPublicFromXprv(*ParamsOfHDKeyPublicFromXPrv) (*ResultOfHDKeyPublicFromXPrv, error)
 		Chacha20(*ParamsOfChaCha20) (*ResultOfChaCha20, error)
 		RegisterSigningBox(AppSigningBox) (*RegisteredSigningBox, error)
 		GetSigningBox(*KeyPair) (*RegisteredSigningBox, error)
@@ -464,24 +484,95 @@ func NewDefaultParamsOfHDKeyXPrvFromMnemonic() *ParamsOfHDKeyXPrvFromMnemonic {
 	return &ParamsOfHDKeyXPrvFromMnemonic{Phrase: "", Dictionary: DefaultDictionary, WordCount: DefaultWordCount}
 }
 
-// ParamsOfAppSigningBoxGetPublicKey - Variant constructor Signing box callbacks from Get public key.
-func ParamsOfAppSigningBoxGetPublicKey() *ParamsOfAppSigningBox {
-	return &ParamsOfAppSigningBox{Type: "GetPublicKey"}
+func (pOASB *ParamsOfAppSigningBox) MarshalJSON() ([]byte, error) {
+	switch value := (pOASB.ValueEnumType).(type) {
+	case ParamsOfAppSigningBoxGetPublicKey:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			ParamsOfAppSigningBoxGetPublicKey
+		}{"GetPublicKey", value})
+	case ParamsOfAppSigningBoxSign:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			ParamsOfAppSigningBoxSign
+		}{"Sign", value})
+	default:
+		return nil, fmt.Errorf("unsupported type for ParamsOfAppSigningBox %v", pOASB.ValueEnumType)
+	}
 }
 
-// ParamsOfAppSigningBoxSign - Variant constructor Signing box callbacks from Sign.
-func ParamsOfAppSigningBoxSign(unsigned string) *ParamsOfAppSigningBox {
-	return &ParamsOfAppSigningBox{Type: "Sign", Unsigned: unsigned}
+func (pOASB *ParamsOfAppSigningBox) UnmarshalJSON(b []byte) error {
+	var typeD EnumType
+	if err := json.Unmarshal(b, &typeD); err != nil {
+		return err
+	}
+	switch typeD.Type {
+	case "GetPublicKey":
+		var valueEnum ParamsOfAppSigningBoxGetPublicKey
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		pOASB.ValueEnumType = valueEnum
+	case "Sign":
+		var valueEnum ParamsOfAppSigningBoxSign
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		pOASB.ValueEnumType = valueEnum
+	default:
+		return fmt.Errorf("unsupported type for ParamsOfAppSigningBox %v", typeD.Type)
+	}
+	return nil
 }
 
-// ResultOfAppSigningBoxGetPublicKey -  Variant constructor Returning values from
-// signing box callbacks Get Public Key.
-func ResultOfAppSigningBoxGetPublicKey(publicKey string) *ResultOfAppSigningBox {
-	return &ResultOfAppSigningBox{Type: "GetPublicKey", PublicKey: publicKey}
+// NewParamsOfAppSigningBox ...
+func NewParamsOfAppSigningBox(value interface{}) *ParamsOfAppSigningBox {
+	return &ParamsOfAppSigningBox{ValueEnumType: value}
 }
 
-// ResultOfAppSigningBoxSign -  Variant constructor Returning values from
-// signing box callbacks Get Public Key.
-func ResultOfAppSigningBoxSign(signature string) *ResultOfAppSigningBox {
-	return &ResultOfAppSigningBox{Type: "Sign", Signature: signature}
+func (rOASB *ResultOfAppSigningBox) MarshalJSON() ([]byte, error) {
+	switch value := (rOASB.ValueEnumType).(type) {
+	case ResultOfAppSigningBoxGetPublicKey:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			ResultOfAppSigningBoxGetPublicKey
+		}{"GetPublicKey", value})
+	case ResultOfAppSigningBoxSign:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			ResultOfAppSigningBoxSign
+		}{"Sign", value})
+	default:
+		return nil, fmt.Errorf("unsupported type for ResultOfAppSigningBox %v", rOASB.ValueEnumType)
+	}
+}
+
+func (rOASB *ResultOfAppSigningBox) UnmarshalJSON(b []byte) error {
+	var typeD EnumType
+	if err := json.Unmarshal(b, &typeD); err != nil {
+		return err
+	}
+
+	switch typeD.Type {
+	case "GetPublicKey":
+		var valueEnum ResultOfAppSigningBoxGetPublicKey
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		rOASB.ValueEnumType = valueEnum
+	case "Sign":
+		var valueEnum ResultOfAppSigningBoxSign
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		rOASB.ValueEnumType = valueEnum
+	default:
+		return fmt.Errorf("unsupported type for ResultOfAppSigningBox %v", typeD.Type)
+	}
+	return nil
+}
+
+// NewResultOfAppSigningBox ...
+func NewResultOfAppSigningBox(value interface{}) *ResultOfAppSigningBox {
+	return &ResultOfAppSigningBox{ValueEnumType: value}
 }

@@ -2,6 +2,7 @@ package crypto
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/move-ton/ton-client-go/domain"
 )
 
@@ -40,7 +41,7 @@ func (c *crypto) TonCrc16(pOTC *domain.ParamsOfTonCrc16) (*domain.ResultOfTonCrc
 	return result, err
 }
 
-// GenerateRandomBytes Generates random byte array of the specified length and returns it in base64 format.
+// GenerateRandomBytes - Generates random byte array of the specified length and returns it in base64 format.
 func (c *crypto) GenerateRandomBytes(pOGRB *domain.ParamsOfGenerateRandomBytes) (*domain.ResultOfGenerateRandomBytes, error) {
 	result := new(domain.ResultOfGenerateRandomBytes)
 	err := c.client.GetResult("crypto.generate_random_bytes", pOGRB, result)
@@ -215,36 +216,36 @@ func (c *crypto) MnemonicDeriveSignKeys(pOMDSK *domain.ParamsOfMnemonicDeriveSig
 	return result, err
 }
 
-// HdkeyXprvFromMnemonic - Generates an extended master private key that will be the root for all the derived keys.
-func (c *crypto) HdkeyXprvFromMnemonic(pOHKXFM *domain.ParamsOfHDKeyXPrvFromMnemonic) (*domain.ResultOfHDKeyXPrvFromMnemonic, error) {
+// HDKeyXprvFromMnemonic - Generates an extended master private key that will be the root for all the derived keys.
+func (c *crypto) HDKeyXprvFromMnemonic(pOHKXFM *domain.ParamsOfHDKeyXPrvFromMnemonic) (*domain.ResultOfHDKeyXPrvFromMnemonic, error) {
 	result := new(domain.ResultOfHDKeyXPrvFromMnemonic)
 	err := c.client.GetResult("crypto.hdkey_xprv_from_mnemonic", pOHKXFM, result)
 	return result, err
 }
 
-// HdkeyDeriveFromXprv - Returns extended private key derived from the specified extended private key and child index.
-func (c *crypto) HdkeyDeriveFromXprv(hdP *domain.ParamsOfHDKeyDeriveFromXPrv) (*domain.ResultOfHDKeyDeriveFromXPrv, error) {
+// HDKeyDeriveFromXprv - Returns extended private key derived from the specified extended private key and child index.
+func (c *crypto) HDKeyDeriveFromXprv(hdP *domain.ParamsOfHDKeyDeriveFromXPrv) (*domain.ResultOfHDKeyDeriveFromXPrv, error) {
 	result := new(domain.ResultOfHDKeyDeriveFromXPrv)
 	err := c.client.GetResult("crypto.hdkey_derive_from_xprv", hdP, result)
 	return result, err
 }
 
-// HdkeyDeriveFromXprvPath - Derives the extended private key from the specified key and path.
-func (c *crypto) HdkeyDeriveFromXprvPath(hdPD *domain.ParamsOfHDKeyDeriveFromXPrvPath) (*domain.ResultOfHDKeyDeriveFromXPrvPath, error) {
+// HDKeyDeriveFromXprvPath - Derives the extended private key from the specified key and path.
+func (c *crypto) HDKeyDeriveFromXprvPath(hdPD *domain.ParamsOfHDKeyDeriveFromXPrvPath) (*domain.ResultOfHDKeyDeriveFromXPrvPath, error) {
 	result := new(domain.ResultOfHDKeyDeriveFromXPrvPath)
 	err := c.client.GetResult("crypto.hdkey_derive_from_xprv_path", hdPD, result)
 	return result, err
 }
 
-// HdkeySecretFromXprv - Extracts the private key from the serialized extended private key.
-func (c *crypto) HdkeySecretFromXprv(pOHKSFXP *domain.ParamsOfHDKeySecretFromXPrv) (*domain.ResultOfHDKeySecretFromXPrv, error) {
+// HDKeySecretFromXprv - Extracts the private key from the serialized extended private key.
+func (c *crypto) HDKeySecretFromXprv(pOHKSFXP *domain.ParamsOfHDKeySecretFromXPrv) (*domain.ResultOfHDKeySecretFromXPrv, error) {
 	result := new(domain.ResultOfHDKeySecretFromXPrv)
 	err := c.client.GetResult("crypto.hdkey_secret_from_xprv", pOHKSFXP, result)
 	return result, err
 }
 
-// HdkeyPublicFromXprv - Extracts the public key from the serialized extended private key.
-func (c *crypto) HdkeyPublicFromXprv(pOHKPFXP *domain.ParamsOfHDKeyPublicFromXPrv) (*domain.ResultOfHDKeyPublicFromXPrv, error) {
+// HDKeyPublicFromXprv - Extracts the public key from the serialized extended private key.
+func (c *crypto) HDKeyPublicFromXprv(pOHKPFXP *domain.ParamsOfHDKeyPublicFromXPrv) (*domain.ResultOfHDKeyPublicFromXPrv, error) {
 	result := new(domain.ResultOfHDKeyPublicFromXPrv)
 	err := c.client.GetResult("crypto.hdkey_public_from_xprv", pOHKPFXP, result)
 	return result, err
@@ -253,7 +254,7 @@ func (c *crypto) HdkeyPublicFromXprv(pOHKPFXP *domain.ParamsOfHDKeyPublicFromXPr
 // Chacha20 - Performs symmetric chacha20 encryption.
 func (c *crypto) Chacha20(pOFCC *domain.ParamsOfChaCha20) (*domain.ResultOfChaCha20, error) {
 	result := new(domain.ResultOfChaCha20)
-	err := c.client.GetResult("crypto.hdkey_secret_from_xprv", pOFCC, result)
+	err := c.client.GetResult("crypto.chacha20", pOFCC, result)
 	return result, err
 }
 
@@ -278,9 +279,6 @@ func (c *crypto) RegisterSigningBox(app domain.AppSigningBox) (*domain.Registere
 			if r.Code == 3 {
 				c.appRequestCryptoRegisterSigningBox(r.Data, app)
 			}
-			if r.Code == 4 {
-				c.appNotifyCryptoRegisterSigningBox(r.Data, app)
-			}
 		}
 	}()
 
@@ -298,31 +296,33 @@ func (c *crypto) appRequestCryptoRegisterSigningBox(payload []byte, app domain.A
 	if err != nil {
 		panic(err)
 	}
-	appResponse, err := app.Request(appParams)
-	appRequestResult := &domain.AppRequestResult{}
+	var appResponse interface{}
+	switch value := (appParams.ValueEnumType).(type) {
+	case domain.ParamsOfAppSigningBoxGetPublicKey:
+		appResponse, err = app.GetPublicKey(value)
+	case domain.ParamsOfAppSigningBoxSign:
+		appResponse, err = app.Sign(value)
+	default:
+		err = fmt.Errorf("unsupported type for request %v", appParams.ValueEnumType)
+	}
+
+	appReqResult := &domain.AppRequestResult{}
 	if err != nil {
-		appRequestResult.Type = domain.AppRequestResultTypeError
-		appRequestResult.Text = err.Error()
+		appReqResult.ValueEnumType = domain.AppRequestResultError{Text: err.Error()}
 	} else {
-		appRequestResult.Type = domain.AppRequestResultTypeOk
-		appRequestResult.Result, _ = json.Marshal(appResponse)
+		marsh, err := json.Marshal(&domain.ResultOfAppSigningBox{ValueEnumType: appResponse})
+		if err != nil {
+			panic(err)
+		}
+		appReqResult.ValueEnumType = domain.AppRequestResultOk{Result: marsh}
 	}
 	err = c.client.ResolveAppRequest(&domain.ParamsOfResolveAppRequest{
 		AppRequestID: appRequest.AppRequestID,
-		Result:       appRequestResult,
+		Result:       appReqResult,
 	})
 	if err != nil {
 		panic(err)
 	}
-}
-
-func (c *crypto) appNotifyCryptoRegisterSigningBox(payload []byte, app domain.AppSigningBox) {
-	var appParams domain.ParamsOfAppSigningBox
-	err := json.Unmarshal(payload, &appParams)
-	if err != nil {
-		panic(err)
-	}
-	app.Notify(appParams)
 }
 
 // GetSigningBox - Creates a default signing box implementation.
@@ -348,6 +348,6 @@ func (c *crypto) SigningBoxSign(pOSBS *domain.ParamsOfSigningBoxSign) (*domain.R
 
 // SigningBoxSign - Removes signing box from SDK.
 func (c *crypto) RemoveSigningBox(rSB *domain.RegisteredSigningBox) error {
-	_, err := c.client.GetResponse("client.resolve_app_request", rSB)
+	_, err := c.client.GetResponse("crypto.remove_signing_box", rSB)
 	return err
 }

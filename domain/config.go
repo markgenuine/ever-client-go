@@ -1,5 +1,11 @@
 package domain
 
+const(
+	BaseUrl = "https://net.ton.dev/"
+	BaseCustomUrl = "https://tonos.freeton.surf"
+	BaseMainUrl = "https://main.ton.dev"
+)
+
 type (
 	// Config ...
 	Config struct {
@@ -20,6 +26,7 @@ type (
 		MessageProcessingTimeout int      `toml:"message_processing_timeout" json:"message_processing_timeout,omitempty"`
 		WaitForTimeout           int      `toml:"wait_for_timeout" json:"wait_for_timeout,omitempty"`
 		OutOfSyncThreshold       int      `toml:"out_of_sync_threshold" json:"out_of_sync_threshold,omitempty"`
+		SendingEndpointCount     *int      `toml:"sending_endpoint_count,omitempty" json:"sending_endpoint_count"`
 		AccessKey                string   `toml:"access_key" json:"access_key,omitempty"`
 	}
 
@@ -44,10 +51,10 @@ type (
 )
 
 // NewDefaultConfig create new config for connect client. ChanID 0-localhost, 1-devnet, 2-mainnet,
-func NewDefaultConfig(chainID int) Config {
+func NewDefaultConfig(address string) Config {
 	config := Config{
 		Network: &Network{
-			ServerAddress:            Chains()[chainID],
+			ServerAddress:           address,
 			NetworkRetriesCount:      5,
 			MessageRetriesCount:      5,
 			MessageProcessingTimeout: 40000, //ms
@@ -70,11 +77,6 @@ func NewDefaultConfig(chainID int) Config {
 	}
 
 	return config
-}
-
-// Chains list endpoints
-func Chains() map[int]string {
-	return map[int]string{0: "localhost", 1: "net.ton.dev", 2: "main.ton.dev"}
 }
 
 // WordCountList list length mnemonic phrases
