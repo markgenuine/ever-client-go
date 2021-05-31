@@ -73,9 +73,6 @@ func NewDefaultConfig(address string) Config {
 			WorkChain:                          util.IntToPointerInt(0),
 			MessageExpirationTimeout:           util.IntToPointerInt(40000), //ms
 			MessageExpirationTimeoutGrowFactor: util.Float32ToPointerFloat32(1.5)},
-		Boc: &BocConfig{
-			//CacheMaxSize: util.IntToPointerInt(10),
-		},
 	}
 
 	return config
