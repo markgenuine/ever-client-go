@@ -142,6 +142,12 @@ type (
 		Endpoints []string `json:"endpoints"`
 	}
 
+	// ResultOfGetEndpoints ...
+	ResultOfGetEndpoints struct {
+		Query string `json:"query"`
+		Endpoints []string `json:"endpoints"`
+	}
+
 	// ParamsOfQueryCounterparties
 	ParamsOfQueryCounterparties struct {
 		Account string `json:"account"`
@@ -164,6 +170,7 @@ type (
 		FindLastShardBlock(*ParamsOfFindLastShardBlock) (*ResultOfFindLastShardBlock, error)
 		FetchEndpoints() (*EndpointsSet, error)
 		SetEndpoints(*EndpointsSet) error
+		GetEndpoints() (*ResultOfGetEndpoints, error)
 		QueryCounterparties(*ParamsOfQueryCounterparties) (*ResultOfQueryCollection, error)
 	}
 )

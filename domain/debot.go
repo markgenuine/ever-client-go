@@ -24,7 +24,7 @@ type (
 		Name       string   `json:"name,omitempty"`
 		Version    string   `json:"version,omitempty"`
 		Publisher  string   `json:"publisher,omitempty"`
-		Key        string   `json:"key,omitempty"`
+		Caption    string   `json:"caption,omitempty"`
 		Author     string   `json:"author,omitempty"`
 		Support    string   `json:"support,omitempty"`
 		Hello      string   `json:"hello,omitempty"`
@@ -40,12 +40,13 @@ type (
 
 	// DebotActivityTransaction ...
 	DebotActivityTransaction struct {
-		Msg     string     `json:"msg"`
-		Dst     string     `json:"dst"`
-		Out     []Spending `json:"out"`
-		Fee     *big.Int   `json:"fee"`
-		Setcode bool       `json:"setcode"`
-		Signkey string     `json:"signkey"`
+		Msg              string     `json:"msg"`
+		Dst              string     `json:"dst"`
+		Out              []Spending `json:"out"`
+		Fee              *big.Int   `json:"fee"`
+		Setcode          bool       `json:"setcode"`
+		Signkey          string     `json:"signkey"`
+		SigningBoxHandle int        `json:"signing_box_handle"`
 	}
 
 	// Spending - Describes how much funds will be debited from the target contract balance as a result of the transaction.

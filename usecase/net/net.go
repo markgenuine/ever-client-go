@@ -128,6 +128,13 @@ func (n *net) SetEndpoints(eS *domain.EndpointsSet) error {
 	return err
 }
 
+// GetEndpoints - Requests the list of alternative endpoints from server.
+func (n *net) GetEndpoints() (*domain.ResultOfGetEndpoints,error) {
+	result := new(domain.ResultOfGetEndpoints)
+	err := n.client.GetResult("net.get_endpoints", nil, result)
+	return result, err
+}
+
 // QueryCounterparties - Allows to query and paginate through the list of accounts that the specified account
 // has interacted with, sorted by the time of the last internal message between accounts
 // Attention this query retrieves data from 'Counterparties' service which is not supported
