@@ -13,7 +13,7 @@ type (
 	// ExecutionOptions ...
 	ExecutionOptions struct {
 		BlockchainConfig string   `json:"blockchain_config,omitempty"`
-		BlockTime        int      `json:"block_time,omitempty"`
+		BlockTime        *int     `json:"block_time,omitempty"`
 		BlockLt          *big.Int `json:"block_lt,omitempty"`
 		TransactionLt    *big.Int `json:"transaction_lt,omitempty"`
 	}
@@ -27,23 +27,23 @@ type (
 	AccountForExecutorNone struct{}
 
 	// AccountForExecutorUninit ...
-	AccountForExecutorUninit struct {}
+	AccountForExecutorUninit struct{}
 
 	// AccountForExecutorAccount ...
 	AccountForExecutorAccount struct {
-		Boc              string                 `json:"boc"`
-		UnlimitedBalance bool                   `json:"unlimited_balance,omitempty"`
+		Boc              string `json:"boc"`
+		UnlimitedBalance *bool  `json:"unlimited_balance,omitempty"`
 	}
 
 	// ParamsOfRunExecutor ...
 	ParamsOfRunExecutor struct {
-		Message              string              `json:"message"`
-		Account              *AccountForExecutor `json:"account"`
-		ExecutionOptions     *ExecutionOptions   `json:"execution_options,omitempty"`
-		Abi                  *Abi                `json:"abi,omitempty"`
-		SkipTransactionCheck bool                `json:"skip_transaction_check,omitempty"`
-		BocCache             *BocCacheType       `json:"boc_cache,omitempty"`
-		ReturnUpdatedAccount bool                `json:"return_updated_account,omitempty"`
+		Message              string             `json:"message"`
+		Account              AccountForExecutor `json:"account"`
+		ExecutionOptions     *ExecutionOptions  `json:"execution_options,omitempty"`
+		Abi                  *Abi               `json:"abi,omitempty"`
+		SkipTransactionCheck *bool              `json:"skip_transaction_check,omitempty"`
+		BocCache             *BocCacheType      `json:"boc_cache,omitempty"`
+		ReturnUpdatedAccount *bool              `json:"return_updated_account,omitempty"`
 	}
 
 	// ResultOfRunExecuteMessage ...
@@ -62,7 +62,7 @@ type (
 		ExecutionOptions     *ExecutionOptions `json:"execution_options,omitempty"`
 		Abi                  *Abi              `json:"abi,omitempty"`
 		BocCache             *BocCacheType     `json:"boc_cache,omitempty"`
-		ReturnUpdatedAccount bool              `json:"return_updated_account"`
+		ReturnUpdatedAccount *bool             `json:"return_updated_account,omitempty"`
 	}
 
 	// ResultOfRunTvm ...
@@ -78,7 +78,7 @@ type (
 		FunctionName     string            `json:"function_name"`
 		Input            interface{}       `json:"input,omitempty"`
 		ExecutionOptions *ExecutionOptions `json:"execution_options,omitempty"`
-		TupleListAsArray bool              `json:"tuple_list_as_array,omitempty"`
+		TupleListAsArray *bool             `json:"tuple_list_as_array,omitempty"`
 	}
 
 	// ResultOfRunGet ...

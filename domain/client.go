@@ -129,8 +129,15 @@ type (
 
 	//AppDebotBrowser ...
 	AppDebotBrowser interface {
-		Request(ParamsOfAppDebotBrowser) (ResultOfAppDebotBrowser, error)
-		Notify(ParamsOfAppDebotBrowser)
+		Log(ParamsOfAppDebotBrowserLog) error
+		Switch(ParamsOfAppDebotBrowserSwitch) error
+		SwitchCompleted(ParamsOfAppDebotBrowserSwitchCompleted) error
+		ShowAction(ParamsOfAppDebotBrowserShowAction) error
+		Input(ParamsOfAppDebotBrowserInput) (ResultOfAppDebotBrowserInput, error)
+		GetSigningBox(ParamsOfAppDebotBrowserGetSigningBox) (ResultOfAppDebotBrowserGetSigningBox, error)
+		InvokeDebot(ParamsOfAppDebotBrowserInvokeDebot) (ResultOfAppDebotBrowserInvokeDebot, error)
+		Send(ParamsOfAppDebotBrowserSend) error
+		Approve(ParamsOfAppDebotBrowserApprove) (ResultOfAppDebotBrowserApprove, error)
 	}
 )
 

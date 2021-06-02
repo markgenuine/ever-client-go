@@ -40,12 +40,12 @@ type (
 
 	// DebotActivityTransaction ...
 	DebotActivityTransaction struct {
-		Msg     string            `json:"msg"`
-		Dst     string            `json:"dst"`
-		Out     []Spending        `json:"Out"`
-		Fee     *big.Int          `json:"fee"`
-		Setcode bool              `json:"setcode"`
-		Signkey string            `json:"signkey"`
+		Msg     string     `json:"msg"`
+		Dst     string     `json:"dst"`
+		Out     []Spending `json:"out"`
+		Fee     *big.Int   `json:"fee"`
+		Setcode bool       `json:"setcode"`
+		Signkey string     `json:"signkey"`
 	}
 
 	// Spending - Describes how much funds will be debited from the target contract balance as a result of the transaction.
@@ -78,44 +78,44 @@ type (
 
 	// ParamsOfAppDebotBrowserLog ...
 	ParamsOfAppDebotBrowserLog struct {
-		Msg       string         `json:"msg"`
+		Msg string `json:"msg"`
 	}
 
 	// ParamsOfAppDebotBrowserSwitch ...
 	ParamsOfAppDebotBrowserSwitch struct {
-		ContextID int            `json:"context_id"`
+		ContextID int `json:"context_id"`
 	}
 
 	// ParamsOfAppDebotBrowserSwitchCompleted ...
-	ParamsOfAppDebotBrowserSwitchCompleted struct {}
+	ParamsOfAppDebotBrowserSwitchCompleted struct{}
 
 	// ParamsOfAppDebotBrowserShowAction ...
 	ParamsOfAppDebotBrowserShowAction struct {
-		Action    *DebotAction   `json:"action"`
+		Action *DebotAction `json:"action"`
 	}
 
 	// ParamsOfAppDebotBrowserInput ...
 	ParamsOfAppDebotBrowserInput struct {
-		Prompt    string         `json:"prompt"`
+		Prompt string `json:"prompt"`
 	}
 
 	// ParamsOfAppDebotBrowserGetSigningBox ...
-	ParamsOfAppDebotBrowserGetSigningBox struct {}
+	ParamsOfAppDebotBrowserGetSigningBox struct{}
 
 	// ParamsOfAppDebotBrowserInvokeDebot ...
 	ParamsOfAppDebotBrowserInvokeDebot struct {
-		DebotAddr string         `json:"debot_addr"`
-		Action    *DebotAction   `json:"action"`
+		DebotAddr string       `json:"debot_addr"`
+		Action    *DebotAction `json:"action"`
 	}
 
 	// ParamsOfAppDebotBrowserSend ...
 	ParamsOfAppDebotBrowserSend struct {
-		Message   string         `json:"message"`
+		Message string `json:"message"`
 	}
 
 	// ParamsOfAppDebotBrowserApprove ...
 	ParamsOfAppDebotBrowserApprove struct {
-		Activity  *DebotActivity `json:"activity"`
+		Activity *DebotActivity `json:"activity"`
 	}
 
 	// ResultOfAppDebotBrowser - Returning values from Debot Browser callbacks.
@@ -125,7 +125,7 @@ type (
 
 	// ResultOfAppDebotBrowserInput ...
 	ResultOfAppDebotBrowserInput struct {
-		Value      string            `json:"value"`
+		Value string `json:"value"`
 	}
 
 	// ResultOfAppDebotBrowserGetSigningBox ...
@@ -134,7 +134,7 @@ type (
 	}
 
 	// ResultOfAppDebotBrowserInvokeDebot ...
-	ResultOfAppDebotBrowserInvokeDebot struct {}
+	ResultOfAppDebotBrowserInvokeDebot struct{}
 
 	// ResultOfAppDebotBrowserApprove ...
 	ResultOfAppDebotBrowserApprove struct {

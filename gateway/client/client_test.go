@@ -1,6 +1,7 @@
 package client
 
 import (
+	"github.com/move-ton/ton-client-go/util"
 	"testing"
 
 	"github.com/move-ton/ton-client-go/domain"
@@ -8,27 +9,35 @@ import (
 )
 
 func Test(t *testing.T) {
-	client, err := NewClientGateway(domain.NewDefaultConfig(2))
+	configConn := domain.NewDefaultConfig(domain.BaseUrl)
+	clientConn, err := NewClientGateway(configConn)
 	assert.Equal(t, nil, err)
-	defer client.Destroy()
+	defer clientConn.Destroy()
 
-	t.Run("TestClient", func(t *testing.T) {
-		t.Run("TestVersion", func(t *testing.T) {
-			version, err := client.Version()
-			assert.Equal(t, nil, err)
-			assert.Equal(t, VersionLibSDK, version.Version)
-		})
+	t.Run("TestConfigFields", func(t *testing.T) {
+		defConf := domain.NewDefaultConfig(domain.BaseUrl)
+		defConf.Abi.MessageExpirationTimeout = util.IntToPointerInt(0)
+		defConf.Network.MaxReconnectTimeOut = util.IntToPointerInt(100)
+		assert.Equal(t, defConf.Crypto.MnemonicWordCount, util.IntToPointerInt(domain.DefaultWordCount))
+		assert.Equal(t, defConf.Network.MaxReconnectTimeOut, util.IntToPointerInt(100))
+	})
 
-		t.Run("TestGetApiReference", func(t *testing.T) {
-			getAPIReference, err := client.GetAPIReference()
-			assert.Equal(t, nil, err)
-			assert.Equal(t, VersionLibSDK, getAPIReference.API.Version)
-		})
+	t.Run("TestVersion", func(t *testing.T) {
+		version, err := clientConn.Version()
+		assert.Equal(t, nil, err)
+		assert.Equal(t, VersionLibSDK, version.Version)
+	})
 
-		t.Run("TestBuildInfo", func(t *testing.T) {
-			buildInfo, err := client.GetBuildInfo()
-			assert.Equal(t, nil, err)
-			assert.Equal(t, 0, buildInfo.BuildNumber)
-		})
+	t.Run("TestGetApiReference", func(t *testing.T) {
+		getAPIReference, err := clientConn.GetAPIReference()
+		assert.Equal(t, nil, err)
+		assert.NotEqual(t, len(getAPIReference.API.Modules), 0)
+		assert.Equal(t, VersionLibSDK, getAPIReference.API.Version)
+	})
+
+	t.Run("TestBuildInfo", func(t *testing.T) {
+		buildInfo, err := clientConn.GetBuildInfo()
+		assert.Equal(t, nil, err)
+		assert.NotNil(t, buildInfo.BuildNumber)
 	})
 }

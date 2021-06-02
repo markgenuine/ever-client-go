@@ -52,7 +52,7 @@ type (
 
 	// FunctionHeader ...
 	FunctionHeader struct {
-		Expire int      `json:"expire,omitempty"`
+		Expire *int     `json:"expire,omitempty"`
 		Time   *big.Int `json:"time,omitempty"`
 		PubKey string   `json:"pubkey,omitempty"`
 	}
@@ -67,7 +67,7 @@ type (
 	// DeploySet ...
 	DeploySet struct {
 		Tvc           string      `json:"tvc"`
-		WorkchainID   int         `json:"workchain_id"` //Default 0
+		WorkchainID   *int        `json:"workchain_id,omitempty"`
 		InitialData   interface{} `json:"initial_data,omitempty"`
 		InitialPubKey string      `json:"initial_pubkey,omitempty"`
 	}
@@ -154,7 +154,7 @@ type (
 	AbiEvent struct {
 		Name   string      `json:"name"`
 		Inputs []*AbiParam `json:"inputs"`
-		ID     string      `json:"id,omitempty"` //?
+		ID     string      `json:"id,omitempty"`
 	}
 
 	// AbiData ...
@@ -170,12 +170,12 @@ type (
 		Name    string      `json:"name"`
 		Inputs  []*AbiParam `json:"inputs"`
 		Outputs []*AbiParam `json:"outputs"`
-		ID      string      `json:"id,omitempty"` //?
+		ID      string      `json:"id,omitempty"`
 	}
 
 	// AbiContract ...
 	AbiContract struct {
-		AbiVersion int             `json:"ABI version,omitempty"`
+		AbiVersion *int            `json:"ABI version,omitempty"`
 		Header     []string        `json:"header,omitempty"`
 		Functions  []*AbiFunctions `json:"functions,omitempty"`
 		Events     []*AbiEvent     `json:"events,omitempty"`
@@ -188,7 +188,7 @@ type (
 		CallSet            *CallSet `json:"call_set"`
 		IsInternal         bool     `json:"is_internal"`
 		Signer             *Signer  `json:"signer"`
-		ProcessingTryIndex int      `json:"processing_try_index"`
+		ProcessingTryIndex *int     `json:"processing_try_index,omitempty"`
 	}
 
 	// ResultOfEncodeMessageBody ...
@@ -217,7 +217,7 @@ type (
 		DeploySet          *DeploySet `json:"deploy_set,omitempty"`
 		CallSet            *CallSet   `json:"call_set,omitempty"`
 		Signer             *Signer    `json:"signer"`
-		ProcessingTryIndex int        `json:"processing_try_index"`
+		ProcessingTryIndex *int       `json:"processing_try_index"`
 	}
 
 	// ResultOfEncodeMessage ...
@@ -236,8 +236,8 @@ type (
 		DeploySet  *DeploySet `json:"deploy_set,omitempty"`
 		CallSet    *CallSet   `json:"call_set,omitempty"`
 		Value      string     `json:"value"`
-		Bounce     bool       `json:"bounce"`     //? Default is true.
-		EnableIhr  bool       `json:"enable_ihr"` //? Default is false.
+		Bounce     *bool      `json:"bounce"`
+		EnableIhr  *bool      `json:"enable_ihr"`
 	}
 
 	// ResultOfEncodeInternalMessage ...
@@ -287,7 +287,7 @@ type (
 		StateInit   *StateInitSource `json:"state_init"`
 		Balance     *big.Int         `json:"balance,omitempty"`
 		LastTransLt *big.Int         `json:"last_trans_lt,omitempty"`
-		LastPaid    int              `json:"last_paid,omitempty"`
+		LastPaid    *int             `json:"last_paid,omitempty"`
 		BocCache    *BocCacheType    `json:"boc_cache,omitempty"`
 	}
 

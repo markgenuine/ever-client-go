@@ -15,55 +15,55 @@ type (
 	}
 
 	// ProcessingEventWillFetchFirstBlock ...
-	ProcessingEventWillFetchFirstBlock struct {}
+	ProcessingEventWillFetchFirstBlock struct{}
 
 	// ProcessingEventFetchFirstBlockFailed ...
 	ProcessingEventFetchFirstBlockFailed struct {
-		Error        ClientError        `json:"error"`
+		Error ClientError `json:"error"`
 	}
 
 	// ProcessingEventWillSend ...
 	ProcessingEventWillSend struct {
-		ShardBlockID string              `json:"shard_block_id"`
-		MessageID    string              `json:"message_id"`
-		Message      string              `json:"message"`
+		ShardBlockID string `json:"shard_block_id"`
+		MessageID    string `json:"message_id"`
+		Message      string `json:"message"`
 	}
 
 	// ProcessingEventDidSend ...
 	ProcessingEventDidSend struct {
-		ShardBlockID string              `json:"shard_block_id"`
-		MessageID    string              `json:"message_id"`
-		Message      string              `json:"message"`
+		ShardBlockID string `json:"shard_block_id"`
+		MessageID    string `json:"message_id"`
+		Message      string `json:"message"`
 	}
 
 	// ProcessingEventSendFailed ...
 	ProcessingEventSendFailed struct {
-		ShardBlockID string              `json:"shard_block_id"`
-		MessageID    string              `json:"message_id"`
-		Message      string              `json:"message"`
-		Error        ClientError        `json:"error"`
+		ShardBlockID string      `json:"shard_block_id"`
+		MessageID    string      `json:"message_id"`
+		Message      string      `json:"message"`
+		Error        ClientError `json:"error"`
 	}
 
 	// ProcessingEventWillFetchNextBlock ...
 	ProcessingEventWillFetchNextBlock struct {
-		ShardBlockID string              `json:"shard_block_id"`
-		MessageID    string              `json:"message_id"`
-		Message      string              `json:"message"`
+		ShardBlockID string `json:"shard_block_id"`
+		MessageID    string `json:"message_id"`
+		Message      string `json:"message"`
 	}
 
 	// ProcessingEventFetchNextBlockFailed ...
 	ProcessingEventFetchNextBlockFailed struct {
-		ShardBlockID string              `json:"shard_block_id"`
-		MessageID    string              `json:"message_id"`
-		Message      string              `json:"message"`
-		Error        ClientError        `json:"error"`
+		ShardBlockID string      `json:"shard_block_id"`
+		MessageID    string      `json:"message_id"`
+		Message      string      `json:"message"`
+		Error        ClientError `json:"error"`
 	}
 
 	// ProcessingEventMessageExpired ...
 	ProcessingEventMessageExpired struct {
-		MessageID    string              `json:"message_id"`
-		Message      string              `json:"message"`
-		Error        ClientError        `json:"error"`
+		MessageID string      `json:"message_id"`
+		Message   string      `json:"message"`
+		Error     ClientError `json:"error"`
 	}
 
 	// ParamsOfSendMessage ...
@@ -75,16 +75,16 @@ type (
 
 	// ResultOfSendMessage ...
 	ResultOfSendMessage struct {
-		ShardBlockID string `json:"shard_block_id"`
+		ShardBlockID     string   `json:"shard_block_id"`
 		SendingEndpoints []string `json:"sending_endpoints"`
 	}
 
 	// ParamsOfWaitForTransaction ...
 	ParamsOfWaitForTransaction struct {
-		Abi          *Abi   `json:"abi,omitempty"`
-		Message      string `json:"message"`
-		ShardBlockID string `json:"shard_block_id"`
-		SendEvents   bool   `json:"send_events"`
+		Abi              *Abi     `json:"abi,omitempty"`
+		Message          string   `json:"message"`
+		ShardBlockID     string   `json:"shard_block_id"`
+		SendEvents       bool     `json:"send_events"`
 		SendingEndpoints []string `json:"sending_endpoints,omitempty"`
 	}
 

@@ -49,7 +49,7 @@ type (
 	// ParamsOfCompressZstd ...
 	ParamsOfCompressZstd struct {
 		Uncompressed string `json:"uncompressed"`
-		Level        int    `json:"level"` //?
+		Level        *int   `json:"level,omitempty"`
 	}
 
 	// ResultOfCompressZstd ...

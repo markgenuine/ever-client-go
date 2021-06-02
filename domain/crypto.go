@@ -3,6 +3,7 @@ package domain
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/move-ton/ton-client-go/util"
 )
 
 const (
@@ -217,7 +218,7 @@ type (
 
 	// ParamsOfMnemonicWords ...
 	ParamsOfMnemonicWords struct {
-		Dictionary int `json:"dictionary"`
+		Dictionary *int `json:"dictionary,omitempty"`
 	}
 
 	// ResultOfMnemonicWords ...
@@ -227,8 +228,8 @@ type (
 
 	// ParamsOfMnemonicFromRandom ...
 	ParamsOfMnemonicFromRandom struct {
-		Dictionary int `json:"dictionary"`
-		WordCount  int `json:"word_count,omitempty"`
+		Dictionary *int `json:"dictionary,omitempty"`
+		WordCount  *int `json:"word_count,omitempty"`
 	}
 
 	// ResultOfMnemonicFromRandom ...
@@ -239,8 +240,8 @@ type (
 	// ParamsOfMnemonicFromEntropy ...
 	ParamsOfMnemonicFromEntropy struct {
 		Entropy    string `json:"entropy"`
-		Dictionary int    `json:"dictionary"`
-		WordCount  int    `json:"word_count,omitempty"`
+		Dictionary *int   `json:"dictionary,omitempty"`
+		WordCount  *int   `json:"word_count,omitempty"`
 	}
 
 	// ResultOfMnemonicFromEntropy ...
@@ -251,8 +252,8 @@ type (
 	// ParamsOfMnemonicVerify ...
 	ParamsOfMnemonicVerify struct {
 		Phrase     string `json:"phrase"`
-		Dictionary int    `json:"dictionary"`
-		WordCount  int    `json:"word_count,omitempty"`
+		Dictionary *int   `json:"dictionary,omitempty"`
+		WordCount  *int   `json:"word_count,omitempty"`
 	}
 
 	// ResultOfMnemonicVerify ...
@@ -264,15 +265,15 @@ type (
 	ParamsOfMnemonicDeriveSignKeys struct {
 		Phrase     string `json:"phrase"`
 		Path       string `json:"path,omitempty"`
-		Dictionary int    `json:"dictionary"`
-		WordCount  int    `json:"word_count,omitempty"`
+		Dictionary *int   `json:"dictionary,omitempty"`
+		WordCount  *int   `json:"word_count,omitempty"`
 	}
 
 	// ParamsOfHDKeyXPrvFromMnemonic ...
 	ParamsOfHDKeyXPrvFromMnemonic struct {
 		Phrase     string `json:"phrase"`
-		Dictionary int    `json:"dictionary"`
-		WordCount  int    `json:"word_count,omitempty"`
+		Dictionary *int   `json:"dictionary,omitempty"`
+		WordCount  *int   `json:"word_count,omitempty"`
 	}
 
 	// ResultOfHDKeyXPrvFromMnemonic ...
@@ -456,32 +457,32 @@ func init() {
 
 // NewDefaultParamsOfMnemonicWords ...
 func NewDefaultParamsOfMnemonicWords() *ParamsOfMnemonicWords {
-	return &ParamsOfMnemonicWords{Dictionary: DefaultDictionary}
+	return &ParamsOfMnemonicWords{Dictionary: util.IntToPointerInt(DefaultDictionary)}
 }
 
 // NewDefaultParamsOfMnemonicFromRandom ...
 func NewDefaultParamsOfMnemonicFromRandom() *ParamsOfMnemonicFromRandom {
-	return &ParamsOfMnemonicFromRandom{Dictionary: DefaultDictionary, WordCount: DefaultWordCount}
+	return &ParamsOfMnemonicFromRandom{Dictionary: util.IntToPointerInt(DefaultDictionary), WordCount: util.IntToPointerInt(DefaultWordCount)}
 }
 
 // NewDefaultParamsOfMnemonicFromEntropy ...
 func NewDefaultParamsOfMnemonicFromEntropy() *ParamsOfMnemonicFromEntropy {
-	return &ParamsOfMnemonicFromEntropy{Entropy: "", Dictionary: DefaultDictionary, WordCount: DefaultWordCount}
+	return &ParamsOfMnemonicFromEntropy{Entropy: "", Dictionary: util.IntToPointerInt(DefaultDictionary), WordCount: util.IntToPointerInt(DefaultWordCount)}
 }
 
 // NewDefaultParamsOfMnemonicVerify ...
 func NewDefaultParamsOfMnemonicVerify() *ParamsOfMnemonicVerify {
-	return &ParamsOfMnemonicVerify{Phrase: "", Dictionary: DefaultDictionary, WordCount: DefaultWordCount}
+	return &ParamsOfMnemonicVerify{Phrase: "", Dictionary: util.IntToPointerInt(DefaultDictionary), WordCount: util.IntToPointerInt(DefaultWordCount)}
 }
 
 // NewDefaultParamsOfMnemonicDeriveSignKeys ...
 func NewDefaultParamsOfMnemonicDeriveSignKeys() *ParamsOfMnemonicDeriveSignKeys {
-	return &ParamsOfMnemonicDeriveSignKeys{Phrase: "", Dictionary: DefaultDictionary, WordCount: DefaultWordCount}
+	return &ParamsOfMnemonicDeriveSignKeys{Phrase: "", Dictionary: util.IntToPointerInt(DefaultDictionary), WordCount: util.IntToPointerInt(DefaultWordCount)}
 }
 
 // NewDefaultParamsOfHDKeyXPrvFromMnemonic ...
 func NewDefaultParamsOfHDKeyXPrvFromMnemonic() *ParamsOfHDKeyXPrvFromMnemonic {
-	return &ParamsOfHDKeyXPrvFromMnemonic{Phrase: "", Dictionary: DefaultDictionary, WordCount: DefaultWordCount}
+	return &ParamsOfHDKeyXPrvFromMnemonic{Phrase: "", Dictionary: util.IntToPointerInt(DefaultDictionary), WordCount: util.IntToPointerInt(DefaultWordCount)}
 }
 
 func (pOASB *ParamsOfAppSigningBox) MarshalJSON() ([]byte, error) {

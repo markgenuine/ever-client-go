@@ -12,10 +12,19 @@ const (
 	// SortDirectionDESC ...
 	SortDirectionDESC SortDirection = "DESC"
 
-	AggregationFnTypeCount   AggregationFnType = "COUNT"
-	AggregationFnTypeMin     AggregationFnType = "MIN"
-	AggregationFnTypeMax     AggregationFnType = "MAX"
-	AggregationFnTypeSum     AggregationFnType = "SUM"
+	// AggregationFnTypeCount - Count value.
+	AggregationFnTypeCount AggregationFnType = "COUNT"
+
+	// AggregationFnTypeMin - Min value.
+	AggregationFnTypeMin AggregationFnType = "MIN"
+
+	// AggregationFnTypeMax - MAX value.
+	AggregationFnTypeMax AggregationFnType = "MAX"
+
+	// AggregationFnTypeSum - SUM value.
+	AggregationFnTypeSum AggregationFnType = "SUM"
+
+	// AggregationFnTypeAverage - AVERAGE value.
 	AggregationFnTypeAverage AggregationFnType = "AVERAGE"
 )
 
@@ -70,11 +79,11 @@ type (
 
 	// ParamsOfQueryCollection ...
 	ParamsOfQueryCollection struct {
-		Collection string      `json:"collection"`
+		Collection string          `json:"collection"`
 		Filter     json.RawMessage `json:"filter,omitempty"`
-		Result     string      `json:"result"`
-		Order      []*OrderBy  `json:"order,omitempty"`
-		Limit      int         `json:"limit,omitempty"`
+		Result     string          `json:"result"`
+		Order      []*OrderBy      `json:"order,omitempty"`
+		Limit      *int            `json:"limit,omitempty"`
 	}
 
 	// ResultOfQueryCollection ...
@@ -85,7 +94,7 @@ type (
 	// ParamsOfAggregateCollection ...
 	ParamsOfAggregateCollection struct {
 		Collection string              `json:"collection"`
-		Filter     json.RawMessage         `json:"filter,omitempty"`
+		Filter     json.RawMessage     `json:"filter,omitempty"`
 		Fields     []*FieldAggregation `json:"fields,omitempty"`
 	}
 	// ResultOfAggregateCollection ...
@@ -95,10 +104,10 @@ type (
 
 	// ParamsOfWaitForCollection ...
 	ParamsOfWaitForCollection struct {
-		Collection string      `json:"collection"`
+		Collection string          `json:"collection"`
 		Filter     json.RawMessage `json:"filter,omitempty"`
-		Result     string      `json:"result"`
-		Timeout    int         `json:"timeout,omitempty"`
+		Result     string          `json:"result"`
+		Timeout    *int            `json:"timeout,omitempty"`
 	}
 
 	// ResultOfWaitForCollection ...
@@ -113,9 +122,9 @@ type (
 
 	// ParamsOfSubscribeCollection ...
 	ParamsOfSubscribeCollection struct {
-		Collection string      `json:"collection"`
+		Collection string          `json:"collection"`
 		Filter     json.RawMessage `json:"filter,omitempty"`
-		Result     string      `json:"result"`
+		Result     string          `json:"result"`
 	}
 
 	// ParamsOfFindLastShardBlock ...
@@ -136,9 +145,9 @@ type (
 	// ParamsOfQueryCounterparties
 	ParamsOfQueryCounterparties struct {
 		Account string `json:"account"`
-		Result string `json:"result"`
-		First int `json:"first,omitempty"`
-		After string `json:"after,omitempty"`
+		Result  string `json:"result"`
+		First   *int   `json:"first,omitempty"`
+		After   string `json:"after,omitempty"`
 	}
 
 	// NetUseCase ...
@@ -179,7 +188,7 @@ func init() {
 	}
 }
 
-func (pOQO *ParamsOfQueryOperation) MarshalJSON()([]byte, error){
+func (pOQO *ParamsOfQueryOperation) MarshalJSON() ([]byte, error) {
 	switch value := (pOQO.ValueEnumType).(type) {
 	case ParamsOfQueryCollection:
 		return json.Marshal(struct {

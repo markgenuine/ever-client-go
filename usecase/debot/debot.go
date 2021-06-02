@@ -2,6 +2,7 @@ package debot
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/move-ton/ton-client-go/domain"
 )
 
@@ -61,19 +62,30 @@ func (d *debot) appRequestDebotInit(payload []byte, app domain.AppDebotBrowser) 
 	if err != nil {
 		panic(err)
 	}
-	appResponse, err := app.Request(appParams)
+	var appResponse interface{}
+
+	switch value := (appParams.ValueEnumType).(type) {
+	case domain.ParamsOfAppDebotBrowserInput:
+		appResponse, err = app.Input(value)
+	case domain.ParamsOfAppDebotBrowserGetSigningBox:
+		appResponse, err = app.GetSigningBox(value)
+	case domain.ParamsOfAppDebotBrowserInvokeDebot:
+		appResponse, err = app.InvokeDebot(value)
+	case domain.ParamsOfAppDebotBrowserApprove:
+		appResponse, err = app.Approve(value)
+	default:
+		err = fmt.Errorf("unsupported type for request %v", appParams.ValueEnumType)
+	}
+
 	appRequestResult := &domain.AppRequestResult{}
 	if err != nil {
-		appRequestResult.Type = domain.AppRequestResultTypeError
-		appRequestResult.Text = err.Error()
+		appRequestResult.ValueEnumType = domain.AppRequestResultError{Text: err.Error()}
 	} else {
-		appRequestResult.Type = domain.AppRequestResultTypeOk
-		appRequestResult.Result, _ = json.Marshal(appResponse)
+		marshal, _ := json.Marshal(&domain.ResultOfAppDebotBrowser{ValueEnumType: appResponse})
+		appRequestResult.ValueEnumType = domain.AppRequestResultOk{Result: marshal}
 	}
-	err = d.client.ResolveAppRequest(&domain.ParamsOfResolveAppRequest{
-		AppRequestID: appRequest.AppRequestID,
-		Result:       appRequestResult,
-	})
+	paramsResolved := &domain.ParamsOfResolveAppRequest{AppRequestID: appRequest.AppRequestID, Result: appRequestResult}
+	err = d.client.ResolveAppRequest(paramsResolved)
 	if err != nil {
 		panic(err)
 	}
@@ -86,7 +98,21 @@ func (d *debot) appNotifyDebotInit(payload []byte, app domain.AppDebotBrowser) {
 	if err != nil {
 		panic(err)
 	}
-	app.Notify(appParams)
+
+	switch value := (appParams.ValueEnumType).(type) {
+	case domain.ParamsOfAppDebotBrowserLog:
+		_ = app.Log(value)
+	case domain.ParamsOfAppDebotBrowserSwitch:
+		_ = app.Switch(value)
+	case domain.ParamsOfAppDebotBrowserSwitchCompleted:
+		_ = app.SwitchCompleted(value)
+	case domain.ParamsOfAppDebotBrowserShowAction:
+		_ = app.ShowAction(value)
+	case domain.ParamsOfAppDebotBrowserSend:
+		_ = app.Send(value)
+	default:
+		panic(fmt.Errorf("unsupported type for request %v", appParams.ValueEnumType))
+	}
 }
 
 //Start - Starts the DeBot.

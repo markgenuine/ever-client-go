@@ -9,7 +9,6 @@ import (
 )
 
 func main() {
-
 	ton, err := goton.NewTon(domain.BaseUrl)
 	if err != nil {
 		log.Fatal(err)
