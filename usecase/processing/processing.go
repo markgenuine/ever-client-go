@@ -23,6 +23,9 @@ func NewProcessing(
 }
 
 // SendMessage - Sends message to the network.
+// Sends message to the network and returns the last
+// generated shard block of the destination account before
+// the message was sent. It will be required later for message processing.
 func (p *processing) SendMessage(pOSM *domain.ParamsOfSendMessage, callback domain.EventCallback) (*domain.ResultOfSendMessage, error) {
 	if pOSM.SendEvents && callback == nil {
 		return nil, errors.New("Don't find callback")
@@ -42,6 +45,10 @@ func (p *processing) SendMessage(pOSM *domain.ParamsOfSendMessage, callback doma
 }
 
 // WaitForTransaction - Performs monitoring of the network for the result transaction of the external inbound message processing.
+// send_events enables intermediate events, such as WillFetchNextBlock, FetchNextBlockFailed
+// that may be useful for logging of new shard blocks creation during message processing.
+// Note, that presence of the abi parameter is critical for ABI compliant contracts.
+// Message processing uses drastically different strategy for processing message for contracts which ABI includes "expire" header.
 func (p *processing) WaitForTransaction(pOWFT *domain.ParamsOfWaitForTransaction, callback domain.EventCallback) (*domain.ResultOfProcessMessage, error) {
 	if pOWFT.SendEvents && callback == nil {
 		return nil, errors.New("Don't find callback")
@@ -61,6 +68,15 @@ func (p *processing) WaitForTransaction(pOWFT *domain.ParamsOfWaitForTransaction
 }
 
 // ProcessMessage - Creates message, sends it to the network and monitors its processing.
+// Creates ABI-compatible message, sends it to the network and monitors for the result
+// transaction. Decodes the output messages' bodies.
+// If contract's ABI includes "expire" header, then SDK implements retries in case of
+// unsuccessful message delivery within the expiration timeout: SDK recreates the message, sends it and processes it again.
+// The intermediate events, such as WillFetchFirstBlock, WillSend, DidSend, WillFetchNextBlock, etc -
+// are switched on/off by send_events flag and logged into the supplied callback function.
+// The retry configuration parameters are defined in the client's NetworkConfig and AbiConfig.
+// If contract's ABI does not include "expire" header then, if no transaction is found within
+// the network timeout (see config parameter ), exits with error.
 func (p *processing) ProcessMessage(pOPM *domain.ParamsOfProcessMessage, callback domain.EventCallback) (*domain.ResultOfProcessMessage, error) {
 	if pOPM.SendEvents && callback == nil {
 		return nil, errors.New("Don't find callback")

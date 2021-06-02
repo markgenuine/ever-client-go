@@ -1,27 +1,27 @@
 package domain
 
-const (
-
-	// AddressStringFormatTypeID ...
-	AddressStringFormatTypeID AddressStringFormatType = "AccountId"
-
-	// AddressStringFormatTypeHex ...
-	AddressStringFormatTypeHex AddressStringFormatType = "Hex"
-
-	// AddressStringFormatTypeBase64 ...
-	AddressStringFormatTypeBase64 AddressStringFormatType = "Base64"
+import (
+	"encoding/json"
+	"fmt"
 )
 
 type (
-	// AddressStringFormatType ...
-	AddressStringFormatType string
+	// AddressStringFormatAccountID ...
+	AddressStringFormatAccountID struct{}
+
+	// AddressStringFormatHex ...
+	AddressStringFormatHex struct{}
+
+	// AddressStringFormatBase64 ...
+	AddressStringFormatBase64 struct {
+		URL    bool `json:"url"`
+		Test   bool `json:"test"`
+		Bounce bool `json:"bounce"`
+	}
 
 	// AddressStringFormat
 	AddressStringFormat struct {
-		Type   AddressStringFormatType `json:"type"`
-		URL    bool                    `json:"url,omitempty"`
-		Test   bool                    `json:"test,omitempty"`
-		Bounce bool                    `json:"bounce,omitempty"`
+		ValueEnumType interface{}
 	}
 
 	// ParamsOfConvertAddress ...
@@ -49,7 +49,7 @@ type (
 	// ParamsOfCompressZstd ...
 	ParamsOfCompressZstd struct {
 		Uncompressed string `json:"uncompressed"`
-		Level        int    `json:"level"`
+		Level        *int   `json:"level,omitempty"`
 	}
 
 	// ResultOfCompressZstd ...
@@ -76,17 +76,60 @@ type (
 	}
 )
 
-// AddressStringFormatAccountId ...
-func AddressStringFormatAccountId() *AddressStringFormat {
-	return &AddressStringFormat{Type: AddressStringFormatTypeID}
+func (a *AddressStringFormat) MarshalJSON() ([]byte, error) {
+	switch value := (a.ValueEnumType).(type) {
+	case AddressStringFormatAccountID:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			AddressStringFormatAccountID
+		}{"AccountId", value})
+	case AddressStringFormatHex:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			AddressStringFormatHex
+		}{"Hex", value})
+	case AddressStringFormatBase64:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			AddressStringFormatBase64
+		}{"Base64", value})
+	default:
+		return nil, fmt.Errorf("unsupported type for AddressStringFormat %v", a.ValueEnumType)
+	}
 }
 
-// AddressStringFormatHex ...
-func AddressStringFormatHex() *AddressStringFormat {
-	return &AddressStringFormat{Type: AddressStringFormatTypeHex}
+func (a *AddressStringFormat) UnmarshalJSON(b []byte) error {
+	var typeD EnumType
+	if err := json.Unmarshal(b, &typeD); err != nil {
+		return err
+	}
+
+	switch typeD.Type {
+	case "AccountId":
+		var valueEnum AddressStringFormatAccountID
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		a.ValueEnumType = valueEnum
+	case "Hex":
+		var valueEnum AddressStringFormatHex
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		a.ValueEnumType = valueEnum
+	case "Base64":
+		var valueEnum AddressStringFormatBase64
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		a.ValueEnumType = valueEnum
+	default:
+		return fmt.Errorf("unsupported type for AddressStringFormat %v", typeD.Type)
+	}
+	return nil
 }
 
-// AddressStringFormatBase64 ...
-func AddressStringFormatBase64(url, test, bounce bool) *AddressStringFormat {
-	return &AddressStringFormat{Type: AddressStringFormatTypeBase64, URL: url, Test: test, Bounce: bounce}
+// NewAddressStringFormat ...
+func NewAddressStringFormat(value interface{}) *AddressStringFormat {
+	return &AddressStringFormat{ValueEnumType: value}
 }

@@ -2,14 +2,14 @@ package main
 
 import (
 	"fmt"
+	"github.com/move-ton/ton-client-go/domain"
 	"log"
 
 	goton "github.com/move-ton/ton-client-go"
 )
 
 func main() {
-
-	ton, err := goton.NewTon(1)
+	ton, err := goton.NewTon(domain.BaseUrl)
 	if err != nil {
 		log.Fatal(err)
 	}

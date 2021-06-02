@@ -2,18 +2,8 @@ package domain
 
 import (
 	"encoding/json"
+	"fmt"
 	"math/big"
-)
-
-const (
-	// AccountForExecutorTypeNone ...
-	AccountForExecutorTypeNone = AccountForExecutorType("None")
-
-	// AccountForExecutorTypeUninit ...
-	AccountForExecutorTypeUninit = AccountForExecutorType("Uninit")
-
-	// AccountForExecutorTypeAccount ...
-	AccountForExecutorTypeAccount = AccountForExecutorType("Account")
 )
 
 // TVMErrorCode ...
@@ -23,30 +13,37 @@ type (
 	// ExecutionOptions ...
 	ExecutionOptions struct {
 		BlockchainConfig string   `json:"blockchain_config,omitempty"`
-		BlockTime        int      `json:"block_time,omitempty"`
+		BlockTime        *int     `json:"block_time,omitempty"`
 		BlockLt          *big.Int `json:"block_lt,omitempty"`
 		TransactionLt    *big.Int `json:"transaction_lt,omitempty"`
 	}
 
-	// AccountForExecutorType ...
-	AccountForExecutorType string
-
-	// AccountForExecutor
+	// AccountForExecutor ...
 	AccountForExecutor struct {
-		Type             AccountForExecutorType `json:"type"`
-		Boc              string                 `json:"boc,omitempty"`
-		UnlimitedBalance bool                   `json:"unlimited_balance,omitempty"`
+		ValueEnumType interface{}
+	}
+
+	// AccountForExecutorNone ...
+	AccountForExecutorNone struct{}
+
+	// AccountForExecutorUninit ...
+	AccountForExecutorUninit struct{}
+
+	// AccountForExecutorAccount ...
+	AccountForExecutorAccount struct {
+		Boc              string `json:"boc"`
+		UnlimitedBalance *bool  `json:"unlimited_balance,omitempty"`
 	}
 
 	// ParamsOfRunExecutor ...
 	ParamsOfRunExecutor struct {
-		Message              string              `json:"message"`
-		Account              *AccountForExecutor `json:"account"`
-		ExecutionOptions     *ExecutionOptions   `json:"execution_options,omitempty"`
-		Abi                  *Abi                `json:"abi,omitempty"`
-		SkipTransactionCheck bool                `json:"skip_transaction_check,omitempty"`
-		BocCache             *BocCacheType       `json:"boc_cache,omitempty"`
-		ReturnUpdatedAccount bool                `json:"return_updated_account,omitempty"`
+		Message              string             `json:"message"`
+		Account              AccountForExecutor `json:"account"`
+		ExecutionOptions     *ExecutionOptions  `json:"execution_options,omitempty"`
+		Abi                  *Abi               `json:"abi,omitempty"`
+		SkipTransactionCheck *bool              `json:"skip_transaction_check,omitempty"`
+		BocCache             *BocCacheType      `json:"boc_cache,omitempty"`
+		ReturnUpdatedAccount *bool              `json:"return_updated_account,omitempty"`
 	}
 
 	// ResultOfRunExecuteMessage ...
@@ -65,7 +62,7 @@ type (
 		ExecutionOptions     *ExecutionOptions `json:"execution_options,omitempty"`
 		Abi                  *Abi              `json:"abi,omitempty"`
 		BocCache             *BocCacheType     `json:"boc_cache,omitempty"`
-		ReturnUpdatedAccount bool              `json:"return_updated_account"`
+		ReturnUpdatedAccount *bool             `json:"return_updated_account,omitempty"`
 	}
 
 	// ResultOfRunTvm ...
@@ -78,10 +75,10 @@ type (
 	// ParamsOfRunGet ...
 	ParamsOfRunGet struct {
 		Account          string            `json:"account"`
-		FunctionName     string            `json:"function_name,omitempty"`
+		FunctionName     string            `json:"function_name"`
 		Input            interface{}       `json:"input,omitempty"`
 		ExecutionOptions *ExecutionOptions `json:"execution_options,omitempty"`
-		TupleListAsArray bool              `json:"tuple_list_as_array,omitempty"`
+		TupleListAsArray *bool             `json:"tuple_list_as_array,omitempty"`
 	}
 
 	// ResultOfRunGet ...
@@ -126,17 +123,55 @@ func init() {
 	}
 }
 
-// AccountForExecutorNone variant constructor AccountForExecutor.
-func AccountForExecutorNone() *AccountForExecutor {
-	return &AccountForExecutor{Type: AccountForExecutorTypeNone}
+func (aFE *AccountForExecutor) MarshalJSON() ([]byte, error) {
+	switch value := (aFE.ValueEnumType).(type) {
+	case AccountForExecutorNone:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			AccountForExecutorNone
+		}{"None", value})
+	case AccountForExecutorUninit:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			AccountForExecutorUninit
+		}{"Uninit", value})
+	case AccountForExecutorAccount:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			AccountForExecutorAccount
+		}{"Account", value})
+	default:
+		return nil, fmt.Errorf("unsupported type for AccountForExecutor %v", aFE.ValueEnumType)
+	}
 }
 
-// AccountForExecutorUninit variant constructor AccountForExecutor.
-func AccountForExecutorUninit() *AccountForExecutor {
-	return &AccountForExecutor{Type: AccountForExecutorTypeUninit}
-}
+func (aFE *AccountForExecutor) UnmarshalJSON(b []byte) error {
+	var typeD EnumType
+	if err := json.Unmarshal(b, &typeD); err != nil {
+		return err
+	}
 
-// AccountForExecutorAccount variant constructor AccountForExecutor.
-func AccountForExecutorAccount(boc string, unlimitedBalance bool) *AccountForExecutor {
-	return &AccountForExecutor{Type: AccountForExecutorTypeUninit, Boc: boc, UnlimitedBalance: unlimitedBalance}
+	switch typeD.Type {
+	case "None":
+		var valueEnum AccountForExecutorNone
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		aFE.ValueEnumType = valueEnum
+	case "Uninit":
+		var valueEnum AccountForExecutorUninit
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		aFE.ValueEnumType = valueEnum
+	case "Account":
+		var valueEnum AccountForExecutorAccount
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		aFE.ValueEnumType = valueEnum
+	default:
+		return fmt.Errorf("unsupported type for AccountForExecutor %v", typeD.Type)
+	}
+	return nil
 }

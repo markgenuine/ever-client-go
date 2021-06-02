@@ -60,14 +60,14 @@ package main
 
 import (
 	"fmt"
+	"github.com/move-ton/ton-client-go/domain"
 	"log"
 
 	goton "github.com/move-ton/ton-client-go"
 )
 
 func main() {
-
-	ton, err := goton.NewTon(1)
+	ton, err := goton.NewTon(domain.BaseUrl)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -81,7 +81,6 @@ func main() {
 
 	fmt.Println("Version bindings is: ", value.Version)
 }
-
 ```
 For more examples see *_test.go files
 [ton-client-go/usecase](https://github.com/move-ton/ton-client-go/tree/master/usecase)

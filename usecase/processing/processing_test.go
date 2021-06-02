@@ -16,14 +16,13 @@ import (
 )
 
 func TestProcessing(t *testing.T) {
-	config := domain.NewDefaultConfig(1)
-	config.Network.ServerAddress = "https://tonos.freeton.surf"
-	clientMain, err := client.NewClientGateway(config)
+	configConn := domain.NewDefaultConfig(domain.BaseCustomUrl)
+	clientConn, err := client.NewClientGateway(configConn)
 	assert.Equal(t, nil, err)
 
 	procUC := processing{
-		config: config,
-		client: clientMain,
+		config: configConn,
+		client: clientConn,
 	}
 	defer procUC.client.Destroy()
 
@@ -51,7 +50,7 @@ func TestProcessing(t *testing.T) {
 		// # Prepare data for deployment message
 		keypair, err := cryptoUC.GenerateRandomSignKeys()
 		assert.Equal(t, nil, err)
-		signer := domain.NewSignerKeys(keypair)
+		signer := domain.NewSigner(domain.SignerKeys{keypair})
 		callSet := domain.CallSet{FunctionName: "constructor", Header: &domain.FunctionHeader{PubKey: keypair.Public}}
 
 		// # Encode deployment message
@@ -68,25 +67,20 @@ func TestProcessing(t *testing.T) {
 		err = json.Unmarshal(byteAbiG, &eventsAbiG)
 		assert.Equal(t, nil, err)
 
-		giverAbi := domain.NewAbiContract(eventsAbiG)
-		callSetN := domain.CallSet{}
-		callSetN.FunctionName = "grant"
-		callSetN.Input = json.RawMessage(`{"dest":"` + encoded.Address + `"}`)
-		assert.Equal(t, nil, err)
-
 		_, err = procUC.ProcessMessage(&domain.ParamsOfProcessMessage{
 			MessageEncodeParams: &domain.ParamsOfEncodeMessage{
-				Type:    "EncodingParams",
-				Abi:     giverAbi,
-				Signer:  domain.NewSignerNone(),
+				Abi:     domain.NewAbiContract(eventsAbiG),
+				Signer:  domain.NewSigner(domain.SignerNone{}),
 				Address: "0:b61cf024cda7dad90e556d0fafb72c08579d5ebf73a67737317d9f3fc73521c5",
-				CallSet: &callSetN}, SendEvents: false}, nil)
+				CallSet: &domain.CallSet{
+					FunctionName: "grant",
+					Input:        json.RawMessage(`{"dest":"` + encoded.Address + `"}`),
+				}}, SendEvents: false}, nil)
 		assert.Equal(t, nil, err)
 
 		// # Deploy account
 		result, err := procUC.ProcessMessage(&domain.ParamsOfProcessMessage{
 			MessageEncodeParams: &domain.ParamsOfEncodeMessage{
-				Type:      "EncodingParams",
 				Abi:       abiValue,
 				Signer:    signer,
 				DeploySet: &deploySet,
@@ -103,7 +97,6 @@ func TestProcessing(t *testing.T) {
 		callSetErr := domain.CallSet{FunctionName: "returnValue", Input: json.RawMessage(`{"id": -1}`)}
 		_, err = procUC.ProcessMessage(&domain.ParamsOfProcessMessage{
 			MessageEncodeParams: &domain.ParamsOfEncodeMessage{
-				Type:    "EncodingParams",
 				Abi:     abiValue,
 				Signer:  signer,
 				Address: encoded.Address,
@@ -116,7 +109,7 @@ func TestProcessing(t *testing.T) {
 		// # Prepare data for deployment message
 		keypair, err := cryptoUC.GenerateRandomSignKeys()
 		assert.Equal(t, nil, err)
-		signer := domain.NewSignerKeys(keypair)
+		signer := domain.NewSigner(domain.SignerKeys{keypair})
 		callSet := domain.CallSet{FunctionName: "constructor", Header: &domain.FunctionHeader{PubKey: keypair.Public}}
 
 		// # Encode deployment message
@@ -141,9 +134,8 @@ func TestProcessing(t *testing.T) {
 
 		_, err = procUC.ProcessMessage(&domain.ParamsOfProcessMessage{
 			MessageEncodeParams: &domain.ParamsOfEncodeMessage{
-				Type:    "EncodingParams",
 				Abi:     giverAbi,
-				Signer:  domain.NewSignerNone(),
+				Signer:  domain.NewSigner(domain.SignerNone{}),
 				Address: "0:b61cf024cda7dad90e556d0fafb72c08579d5ebf73a67737317d9f3fc73521c5",
 				CallSet: &callSetN}, SendEvents: false}, nil)
 		assert.Equal(t, nil, err)
@@ -153,7 +145,6 @@ func TestProcessing(t *testing.T) {
 		// # Deploy account
 		generator, err := procUC.ProcessMessage(&domain.ParamsOfProcessMessage{
 			MessageEncodeParams: &domain.ParamsOfEncodeMessage{
-				Type:      "EncodingParams",
 				Abi:       abiValue,
 				Signer:    signer,
 				DeploySet: &deploySet,
@@ -163,7 +154,20 @@ func TestProcessing(t *testing.T) {
 
 		if len(events) > 0 {
 			for event := range events {
-				fmt.Println("Type: " + string(event.Type) + "; Shard block id: " + event.ShardBlockID)
+				switch valueType := event.ValueEnumType.(type) {
+				case domain.ProcessingEventWillSend:
+					fmt.Println("Type: ProcessingEventWillSend; Shard block id: " + valueType.ShardBlockID)
+				case domain.ProcessingEventDidSend:
+					fmt.Println("Type: ProcessingEventDidSend; Shard block id: " + valueType.ShardBlockID)
+				case domain.ProcessingEventSendFailed:
+					fmt.Println("Type: ProcessingEventSendFailed; Shard block id: " + valueType.ShardBlockID)
+				case domain.ProcessingEventWillFetchNextBlock:
+					fmt.Println("Type: ProcessingEventWillFetchNextBlock; Shard block id: " + valueType.ShardBlockID)
+				case domain.ProcessingEventFetchNextBlockFailed:
+					fmt.Println("Type: ProcessingEventFetchNextBlockFailed; Shard block id: " + valueType.ShardBlockID)
+				default:
+					continue
+				}
 			}
 		}
 
@@ -189,7 +193,7 @@ func TestProcessing(t *testing.T) {
 		// # Create deploy message
 		keypair, err := cryptoUC.GenerateRandomSignKeys()
 		assert.Equal(t, nil, err)
-		signer := domain.NewSignerKeys(keypair)
+		signer := domain.NewSigner(domain.SignerKeys{keypair})
 		callSet := domain.CallSet{FunctionName: "constructor", Header: &domain.FunctionHeader{PubKey: keypair.Public}}
 
 		// # Encode deployment message
@@ -213,9 +217,8 @@ func TestProcessing(t *testing.T) {
 		assert.Equal(t, nil, err)
 		_, err = procUC.ProcessMessage(&domain.ParamsOfProcessMessage{
 			MessageEncodeParams: &domain.ParamsOfEncodeMessage{
-				Type:    "EncodingParams",
 				Abi:     giverAbi,
-				Signer:  domain.NewSignerNone(),
+				Signer:  domain.NewSigner(domain.SignerNone{}),
 				Address: "0:b61cf024cda7dad90e556d0fafb72c08579d5ebf73a67737317d9f3fc73521c5",
 				CallSet: &callSetN}, SendEvents: false}, nil)
 		assert.Equal(t, nil, err)
@@ -236,7 +239,7 @@ func TestProcessing(t *testing.T) {
 		// # Create deploy message
 		keypair, err := cryptoUC.GenerateRandomSignKeys()
 		assert.Equal(t, nil, err)
-		signer := domain.NewSignerKeys(keypair)
+		signer := domain.NewSigner(domain.SignerKeys{keypair})
 		callSet := domain.CallSet{FunctionName: "constructor", Header: &domain.FunctionHeader{PubKey: keypair.Public}}
 
 		// # Encode deployment message
@@ -260,9 +263,8 @@ func TestProcessing(t *testing.T) {
 		assert.Equal(t, nil, err)
 		_, err = procUC.ProcessMessage(&domain.ParamsOfProcessMessage{
 			MessageEncodeParams: &domain.ParamsOfEncodeMessage{
-				Type:    "EncodingParams",
 				Abi:     giverAbi,
-				Signer:  domain.NewSignerNone(),
+				Signer:  domain.NewSigner(domain.SignerNone{}),
 				Address: "0:b61cf024cda7dad90e556d0fafb72c08579d5ebf73a67737317d9f3fc73521c5",
 				CallSet: &callSetN}, SendEvents: false}, nil)
 		assert.Equal(t, nil, err)
@@ -276,7 +278,20 @@ func TestProcessing(t *testing.T) {
 
 		if len(events) > 0 {
 			for event := range events {
-				fmt.Println("Type: " + string(event.Type) + "; Shard block id: " + event.ShardBlockID)
+				switch valueType := event.ValueEnumType.(type) {
+				case domain.ProcessingEventWillSend:
+					fmt.Println("Type: ProcessingEventWillSend; Shard block id: " + valueType.ShardBlockID)
+				case domain.ProcessingEventDidSend:
+					fmt.Println("Type: ProcessingEventDidSend; Shard block id: " + valueType.ShardBlockID)
+				case domain.ProcessingEventSendFailed:
+					fmt.Println("Type: ProcessingEventSendFailed; Shard block id: " + valueType.ShardBlockID)
+				case domain.ProcessingEventWillFetchNextBlock:
+					fmt.Println("Type: ProcessingEventWillFetchNextBlock; Shard block id: " + valueType.ShardBlockID)
+				case domain.ProcessingEventFetchNextBlockFailed:
+					fmt.Println("Type: ProcessingEventFetchNextBlockFailed; Shard block id: " + valueType.ShardBlockID)
+				default:
+					continue
+				}
 			}
 		}
 
@@ -288,7 +303,20 @@ func TestProcessing(t *testing.T) {
 
 		if len(events) > 0 {
 			for event := range events {
-				fmt.Println("Type: " + string(event.Type) + "; Shard block id: " + event.ShardBlockID)
+				switch valueType := event.ValueEnumType.(type) {
+				case domain.ProcessingEventWillSend:
+					fmt.Println("Type: ProcessingEventWillSend; Shard block id: " + valueType.ShardBlockID)
+				case domain.ProcessingEventDidSend:
+					fmt.Println("Type: ProcessingEventDidSend; Shard block id: " + valueType.ShardBlockID)
+				case domain.ProcessingEventSendFailed:
+					fmt.Println("Type: ProcessingEventSendFailed; Shard block id: " + valueType.ShardBlockID)
+				case domain.ProcessingEventWillFetchNextBlock:
+					fmt.Println("Type: ProcessingEventWillFetchNextBlock; Shard block id: " + valueType.ShardBlockID)
+				case domain.ProcessingEventFetchNextBlockFailed:
+					fmt.Println("Type: ProcessingEventFetchNextBlockFailed; Shard block id: " + valueType.ShardBlockID)
+				default:
+					continue
+				}
 			}
 		}
 

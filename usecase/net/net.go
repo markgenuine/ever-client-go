@@ -2,7 +2,6 @@ package net
 
 import (
 	"encoding/json"
-
 	"github.com/move-ton/ton-client-go/domain"
 )
 
@@ -63,8 +62,8 @@ func (n *net) Unsubscribe(rOSC *domain.ResultOfSubscribeCollection) error {
 	return err
 }
 
-// SubscribeCollection - Creates a subscription
-func (n *net) SubscribeCollection(pOSC *domain.ParamsOfSubscribeCollection) (<-chan interface{}, *domain.ResultOfSubscribeCollection, error) {
+// SubscribeCollection - Creates a subscription.
+func (n *net) SubscribeCollection(pOSC *domain.ParamsOfSubscribeCollection) (<-chan json.RawMessage, *domain.ResultOfSubscribeCollection, error) {
 	result := new(domain.ResultOfSubscribeCollection)
 	responses, err := n.client.Request("net.subscribe_collection", pOSC)
 	if err != nil {
@@ -80,10 +79,10 @@ func (n *net) SubscribeCollection(pOSC *domain.ParamsOfSubscribeCollection) (<-c
 	}
 
 	respInBuffer := domain.DynBufferForResponses(responses)
-	chanResult := make(chan interface{}, 1)
+	chanResult := make(chan json.RawMessage, 1)
 	go func() {
 		var body struct {
-			Result interface{} `json:"result"`
+			Result json.RawMessage `json:"result"`
 		}
 		for r := range respInBuffer {
 			if err := json.Unmarshal(r.Data, &body); err != nil {
@@ -127,4 +126,15 @@ func (n *net) FetchEndpoints() (*domain.EndpointsSet, error) {
 func (n *net) SetEndpoints(eS *domain.EndpointsSet) error {
 	_, err := n.client.GetResponse("net.set_endpoints", eS)
 	return err
+}
+
+// QueryCounterparties - Allows to query and paginate through the list of accounts that the specified account
+// has interacted with, sorted by the time of the last internal message between accounts
+// Attention this query retrieves data from 'Counterparties' service which is not supported
+// in the opensource version of DApp Server (and will not be supported) as well as in TON OS SE
+// (will be supported in SE in future), but is always accessible via TON OS Devnet/Mainnet Clouds
+func (n *net) QueryCounterparties(pOQC *domain.ParamsOfQueryCounterparties) (*domain.ResultOfQueryCollection, error) {
+	result := new(domain.ResultOfQueryCollection)
+	err := n.client.GetResult("net.query_counterparties", pOQC, result)
+	return result, err
 }
