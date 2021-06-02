@@ -28,7 +28,9 @@ type (
 		MessageProcessingTimeout *int     `toml:"message_processing_timeout" json:"message_processing_timeout,omitempty"`
 		WaitForTimeout           *int     `toml:"wait_for_timeout" json:"wait_for_timeout,omitempty"`
 		OutOfSyncThreshold       *int     `toml:"out_of_sync_threshold" json:"out_of_sync_threshold,omitempty"`
-		SendingEndpointCount     *int     `toml:"sending_endpoint_count,omitempty" json:"sending_endpoint_count"`
+		SendingEndpointCount     *int     `toml:"sending_endpoint_count,omitempty" json:"sending_endpoint_count,omitempty"`
+		LatencyDetectionInterval *int     `toml:"latency_detection_interval,omitempty" json:"latency_detection_interval,omitempty"`
+		MaxLatency               *int     `toml:"max_latency,omitempty" json:"max_latency,omitempty"`
 		AccessKey                string   `toml:"access_key" json:"access_key,omitempty"`
 	}
 
