@@ -59,16 +59,16 @@ type (
 		Address string `json:"address"`
 	}
 
-	// ParamsOfStart - Parameters to start DeBot. DeBot must be already initialized with init() function.
-	ParamsOfStart struct {
-		DebotHandle DebotHandle `json:"debot_handle"`
-	}
-
 	// RegisteredDebot - Structure for storing debot handle returned from init function.
 	RegisteredDebot struct {
 		DebotHandle DebotHandle `json:"debot_handle"`
 		DebotAbi    string      `json:"debot_abi"`
 		Info        *DebotInfo  `json:"info"`
+	}
+
+	// ParamsOfStart - Parameters to start DeBot. DeBot must be already initialized with init() function.
+	ParamsOfStart struct {
+		DebotHandle DebotHandle `json:"debot_handle"`
 	}
 
 	// ParamsOfAppDebotBrowser - Debot Browser callbacks.
