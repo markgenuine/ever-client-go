@@ -159,7 +159,7 @@ type (
 
 	// AbiData ...
 	AbiData struct {
-		Key        *big.Int    `json:"key"`
+		Key        int         `json:"key"`
 		Name       string      `json:"name"`
 		Type       string      `json:"type"`
 		Components []*AbiParam `json:"components,omitempty"`
