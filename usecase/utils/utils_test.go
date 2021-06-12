@@ -21,7 +21,7 @@ func TestUtils(t *testing.T) {
 		client: client,
 	}
 
-	t.Run("TestUtils", func(t *testing.T) {
+	t.Run("TestConvertAddress", func(t *testing.T) {
 		accountID := "fcb91a3a3816d0f7b8c2c76108b8a9bc5a6b7a55bd79f8ab101c52db29232260"
 		hex := "-1:fcb91a3a3816d0f7b8c2c76108b8a9bc5a6b7a55bd79f8ab101c52db29232260"
 		hexWorkchain0 := "0:fcb91a3a3816d0f7b8c2c76108b8a9bc5a6b7a55bd79f8ab101c52db29232260"
