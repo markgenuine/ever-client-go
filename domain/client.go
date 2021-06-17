@@ -19,7 +19,7 @@ type (
 
 	// ClientResponse ...
 	ClientResponse struct {
-		Code  int
+		Code  uint32
 		Data  []byte
 		Error error
 	}
@@ -123,7 +123,7 @@ type (
 
 	// AppSigningBox ...
 	AppSigningBox interface {
-		GetPublicKey(ParamsOfAppSigningBoxGetPublicKey) (ResultOfAppSigningBoxGetPublicKey, error)
+		GetPublicKey() (ResultOfAppSigningBoxGetPublicKey, error)
 		Sign(ParamsOfAppSigningBoxSign) (ResultOfAppSigningBoxSign, error)
 	}
 

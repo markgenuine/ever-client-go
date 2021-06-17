@@ -6,7 +6,7 @@ package client
 #cgo windows LDFLAGS: -L${SRCDIR}/lib/windows -lton_client
 
 #include "client_method.h"
-void callB(int request_id, tc_string_data_t paramsJson, int response_type, bool finished);
+void callB(uint32_t request_id, tc_string_data_t paramsJson, uint32_t response_type, bool finished);
 */
 import "C"
 import (
@@ -80,10 +80,10 @@ func (c *clientGateway) Destroy() {
 }
 
 //export callB
-func callB(requestIDin C.int, paramsJSON C.tc_string_data_t, responseTypein C.int, finishedin C.bool) {
-	requestID := int(requestIDin)
+func callB(requestIDin C.uint32_t, paramsJSON C.tc_string_data_t, responseTypein C.uint32_t, finishedin C.bool) {
+	requestID := uint32(requestIDin)
 	params := C.GoBytes(unsafe.Pointer(paramsJSON.content), C.int(paramsJSON.len))
-	responseType := int(responseTypein)
+	responseType := uint32(responseTypein)
 	finished := bool(finishedin)
 
 	responses, closeSignal, isFound := mainStore.GetChannels(requestID, finished)
@@ -95,7 +95,6 @@ func callB(requestIDin C.int, paramsJSON C.tc_string_data_t, responseTypein C.in
 		if finished {
 			close(responses)
 		}
-
 		return
 	}
 
@@ -110,7 +109,7 @@ func callB(requestIDin C.int, paramsJSON C.tc_string_data_t, responseTypein C.in
 	}
 }
 
-func newResponse(rawBytes []byte, responseType int) *domain.ClientResponse {
+func newResponse(rawBytes []byte, responseType uint32) *domain.ClientResponse {
 	res := &domain.ClientResponse{
 		Code: responseType,
 	}
