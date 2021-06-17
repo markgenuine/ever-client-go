@@ -115,7 +115,7 @@ func newResponse(rawBytes []byte, responseType uint32) *domain.ClientResponse {
 	}
 	if responseType == 1 {
 		res.Error = errors.New(string(rawBytes))
-	} else if responseType == 0 || responseType == 100 {
+	} else {
 		res.Data = rawBytes
 	}
 
