@@ -276,9 +276,11 @@ func (c *crypto) RegisterSigningBox(app domain.AppSigningBox) (*domain.Registere
 
 	go func() {
 		for r := range responses {
-			if r.Code == 3 {
+			//if r.Code == 3 {
 				c.appRequestCryptoRegisterSigningBox(r.Data, app)
-			}
+			//} else {
+			//	fmt.Println("Code: ", r.Code, " Data: ", r.Data, " Error: ", r.Error)
+			//}
 		}
 	}()
 
@@ -299,7 +301,7 @@ func (c *crypto) appRequestCryptoRegisterSigningBox(payload []byte, app domain.A
 	var appResponse interface{}
 	switch value := (appParams.ValueEnumType).(type) {
 	case domain.ParamsOfAppSigningBoxGetPublicKey:
-		appResponse, err = app.GetPublicKey(value)
+		appResponse, err = app.GetPublicKey()
 	case domain.ParamsOfAppSigningBoxSign:
 		appResponse, err = app.Sign(value)
 	default:
