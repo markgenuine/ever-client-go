@@ -299,7 +299,7 @@ func (c *crypto) appRequestCryptoRegisterSigningBox(payload []byte, app domain.A
 	var appResponse interface{}
 	switch value := (appParams.ValueEnumType).(type) {
 	case domain.ParamsOfAppSigningBoxGetPublicKey:
-		appResponse, err = app.GetPublicKey(value)
+		appResponse, err = app.GetPublicKey()
 	case domain.ParamsOfAppSigningBoxSign:
 		appResponse, err = app.Sign(value)
 	default:

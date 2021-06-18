@@ -31,6 +31,11 @@ func TestTvm(t *testing.T) {
 		client: clientMain,
 	}
 
+	type resultData struct {
+		ID          string `json:"id,omitempty"`
+		AccTypeName string `json:"acc_type_name,omitempty"`
+	}
+
 	t.Run("TestExecuteMessage", func(t *testing.T) {
 		fileAbi, err := os.Open("../samples/Subscription.abi.json")
 		assert.Equal(t, nil, err)
@@ -262,11 +267,12 @@ func TestTvm(t *testing.T) {
 
 		parsed, err := bocUC.ParseAccount(&domain.ParamsOfParse{Boc: result.Account})
 		assert.Equal(t, nil, err)
-		var object map[string]json.RawMessage
-		err = json.Unmarshal(parsed.Parsed, &object)
+
+		resultSt := &resultData{}
+		err = json.Unmarshal(parsed.Parsed, resultSt)
 		assert.Equal(t, nil, err)
-		assert.Equal(t, `"0:f18d106c11586689b11e946269ec1550b69654a8d5964de668149c28877fb65a"`, string(object["id"]))
-		assert.Equal(t, `"Uninit"`, string(object["acc_type_name"]))
+		assert.Equal(t, "0:f18d106c11586689b11e946269ec1550b69654a8d5964de668149c28877fb65a", resultSt.ID)
+		assert.Equal(t, "Uninit", resultSt.AccTypeName)
 	})
 
 	t.Run("TestRunExecutorAccUninit", func(t *testing.T) {
@@ -308,11 +314,11 @@ func TestTvm(t *testing.T) {
 		// # Parse account
 		parsed, err := bocUC.ParseAccount(&domain.ParamsOfParse{Boc: result.Account})
 		assert.Equal(t, nil, err)
-		var object map[string]json.RawMessage
-		err = json.Unmarshal(parsed.Parsed, &object)
+		resultSt := &resultData{}
+		err = json.Unmarshal(parsed.Parsed, resultSt)
 		assert.Equal(t, nil, err)
-		assert.Equal(t, `"`+deployMessage.Address+`"`, string(object["id"]))
-		assert.Equal(t, `"Active"`, string(object["acc_type_name"]))
+		assert.Equal(t, deployMessage.Address, resultSt.ID)
+		assert.Equal(t, "Active", resultSt.AccTypeName)
 	})
 
 	t.Run("TestCache", func(t *testing.T) {

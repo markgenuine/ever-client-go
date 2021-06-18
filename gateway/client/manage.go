@@ -8,22 +8,22 @@ import (
 
 // Manager ...
 type Manager interface {
-	SetChannels(chan<- *domain.ClientResponse, <-chan struct{}) int
-	DeleteRequestID(int)
-	GetChannels(requestID int, delete bool) (chan<- *domain.ClientResponse, <-chan struct{}, bool)
+	SetChannels(chan<- *domain.ClientResponse, <-chan struct{}) uint32
+	DeleteRequestID(uint32)
+	GetChannels(requestID uint32, delete bool) (chan<- *domain.ClientResponse, <-chan struct{}, bool)
 }
 
 type multiplexer struct {
 	sync.Locker
-	requestIDCounter int
-	callbacks        map[int]manageChan
+	requestIDCounter uint32
+	callbacks        map[uint32]manageChan
 }
 
 // NewStore ...
 func NewStore() Manager {
 	return &multiplexer{
 		Locker:    &sync.Mutex{},
-		callbacks: make(map[int]manageChan),
+		callbacks: make(map[uint32]manageChan),
 	}
 }
 
@@ -33,7 +33,7 @@ type manageChan struct {
 }
 
 // GetChannels ...
-func (m *multiplexer) GetChannels(requestID int, toDelete bool) (chan<- *domain.ClientResponse, <-chan struct{}, bool) {
+func (m *multiplexer) GetChannels(requestID uint32, toDelete bool) (chan<- *domain.ClientResponse, <-chan struct{}, bool) {
 	m.Lock()
 	defer m.Unlock()
 	pair, isFound := m.callbacks[requestID]
@@ -45,7 +45,7 @@ func (m *multiplexer) GetChannels(requestID int, toDelete bool) (chan<- *domain.
 }
 
 //SetChannels ...
-func (m *multiplexer) SetChannels(responses chan<- *domain.ClientResponse, close <-chan struct{}) int {
+func (m *multiplexer) SetChannels(responses chan<- *domain.ClientResponse, close <-chan struct{}) uint32 {
 	m.Lock()
 	defer m.Unlock()
 	m.requestIDCounter++
@@ -59,7 +59,7 @@ func (m *multiplexer) SetChannels(responses chan<- *domain.ClientResponse, close
 }
 
 // DeleteRequestID ...
-func (m *multiplexer) DeleteRequestID(requestID int) {
+func (m *multiplexer) DeleteRequestID(requestID uint32) {
 	m.Lock()
 	defer m.Unlock()
 	delete(m.callbacks, requestID)

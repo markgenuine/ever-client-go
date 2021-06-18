@@ -1,14 +1,12 @@
 package client
 
 /*
-//#cgo darwin LDFLAGS: -L../../lib/darwin -lton_client
-//#cgo linux LDFLAGS: -L../../lib/linux -lton_client
-//#cgo windows LDFLAGS: -L../../lib/windows -lton_client
 #cgo darwin LDFLAGS: -L${SRCDIR}/lib/darwin -lton_client
 #cgo linux LDFLAGS: -L${SRCDIR}/lib/linux -lton_client
+#cgo windows LDFLAGS: -L${SRCDIR}/lib/windows -lton_client
 
 #include "client_method.h"
-void callB(int request_id, tc_string_data_t paramsJson, int response_type, bool finished);
+void callB(uint32_t request_id, tc_string_data_t paramsJson, uint32_t response_type, bool finished);
 */
 import "C"
 import (
@@ -22,7 +20,7 @@ import (
 
 const (
 	// VersionLibSDK ...
-	VersionLibSDK = "1.15.0"
+	VersionLibSDK = "1.16.0"
 )
 
 var mainStore = NewStore()
@@ -82,10 +80,10 @@ func (c *clientGateway) Destroy() {
 }
 
 //export callB
-func callB(requestIDin C.int, paramsJSON C.tc_string_data_t, responseTypein C.int, finishedin C.bool) {
-	requestID := int(requestIDin)
+func callB(requestIDin C.uint32_t, paramsJSON C.tc_string_data_t, responseTypein C.uint32_t, finishedin C.bool) {
+	requestID := uint32(requestIDin)
 	params := C.GoBytes(unsafe.Pointer(paramsJSON.content), C.int(paramsJSON.len))
-	responseType := int(responseTypein)
+	responseType := uint32(responseTypein)
 	finished := bool(finishedin)
 
 	responses, closeSignal, isFound := mainStore.GetChannels(requestID, finished)
@@ -97,7 +95,6 @@ func callB(requestIDin C.int, paramsJSON C.tc_string_data_t, responseTypein C.in
 		if finished {
 			close(responses)
 		}
-
 		return
 	}
 
@@ -112,13 +109,13 @@ func callB(requestIDin C.int, paramsJSON C.tc_string_data_t, responseTypein C.in
 	}
 }
 
-func newResponse(rawBytes []byte, responseType int) *domain.ClientResponse {
+func newResponse(rawBytes []byte, responseType uint32) *domain.ClientResponse {
 	res := &domain.ClientResponse{
 		Code: responseType,
 	}
 	if responseType == 1 {
 		res.Error = errors.New(string(rawBytes))
-	} else if responseType == 0 || responseType == 100 {
+	} else {
 		res.Data = rawBytes
 	}
 

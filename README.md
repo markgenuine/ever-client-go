@@ -24,7 +24,7 @@ $ cd ton-client-go
 #### Installation for MAC OS 
 ```
 #Set path to library
-install_name_tool -id PATH_WITH_BINDING/gateway/client/lib/darwin/libton_client.dylib PATH_WITH_BINDING/gateway/client/lib/darwin/libton_client.dylibs```
+install_name_tool -id PATH_WITH_BINDING/gateway/client/lib/darwin/libton_client.dylib PATH_WITH_BINDING/gateway/client/lib/darwin/libton_client.dylib```
 
 #Add to ~/.bashrc or execute everytime 
 export CGO_LDFLAGS="-LPATH_WITH_BINDING/gateway/client/lib/darwin -lton_client"

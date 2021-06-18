@@ -56,6 +56,29 @@ type (
 		Fn    AggregationFnType `json:"fn"`
 	}
 
+	// TransactionNode ...
+	TransactionNode struct {
+		ID          string   `json:"id"`
+		InMsg       string   `json:"in_msg"`
+		OutMsgs     []string `json:"out_msgs"`
+		AccountAddr string   `json:"account_addr"`
+		TotalFees   string   `json:"total_fees"`
+		Aborted     bool     `json:"aborted"`
+		ExitCode    int      `json:"exit_code,omitempty"`
+	}
+
+	// MessageNode ...
+	MessageNode struct {
+		ID               string              `json:"id"`
+		SrcTransactionID string              `json:"src_transaction_id,omitempty"`
+		DstTransactionID string              `json:"dst_transaction_id,omitempty"`
+		Src              string              `json:"src,omitempty"`
+		Dst              string              `json:"dst,omitempty"`
+		Value            string              `json:"value,omitempty"`
+		Bounce           bool                `json:"bounce"`
+		DecodedBody      *DecodedMessageBody `json:"decoded_body,omitempty"`
+	}
+
 	// ParamsOfQuery ...
 	ParamsOfQuery struct {
 		Query     string          `json:"query"`
@@ -144,7 +167,7 @@ type (
 
 	// ResultOfGetEndpoints ...
 	ResultOfGetEndpoints struct {
-		Query string `json:"query"`
+		Query     string   `json:"query"`
 		Endpoints []string `json:"endpoints"`
 	}
 
@@ -154,6 +177,17 @@ type (
 		Result  string `json:"result"`
 		First   *int   `json:"first,omitempty"`
 		After   string `json:"after,omitempty"`
+	}
+
+	//ParamsOfQueryTransactionTree
+	ParamsOfQueryTransactionTree struct {
+		InMsg       string `json:"in_msg"`
+		AbiRegistry []*Abi `json:"abi_registry,omitempty"`
+	}
+	// ResultOfQueryTransactionTree
+	ResultOfQueryTransactionTree struct {
+		Messages     []MessageNode     `json:"messages"`
+		Transactions []TransactionNode `json:"transactions"`
 	}
 
 	// NetUseCase ...
@@ -172,6 +206,7 @@ type (
 		SetEndpoints(*EndpointsSet) error
 		GetEndpoints() (*ResultOfGetEndpoints, error)
 		QueryCounterparties(*ParamsOfQueryCounterparties) (*ResultOfQueryCollection, error)
+		QueryTransactionTree(*ParamsOfQueryTransactionTree) (*ResultOfQueryTransactionTree, error)
 	}
 )
 

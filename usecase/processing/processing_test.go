@@ -46,6 +46,11 @@ func TestProcessing(t *testing.T) {
 	assert.Equal(t, nil, err)
 	deploySet := domain.DeploySet{Tvc: base64.StdEncoding.EncodeToString(byteTvc)}
 
+	type resultData struct {
+		AccountAddr string `json:"account_addr,omitempty"`
+		StatusName  string `json:"status_name,omitempty"`
+	}
+
 	t.Run("TestProcessMessage", func(t *testing.T) {
 		// # Prepare data for deployment message
 		keypair, err := cryptoUC.GenerateRandomSignKeys()
@@ -86,11 +91,12 @@ func TestProcessing(t *testing.T) {
 				DeploySet: &deploySet,
 				CallSet:   &callSet}, SendEvents: false}, nil)
 		assert.Equal(t, nil, err)
-		var object map[string]json.RawMessage
-		err = json.Unmarshal(result.Transaction, &object)
+
+		resultSt := &resultData{}
+		err = json.Unmarshal(result.Transaction, resultSt)
 		assert.Equal(t, nil, err)
-		assert.Equal(t, `"`+encoded.Address+`"`, string(object["account_addr"]))
-		assert.Equal(t, `"finalized"`, string(object["status_name"]))
+		assert.Equal(t, encoded.Address, resultSt.AccountAddr)
+		assert.Equal(t, `finalized`, resultSt.StatusName)
 		assert.Equal(t, 0, len(result.OutMessages))
 
 		// # Contract execution error
@@ -130,6 +136,7 @@ func TestProcessing(t *testing.T) {
 		callSetN := domain.CallSet{}
 		callSetN.FunctionName = "grant"
 		callSetN.Input = json.RawMessage(`{"dest":"` + encoded.Address + `"}`)
+
 		assert.Equal(t, nil, err)
 
 		_, err = procUC.ProcessMessage(&domain.ParamsOfProcessMessage{
@@ -152,40 +159,14 @@ func TestProcessing(t *testing.T) {
 		assert.Equal(t, nil, err)
 		close(events)
 
-		if len(events) > 0 {
-			for event := range events {
-				switch valueType := event.ValueEnumType.(type) {
-				case domain.ProcessingEventWillSend:
-					fmt.Println("Type: ProcessingEventWillSend; Shard block id: " + valueType.ShardBlockID)
-				case domain.ProcessingEventDidSend:
-					fmt.Println("Type: ProcessingEventDidSend; Shard block id: " + valueType.ShardBlockID)
-				case domain.ProcessingEventSendFailed:
-					fmt.Println("Type: ProcessingEventSendFailed; Shard block id: " + valueType.ShardBlockID)
-				case domain.ProcessingEventWillFetchNextBlock:
-					fmt.Println("Type: ProcessingEventWillFetchNextBlock; Shard block id: " + valueType.ShardBlockID)
-				case domain.ProcessingEventFetchNextBlockFailed:
-					fmt.Println("Type: ProcessingEventFetchNextBlockFailed; Shard block id: " + valueType.ShardBlockID)
-				default:
-					continue
-				}
-			}
-		}
+		printMessage(events)
 
-		var (
-			objmap                  map[string]json.RawMessage
-			accountAddr, statusName string
-		)
-		err = json.Unmarshal(generator.Transaction, &objmap)
+		resSt := &resultData{}
+		err = json.Unmarshal(generator.Transaction, &resSt)
 		assert.Equal(t, nil, err)
 
-		err = json.Unmarshal(objmap["account_addr"], &accountAddr)
-		assert.Equal(t, nil, err)
-
-		err = json.Unmarshal(objmap["status_name"], &statusName)
-		assert.Equal(t, nil, err)
-
-		assert.Equal(t, encoded.Address, accountAddr)
-		assert.Equal(t, "finalized", statusName)
+		assert.Equal(t, encoded.Address, resSt.AccountAddr)
+		assert.Equal(t, "finalized", resSt.StatusName)
 		assert.Equal(t, 0, len(generator.OutMessages))
 	})
 
@@ -276,24 +257,7 @@ func TestProcessing(t *testing.T) {
 		assert.Equal(t, nil, err)
 		close(events)
 
-		if len(events) > 0 {
-			for event := range events {
-				switch valueType := event.ValueEnumType.(type) {
-				case domain.ProcessingEventWillSend:
-					fmt.Println("Type: ProcessingEventWillSend; Shard block id: " + valueType.ShardBlockID)
-				case domain.ProcessingEventDidSend:
-					fmt.Println("Type: ProcessingEventDidSend; Shard block id: " + valueType.ShardBlockID)
-				case domain.ProcessingEventSendFailed:
-					fmt.Println("Type: ProcessingEventSendFailed; Shard block id: " + valueType.ShardBlockID)
-				case domain.ProcessingEventWillFetchNextBlock:
-					fmt.Println("Type: ProcessingEventWillFetchNextBlock; Shard block id: " + valueType.ShardBlockID)
-				case domain.ProcessingEventFetchNextBlockFailed:
-					fmt.Println("Type: ProcessingEventFetchNextBlockFailed; Shard block id: " + valueType.ShardBlockID)
-				default:
-					continue
-				}
-			}
-		}
+		printMessage(events)
 
 		events = make(chan *domain.ProcessingEvent, 10)
 		//  # Wait for transaction
@@ -301,27 +265,33 @@ func TestProcessing(t *testing.T) {
 		assert.Equal(t, nil, err)
 		close(events)
 
-		if len(events) > 0 {
-			for event := range events {
-				switch valueType := event.ValueEnumType.(type) {
-				case domain.ProcessingEventWillSend:
-					fmt.Println("Type: ProcessingEventWillSend; Shard block id: " + valueType.ShardBlockID)
-				case domain.ProcessingEventDidSend:
-					fmt.Println("Type: ProcessingEventDidSend; Shard block id: " + valueType.ShardBlockID)
-				case domain.ProcessingEventSendFailed:
-					fmt.Println("Type: ProcessingEventSendFailed; Shard block id: " + valueType.ShardBlockID)
-				case domain.ProcessingEventWillFetchNextBlock:
-					fmt.Println("Type: ProcessingEventWillFetchNextBlock; Shard block id: " + valueType.ShardBlockID)
-				case domain.ProcessingEventFetchNextBlockFailed:
-					fmt.Println("Type: ProcessingEventFetchNextBlockFailed; Shard block id: " + valueType.ShardBlockID)
-				default:
-					continue
-				}
-			}
-		}
+		printMessage(events)
 
 		assert.Equal(t, 0, len(result.OutMessages))
 		assert.Equal(t, 0, len(result.Decoded.OutMessages))
 		assert.Equal(t, json.RawMessage("null"), result.Decoded.Output)
 	})
+}
+
+func printMessage(events chan *domain.ProcessingEvent) {
+	if len(events) == 0 {
+		return
+	}
+
+	for event := range events {
+		switch valueType := event.ValueEnumType.(type) {
+		case domain.ProcessingEventWillSend:
+			fmt.Println("Type: ProcessingEventWillSend; Shard block id: " + valueType.ShardBlockID)
+		case domain.ProcessingEventDidSend:
+			fmt.Println("Type: ProcessingEventDidSend; Shard block id: " + valueType.ShardBlockID)
+		case domain.ProcessingEventSendFailed:
+			fmt.Println("Type: ProcessingEventSendFailed; Shard block id: " + valueType.ShardBlockID)
+		case domain.ProcessingEventWillFetchNextBlock:
+			fmt.Println("Type: ProcessingEventWillFetchNextBlock; Shard block id: " + valueType.ShardBlockID)
+		case domain.ProcessingEventFetchNextBlockFailed:
+			fmt.Println("Type: ProcessingEventFetchNextBlockFailed; Shard block id: " + valueType.ShardBlockID)
+		default:
+			continue
+		}
+	}
 }
