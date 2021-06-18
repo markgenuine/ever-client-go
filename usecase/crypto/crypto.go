@@ -276,11 +276,9 @@ func (c *crypto) RegisterSigningBox(app domain.AppSigningBox) (*domain.Registere
 
 	go func() {
 		for r := range responses {
-			//if r.Code == 3 {
+			if r.Code == 3 {
 				c.appRequestCryptoRegisterSigningBox(r.Data, app)
-			//} else {
-			//	fmt.Println("Code: ", r.Code, " Data: ", r.Data, " Error: ", r.Error)
-			//}
+			}
 		}
 	}()
 
