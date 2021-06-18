@@ -183,6 +183,7 @@ type (
 	ParamsOfQueryTransactionTree struct {
 		InMsg       string `json:"in_msg"`
 		AbiRegistry []*Abi `json:"abi_registry,omitempty"`
+		TimeOut     *int   `json:"timeout,omitempty"`
 	}
 	// ResultOfQueryTransactionTree
 	ResultOfQueryTransactionTree struct {
