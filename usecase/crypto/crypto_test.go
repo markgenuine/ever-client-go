@@ -1,7 +1,9 @@
 package crypto
 
 import (
+	"crypto/ed25519"
 	"encoding/base64"
+	"encoding/hex"
 	"strings"
 	"testing"
 
@@ -10,6 +12,26 @@ import (
 	"github.com/move-ton/ton-client-go/util"
 	"github.com/stretchr/testify/assert"
 )
+
+type AppSigningBoxTest struct {
+	Public  string
+	Private string
+}
+
+func (a *AppSigningBoxTest) GetPublicKey() (domain.ResultOfAppSigningBoxGetPublicKey, error) {
+	return domain.ResultOfAppSigningBoxGetPublicKey{PublicKey: a.Public}, nil
+}
+
+func (a *AppSigningBoxTest) Sign(sign domain.ParamsOfAppSigningBoxSign) (domain.ResultOfAppSigningBoxSign, error) {
+	privByte, err := hex.DecodeString(a.Private)
+	if err != nil {
+		return domain.ResultOfAppSigningBoxSign{}, err
+	}
+	privKey := ed25519.NewKeyFromSeed(privByte)
+	data, err := base64.StdEncoding.DecodeString(sign.Unsigned)
+	signature := hex.EncodeToString(ed25519.Sign(privKey, data))
+	return domain.ResultOfAppSigningBoxSign{Signature: signature}, nil
+}
 
 func TestCrypto(t *testing.T) {
 	configConn := domain.NewDefaultConfig(domain.BaseUrl)
@@ -472,4 +494,30 @@ func TestCrypto(t *testing.T) {
 		err = cryptoUC.RemoveSigningBox(signingBox)
 		assert.Equal(t, nil, err)
 	})
+
+	t.Run("TestRegisterSigningBox", func(t *testing.T) {
+		keys, err := cryptoUC.GenerateRandomSignKeys()
+		assert.Equal(t, nil, err)
+
+		handle, err := cryptoUC.RegisterSigningBox(&AppSigningBoxTest{Private: keys.Secret, Public: keys.Public})
+		assert.Equal(t, nil, err)
+
+		keyResult, err := cryptoUC.SigningBoxGetPublicKey(handle)
+		assert.Equal(t, nil, err)
+		assert.Equal(t, keyResult.PubKey, keys.Public)
+
+		messageToSign := []byte("Test message")
+		signResult, err := cryptoUC.SigningBoxSign(&domain.ParamsOfSigningBoxSign{SigningBox: handle.Handle, Unsigned: base64.StdEncoding.EncodeToString(messageToSign)})
+		assert.Equal(t, nil, err)
+
+		pubKeyBytes, err := hex.DecodeString(keyResult.PubKey)
+		assert.Equal(t, nil, err)
+
+		signatureBytes, err := hex.DecodeString(signResult.Signature)
+		assert.Equal(t, nil, err)
+
+		assert.True(t, ed25519.Verify(pubKeyBytes, messageToSign, signatureBytes))
+		assert.Equal(t, nil, cryptoUC.RemoveSigningBox(&domain.RegisteredSigningBox{Handle: handle.Handle}))
+	})
+
 }
