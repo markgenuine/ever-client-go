@@ -346,8 +346,104 @@ func (c *crypto) SigningBoxSign(pOSBS *domain.ParamsOfSigningBoxSign) (*domain.R
 	return result, err
 }
 
-// SigningBoxSign - Removes signing box from SDK.
+// RemoveSigningBox - Removes signing box from SDK.
 func (c *crypto) RemoveSigningBox(rSB *domain.RegisteredSigningBox) error {
 	_, err := c.client.GetResponse("crypto.remove_signing_box", rSB)
 	return err
+}
+
+// RegisterEncryptionBox - Register an application implemented encryption box.
+func (c *crypto) RegisterEncryptionBox(app domain.AppEncryptionBox) (*domain.RegisteredEncryptionBox, error) {
+	result := new(domain.RegisteredEncryptionBox)
+	responses, err := c.client.Request("crypto.register_encryption_box", nil)
+	if err != nil {
+		return nil, err
+	}
+	response := <-responses
+	if response.Code == 1 {
+		return nil, response.Error
+	}
+
+	if err := json.Unmarshal(response.Data, result); err != nil {
+		return nil, err
+	}
+
+	go func() {
+		for r := range responses {
+			if r.Code == 3 {
+				c.appRequestCryptoRegisterEncryptionBox(r.Data, app)
+			}
+		}
+	}()
+
+	return result, nil
+}
+
+func (c *crypto) appRequestCryptoRegisterEncryptionBox(payload []byte, app domain.AppEncryptionBox) {
+	var appRequest domain.ParamsOfAppRequest
+	var appParams domain.ParamsOfAppEncryptionBox
+	err := json.Unmarshal(payload, &appRequest)
+	if err != nil {
+		panic(err)
+	}
+	err = json.Unmarshal(appRequest.RequestData, &appParams)
+	if err != nil {
+		panic(err)
+	}
+	var appResponse interface{}
+	switch value := (appParams.ValueEnumType).(type) {
+	case domain.ParamsOfAppEncryptionBoxGetInfo:
+		appResponse, err = app.GetInfo()
+	case domain.ParamsOfAppEncryptionBoxEncrypt:
+		appResponse, err = app.Encrypt(value)
+	case domain.ParamsOfAppEncryptionBoxDecrypt:
+		appResponse, err = app.Decrypt(value)
+	default:
+		err = fmt.Errorf("unsupported type for request %v", appParams.ValueEnumType)
+	}
+
+	appReqResult := &domain.AppRequestResult{}
+	if err != nil {
+		appReqResult.ValueEnumType = domain.AppRequestResultError{Text: err.Error()}
+	} else {
+		marsh, err := json.Marshal(&domain.ResultOfAppEncryptionBox{ValueEnumType: appResponse})
+		if err != nil {
+			panic(err)
+		}
+		appReqResult.ValueEnumType = domain.AppRequestResultOk{Result: marsh}
+	}
+	err = c.client.ResolveAppRequest(&domain.ParamsOfResolveAppRequest{
+		AppRequestID: appRequest.AppRequestID,
+		Result:       appReqResult,
+	})
+	if err != nil {
+		panic(err)
+	}
+}
+
+// RemoveEncryptionBox - Removes encryption box from SDK.
+func (c *crypto) RemoveEncryptionBox(rEB *domain.RegisteredEncryptionBox) error {
+	_, err := c.client.GetResponse("crypto.remove_encryption_box", rEB)
+	return err
+}
+
+// EncryptionBoxGetInfo - Queries info from the given encryption box.
+func (c *crypto) EncryptionBoxGetInfo(pOEBGI *domain.ParamsOfEncryptionBoxGetInfo) (*domain.ResultOfEncryptionBoxGetInfo, error) {
+	result := new(domain.ResultOfEncryptionBoxGetInfo)
+	err := c.client.GetResult("crypto.encryption_box_get_info", pOEBGI, result)
+	return result, err
+}
+
+// EncryptionBoxEncrypt - Encrypts data using given encryption box.
+func (c *crypto) EncryptionBoxEncrypt(pOAEBE *domain.ParamsOfEncryptionBoxEncrypt) (*domain.ResultOfEncryptionBoxEncrypt, error) {
+	result := new(domain.ResultOfEncryptionBoxEncrypt)
+	err := c.client.GetResult("crypto.encryption_box_get_info", pOAEBE, result)
+	return result, err
+}
+
+// EncryptionBoxDecrypt - Decrypts data using given encryption box.
+func (c *crypto) EncryptionBoxDecrypt(pOAEBD *domain.ParamsOfEncryptionBoxDecrypt) (*domain.ResultOfEncryptionBoxDecrypt, error) {
+	result := new(domain.ResultOfEncryptionBoxDecrypt)
+	err := c.client.GetResult("crypto.encryption_box_decrypt", pOAEBD, result)
+	return result, err
 }
