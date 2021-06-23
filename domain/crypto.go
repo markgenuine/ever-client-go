@@ -21,6 +21,17 @@ type (
 	// SigningBoxHandle ...
 	SigningBoxHandle int
 
+	// EncryptionBoxHandle ...
+	EncryptionBoxHandle int
+
+	// EncryptionBoxInfo - Encryption box information.
+	EncryptionBoxInfo struct {
+		HDPath    string          `json:"hdpath,omitempty"`
+		Algorithm string          `json:"algorithm,omitempty"`
+		Options   json.RawMessage `json:"options,omitempty"`
+		Public    json.RawMessage `json:"public,omitempty"`
+	}
+
 	// ParamsOfFactorize ...
 	ParamsOfFactorize struct {
 		Composite string `json:"composite"`
@@ -385,6 +396,81 @@ type (
 		Signature string `json:"signature"`
 	}
 
+	// RegisteredEncryptionBox ...
+	RegisteredEncryptionBox struct {
+		Handle EncryptionBoxHandle `json:"handle"`
+	}
+
+	// ParamsOfAppEncryptionBox - Encryption box callbacks.
+	ParamsOfAppEncryptionBox struct {
+		ValueEnumType interface{}
+	}
+
+	// ParamsOfAppEncryptionBoxGetInfo ...
+	ParamsOfAppEncryptionBoxGetInfo struct{}
+
+	// ParamsOfAppEncryptionBoxEncrypt ...
+	ParamsOfAppEncryptionBoxEncrypt struct {
+		Data string `json:"data"`
+	}
+
+	// ParamsOfAppEncryptionBoxDecrypt ...
+	ParamsOfAppEncryptionBoxDecrypt struct {
+		Data string `json:"data"`
+	}
+
+	// ResultOfAppEncryptionBox - Returning values from signing box callbacks.
+	ResultOfAppEncryptionBox struct {
+		ValueEnumType interface{}
+	}
+
+	// ResultOfAppEncryptionBoxGetInfo ...
+	ResultOfAppEncryptionBoxGetInfo struct {
+		Info EncryptionBoxInfo `json:"info"`
+	}
+
+	// ResultOfAppEncryptionBoxEncrypt ...
+	ResultOfAppEncryptionBoxEncrypt struct {
+		Data string `json:"data"`
+	}
+
+	// ResultOfAppEncryptionBoxDecrypt ...
+	ResultOfAppEncryptionBoxDecrypt struct {
+		Data string `json:"data"`
+	}
+
+	// ParamsOfEncryptionBoxGetInfo ...
+	ParamsOfEncryptionBoxGetInfo struct {
+		EncryptionBox EncryptionBoxHandle `json:"encryption_box"`
+	}
+
+	// ResultOfEncryptionBoxGetInfo ...
+	ResultOfEncryptionBoxGetInfo struct {
+		Info EncryptionBoxInfo `json:"info"`
+	}
+
+	// ParamsOfEncryptionBoxEncrypt ...
+	ParamsOfEncryptionBoxEncrypt struct {
+		EncryptionBox EncryptionBoxHandle `json:"encryption_box"`
+		Data          string              `json:"data"`
+	}
+
+	// ResultOfEncryptionBoxEncrypt ...
+	ResultOfEncryptionBoxEncrypt struct {
+		Data string `json:"data"`
+	}
+
+	// ParamsOfEncryptionBoxDecrypt ...
+	ParamsOfEncryptionBoxDecrypt struct {
+		EncryptionBox EncryptionBoxHandle `json:"encryption_box"`
+		Data          string              `json:"data"`
+	}
+
+	//ResultOfEncryptionBoxDecrypt ...
+	ResultOfEncryptionBoxDecrypt struct {
+		Data string `json:"data"`
+	}
+
 	// CryptoUseCase ...
 	CryptoUseCase interface {
 		Factorize(*ParamsOfFactorize) (*ResultOfFactorize, error)
@@ -425,32 +511,38 @@ type (
 		SigningBoxGetPublicKey(*RegisteredSigningBox) (*ResultOfSigningBoxGetPublicKey, error)
 		SigningBoxSign(*ParamsOfSigningBoxSign) (*ResultOfSigningBoxSign, error)
 		RemoveSigningBox(rSB *RegisteredSigningBox) error
+		RegisterEncryptionBox(AppEncryptionBox) (*RegisteredEncryptionBox, error)
+		RemoveEncryptionBox(*RegisteredEncryptionBox) error
+		EncryptionBoxGetInfo(*ParamsOfEncryptionBoxGetInfo) (*ResultOfEncryptionBoxGetInfo, error)
+		EncryptionBoxEncrypt(*ParamsOfEncryptionBoxEncrypt) (*ResultOfEncryptionBoxEncrypt, error)
+		EncryptionBoxDecrypt(*ParamsOfEncryptionBoxDecrypt) (*ResultOfEncryptionBoxDecrypt, error)
 	}
 )
 
 func init() {
 	// List errors crypto module
 	CryptoErrorCode = map[string]int{
-		"InvalidPublicKey":          100,
-		"InvalidSecretKey":          101,
-		"InvalidKey":                102,
-		"InvalidFactorizeChallenge": 106,
-		"InvalidBigInt":             107,
-		"ScryptFailed":              108,
-		"InvalidKeySize":            109,
-		"NaclSecretBoxFailed":       110,
-		"NaclBoxFailed":             111,
-		"NaclSignFailed":            112,
-		"Bip39InvalidEntropy":       113,
-		"Bip39InvalidPhrase":        114,
-		"Bip32InvalidKey":           115,
-		"Bip32InvalidDerivePath":    116,
-		"Bip39InvalidDictionary":    117,
-		"Bip39InvalidWordCount":     118,
-		"MnemonicGenerationFailed":  119,
-		"MnemonicFromEntropyFailed": 120,
-		"SigningBoxNotRegistered":   121,
-		"InvalidSignature":          122,
+		"InvalidPublicKey":           100,
+		"InvalidSecretKey":           101,
+		"InvalidKey":                 102,
+		"InvalidFactorizeChallenge":  106,
+		"InvalidBigInt":              107,
+		"ScryptFailed":               108,
+		"InvalidKeySize":             109,
+		"NaclSecretBoxFailed":        110,
+		"NaclBoxFailed":              111,
+		"NaclSignFailed":             112,
+		"Bip39InvalidEntropy":        113,
+		"Bip39InvalidPhrase":         114,
+		"Bip32InvalidKey":            115,
+		"Bip32InvalidDerivePath":     116,
+		"Bip39InvalidDictionary":     117,
+		"Bip39InvalidWordCount":      118,
+		"MnemonicGenerationFailed":   119,
+		"MnemonicFromEntropyFailed":  120,
+		"SigningBoxNotRegistered":    121,
+		"InvalidSignature":           122,
+		"EncryptionBoxNotRegistered": 123,
 	}
 
 }
@@ -576,4 +668,118 @@ func (rOASB *ResultOfAppSigningBox) UnmarshalJSON(b []byte) error {
 // NewResultOfAppSigningBox ...
 func NewResultOfAppSigningBox(value interface{}) *ResultOfAppSigningBox {
 	return &ResultOfAppSigningBox{ValueEnumType: value}
+}
+
+func (pOASB *ParamsOfAppEncryptionBox) MarshalJSON() ([]byte, error) {
+	switch value := (pOASB.ValueEnumType).(type) {
+	case ParamsOfAppEncryptionBoxGetInfo:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			ParamsOfAppEncryptionBoxGetInfo
+		}{"GetInfo", value})
+	case ParamsOfAppEncryptionBoxEncrypt:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			ParamsOfAppEncryptionBoxEncrypt
+		}{"Encrypt", value})
+	case ParamsOfAppEncryptionBoxDecrypt:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			ParamsOfAppEncryptionBoxDecrypt
+		}{"Decrypt", value})
+	default:
+		return nil, fmt.Errorf("unsupported type for ParamsOfAppEncryptionBox %v", pOASB.ValueEnumType)
+	}
+}
+
+func (pOASB *ParamsOfAppEncryptionBox) UnmarshalJSON(b []byte) error {
+	var typeD EnumType
+	if err := json.Unmarshal(b, &typeD); err != nil {
+		return err
+	}
+	switch typeD.Type {
+	case "GetInfo":
+		var valueEnum ParamsOfAppEncryptionBoxGetInfo
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		pOASB.ValueEnumType = valueEnum
+	case "Encrypt":
+		var valueEnum ParamsOfAppEncryptionBoxEncrypt
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		pOASB.ValueEnumType = valueEnum
+	case "Decrypt":
+		var valueEnum ParamsOfAppEncryptionBoxDecrypt
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		pOASB.ValueEnumType = valueEnum
+	default:
+		return fmt.Errorf("unsupported type for ParamsOfAppEncryptionBox %v", typeD.Type)
+	}
+	return nil
+}
+
+// NewParamsOfAppEncryptionBox ...
+func NewParamsOfAppEncryptionBox(value interface{}) *ParamsOfAppEncryptionBox {
+	return &ParamsOfAppEncryptionBox{ValueEnumType: value}
+}
+
+func (pOASB *ResultOfAppEncryptionBox) MarshalJSON() ([]byte, error) {
+	switch value := (pOASB.ValueEnumType).(type) {
+	case ResultOfAppEncryptionBoxGetInfo:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			ResultOfAppEncryptionBoxGetInfo
+		}{"GetInfo", value})
+	case ResultOfAppEncryptionBoxEncrypt:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			ResultOfAppEncryptionBoxEncrypt
+		}{"Encrypt", value})
+	case ResultOfAppEncryptionBoxDecrypt:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			ResultOfAppEncryptionBoxDecrypt
+		}{"Decrypt", value})
+	default:
+		return nil, fmt.Errorf("unsupported type for ResultOfAppEncryptionBox %v", pOASB.ValueEnumType)
+	}
+}
+
+func (pOASB *ResultOfAppEncryptionBox) UnmarshalJSON(b []byte) error {
+	var typeD EnumType
+	if err := json.Unmarshal(b, &typeD); err != nil {
+		return err
+	}
+	switch typeD.Type {
+	case "GetInfo":
+		var valueEnum ResultOfAppEncryptionBoxGetInfo
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		pOASB.ValueEnumType = valueEnum
+	case "Encrypt":
+		var valueEnum ResultOfAppEncryptionBoxEncrypt
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		pOASB.ValueEnumType = valueEnum
+	case "Decrypt":
+		var valueEnum ResultOfAppEncryptionBoxDecrypt
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		pOASB.ValueEnumType = valueEnum
+	default:
+		return fmt.Errorf("unsupported type for ResultOfAppEncryptionBox %v", typeD.Type)
+	}
+	return nil
+}
+
+// NewResultOfAppEncryptionBox ...
+func NewResultOfAppEncryptionBox(value interface{}) *ResultOfAppEncryptionBox {
+	return &ResultOfAppEncryptionBox{ValueEnumType: value}
 }

@@ -127,6 +127,13 @@ type (
 		Sign(ParamsOfAppSigningBoxSign) (ResultOfAppSigningBoxSign, error)
 	}
 
+	// AppEncryptionBox ...
+	AppEncryptionBox interface {
+		GetInfo() (ResultOfAppEncryptionBoxGetInfo, error)
+		Encrypt(ParamsOfAppEncryptionBoxEncrypt) (ResultOfAppEncryptionBoxEncrypt, error)
+		Decrypt(ParamsOfAppEncryptionBoxDecrypt) (ResultOfAppEncryptionBoxDecrypt, error)
+	}
+
 	//AppDebotBrowser ...
 	AppDebotBrowser interface {
 		Log(ParamsOfAppDebotBrowserLog) error
