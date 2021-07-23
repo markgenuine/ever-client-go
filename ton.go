@@ -47,7 +47,7 @@ func NewTonWithConfig(config domain.Config) (*Ton, error) {
 }
 
 // NewTon ...
-func NewTon(address string) (*Ton, error) {
-	conf := domain.NewDefaultConfig(address)
+func NewTon(address string, endPoints []string) (*Ton, error) {
+	conf := domain.NewDefaultConfig(address, endPoints)
 	return NewTonWithConfig(conf)
 }
