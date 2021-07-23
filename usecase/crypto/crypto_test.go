@@ -34,7 +34,7 @@ func (a *AppSigningBoxTest) Sign(sign domain.ParamsOfAppSigningBoxSign) (domain.
 }
 
 func TestCrypto(t *testing.T) {
-	configConn := domain.NewDefaultConfig(domain.BaseUrl)
+	configConn := domain.NewDefaultConfig("", domain.GetDevNetBaseUrls())
 	clientConn, err := client.NewClientGateway(configConn)
 	assert.Equal(t, nil, err)
 	defer clientConn.Destroy()

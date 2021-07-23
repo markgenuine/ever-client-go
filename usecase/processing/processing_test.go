@@ -16,7 +16,7 @@ import (
 )
 
 func TestProcessing(t *testing.T) {
-	configConn := domain.NewDefaultConfig(domain.BaseCustomUrl)
+	configConn := domain.NewDefaultConfig("", domain.GetDevNetBaseUrls())
 	clientConn, err := client.NewClientGateway(configConn)
 	assert.Equal(t, nil, err)
 

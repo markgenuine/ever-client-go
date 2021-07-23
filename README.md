@@ -67,7 +67,7 @@ import (
 )
 
 func main() {
-	ton, err := goton.NewTon(domain.BaseUrl)
+	ton, err := goton.NewTon("", domain.GetDevNetBaseUrls())
 	if err != nil {
 		log.Fatal(err)
 	}

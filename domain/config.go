@@ -3,9 +3,7 @@ package domain
 import "github.com/move-ton/ton-client-go/util"
 
 const (
-	BaseUrl       = "https://net.ton.dev/"
-	BaseCustomUrl = "https://tonos.freeton.surf"
-	BaseMainUrl   = "https://main.ton.dev"
+	BaseCustomUrl = "https://tonos.freeton.surf/"
 )
 
 type (
@@ -54,11 +52,12 @@ type (
 	}
 )
 
-// NewDefaultConfig create new config for connect client. ChanID 0-localhost, 1-devnet, 2-mainnet,
-func NewDefaultConfig(address string) Config {
+// NewDefaultConfig create new config for connect client.
+func NewDefaultConfig(address string, endPoints []string) Config {
 	config := Config{
 		Network: &Network{
 			ServerAddress:            address,
+			Endpoints: 				  endPoints,
 			NetworkRetriesCount:      util.IntToPointerInt(5),
 			MessageRetriesCount:      util.IntToPointerInt(5),
 			MessageProcessingTimeout: util.IntToPointerInt(40000), //ms
@@ -98,4 +97,19 @@ func DictionaryList() map[string]*int {
 		"KOREAN":              util.IntToPointerInt(7),
 		"SPANISH":             util.IntToPointerInt(8),
 	}
+}
+
+// GetDevNetBaseUrls ...
+func GetDevNetBaseUrls()[]string{
+	return []string{"https://net1.ton.dev/","https://net5.ton.dev/"}
+}
+
+// GetMainNetBaseUrls ...
+func GetMainNetBaseUrls()[]string{
+	return []string{"https://main2.ton.dev/", "https://main3.ton.dev/", "https://main4.ton.dev/"}
+}
+
+// GetLocalNetBaseUrls ...
+func GetLocalNetBaseUrls()[]string{
+	return []string{"http://0.0.0.0/", "http://127.0.0.1/", "http://localhost/"}
 }

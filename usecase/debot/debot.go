@@ -2,6 +2,7 @@ package debot
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/move-ton/ton-client-go/domain"
 )
@@ -86,9 +87,10 @@ func (d *debot) appRequestDebotInit(payload []byte, app domain.AppDebotBrowser) 
 	}
 	paramsResolved := &domain.ParamsOfResolveAppRequest{AppRequestID: appRequest.AppRequestID, Result: appRequestResult}
 	err = d.client.ResolveAppRequest(paramsResolved)
-	if err != nil {
-		panic(err)
+	if err != nil || errors.Is(err, errors.New("channels is closed")) {
+		return
 	}
+	panic(err)
 }
 
 // appNotifyDebotInit ...
