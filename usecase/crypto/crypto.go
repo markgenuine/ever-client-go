@@ -2,6 +2,7 @@ package crypto
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/move-ton/ton-client-go/domain"
 )
@@ -320,9 +321,10 @@ func (c *crypto) appRequestCryptoRegisterSigningBox(payload []byte, app domain.A
 		AppRequestID: appRequest.AppRequestID,
 		Result:       appReqResult,
 	})
-	if err != nil {
-		panic(err)
+	if err != nil || errors.Is(err, errors.New("channels is closed")) {
+		return
 	}
+	panic(err)
 }
 
 // GetSigningBox - Creates a default signing box implementation.
@@ -416,9 +418,10 @@ func (c *crypto) appRequestCryptoRegisterEncryptionBox(payload []byte, app domai
 		AppRequestID: appRequest.AppRequestID,
 		Result:       appReqResult,
 	})
-	if err != nil {
-		panic(err)
+	if err == nil || errors.Is(err, errors.New("channels is closed")) {
+		return
 	}
+	panic(err)
 }
 
 // RemoveEncryptionBox - Removes encryption box from SDK.

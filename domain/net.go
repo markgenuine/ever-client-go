@@ -185,10 +185,59 @@ type (
 		AbiRegistry []*Abi `json:"abi_registry,omitempty"`
 		TimeOut     *int   `json:"timeout,omitempty"`
 	}
+
 	// ResultOfQueryTransactionTree
 	ResultOfQueryTransactionTree struct {
 		Messages     []MessageNode     `json:"messages"`
 		Transactions []TransactionNode `json:"transactions"`
+	}
+
+	// ParamsOfCreateBlockIterator ...
+	ParamsOfCreateBlockIterator struct {
+		StartTime   *int     `json:"start_time,omitempty"`
+		EndTime     *int     `json:"end_time,omitempty"`
+		ShardFilter []string `json:"shard_filter,omitempty"`
+		Result      string   `json:"result,omitempty"`
+	}
+
+	// RegisteredIterator ...
+	RegisteredIterator struct {
+		Handle int `json:"handle"`
+	}
+
+	// ParamsOfResumeBlockIterator ...
+	ParamsOfResumeBlockIterator struct {
+		ResumeState json.RawMessage `json:"resume_state"`
+	}
+
+	// ParamsOfCreateTransactionIterator ...
+	ParamsOfCreateTransactionIterator struct {
+		StartTime        *int     `json:"start_time,omitempty"`
+		EndTime          *int     `json:"end_time,omitempty"`
+		ShardFilter      []string `json:"shard_filter,omitempty"`
+		AccountsFilter   []string `json:"accounts_filter,omitempty"`
+		Result           string   `json:"result,omitempty"`
+		IncludeTransfers *bool    `json:"include_transfers,omitempty"`
+	}
+
+	// ParamsOfResumeTransactionIterator ...
+	ParamsOfResumeTransactionIterator struct {
+		ResumeState    json.RawMessage `json:"resume_state"`
+		AccountsFilter []string        `json:"accounts_filter,omitempty"`
+	}
+
+	// ParamsOfIteratorNext ...
+	ParamsOfIteratorNext struct {
+		Iterator          int   `json:"iterator"`
+		Limit             *int  `json:"limit,omitempty"`
+		ReturnResumeState *bool `json:"return_resume_state,omitempty"`
+	}
+
+	// ResultOfIteratorNext ...
+	ResultOfIteratorNext struct {
+		Items       []json.RawMessage `json:"items"`
+		HasMore     bool              `json:"has_more"`
+		ResumeState json.RawMessage   `json:"resume_state,omitempty"`
 	}
 
 	// NetUseCase ...
@@ -208,6 +257,12 @@ type (
 		GetEndpoints() (*ResultOfGetEndpoints, error)
 		QueryCounterparties(*ParamsOfQueryCounterparties) (*ResultOfQueryCollection, error)
 		QueryTransactionTree(*ParamsOfQueryTransactionTree) (*ResultOfQueryTransactionTree, error)
+		CreateBlockIterator(*ParamsOfCreateBlockIterator) (*RegisteredIterator, error)
+		ResumeBlockIterator(*ParamsOfResumeBlockIterator) (*RegisteredIterator, error)
+		CreateTransactionIterator(*ParamsOfCreateTransactionIterator) (*RegisteredIterator, error)
+		ResumeTransactionIterator(*ParamsOfResumeTransactionIterator) (*RegisteredIterator, error)
+		IteratorNext(*ParamsOfIteratorNext) (*ResultOfIteratorNext, error)
+		RemoveIterator(*RegisteredIterator) error
 	}
 )
 

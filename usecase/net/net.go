@@ -158,3 +158,56 @@ func (n *net) QueryTransactionTree(pOQTT *domain.ParamsOfQueryTransactionTree) (
 	err := n.client.GetResult("net.query_transaction_tree", pOQTT, result)
 	return result, err
 }
+
+// CreateBlockIterator - Creates block iterator.
+// Block iterator uses robust iteration methods that guaranties that every block in the specified range isn't missed or iterated twice.
+func (n *net) CreateBlockIterator(iterator *domain.ParamsOfCreateBlockIterator) (*domain.RegisteredIterator, error) {
+	result := new(domain.RegisteredIterator)
+	err := n.client.GetResult("net.create_block_iterator", iterator, result)
+	return result, err
+}
+
+// ResumeBlockIterator - Resumes block iterator.
+// The iterator stays exactly at the same position where the resume_state was catched.
+// Application should call the remove_iterator when iterator is no longer required.
+func (n *net) ResumeBlockIterator(iterator *domain.ParamsOfResumeBlockIterator) (*domain.RegisteredIterator, error) {
+	result := new(domain.RegisteredIterator)
+	err := n.client.GetResult("net.resume_block_iterator", iterator, result)
+	return result, err
+}
+
+// CreateTransactionIterator - Creates transaction iterator.
+// Transaction iterator uses robust iteration methods that guaranty that every transaction in the specified range isn't missed or iterated twice.
+func (n *net) CreateTransactionIterator(iterator *domain.ParamsOfCreateTransactionIterator) (*domain.RegisteredIterator, error) {
+	result := new(domain.RegisteredIterator)
+	err := n.client.GetResult("net.create_transaction_iterator", iterator, result)
+	return result, err
+}
+
+// ResumeTransactionIterator - Resumes transaction iterator.
+// The iterator stays exactly at the same position where the resume_state was caught. Note that resume_state doesn't store the account filter. If the application requires to use the same account filter as it was when the iterator was created then the application must pass the account filter again in accounts_filter parameter.
+// Application should call the remove_iterator when iterator is no longer required.
+func (n *net) ResumeTransactionIterator(iterator *domain.ParamsOfResumeTransactionIterator) (*domain.RegisteredIterator, error) {
+	result := new(domain.RegisteredIterator)
+	err := n.client.GetResult("net.resume_transaction_iterator", iterator, result)
+	return result, err
+}
+
+// ResumeTransactionIterator - Returns next available items.
+// In addition to available items this function returns the has_more flag indicating that the iterator isn't reach the end of the iterated range yet.
+// This function can return the empty list of available items but indicates that there are more items is available. This situation appears when the iterator doesn't reach iterated range but database doesn't contains available items yet.
+// If application requests resume state in return_resume_state parameter then this function returns resume_state that can be used later to resume the iteration from the position after returned items.
+// The structure of the items returned depends on the iterator used. See the description to the appropriated iterator creation function.
+func (n *net) IteratorNext(iterator *domain.ParamsOfIteratorNext) (*domain.ResultOfIteratorNext, error) {
+	result := new(domain.ResultOfIteratorNext)
+	err := n.client.GetResult("net.iterator_next", iterator, result)
+	return result, err
+}
+
+// RemoveIterator - Removes an iterator
+// Frees all resources allocated in library to serve iterator.
+// Application always should call the remove_iterator when iterator is no longer required.
+func (n *net) RemoveIterator(iterator *domain.RegisteredIterator) error {
+	_, err := n.client.GetResponse("net.remove_iterator", iterator)
+	return err
+}
