@@ -9,13 +9,13 @@ import (
 )
 
 func Test(t *testing.T) {
-	configConn := domain.NewDefaultConfig(domain.BaseUrl)
+	configConn := domain.NewDefaultConfig("", domain.GetDevNetBaseUrls())
 	clientConn, err := NewClientGateway(configConn)
 	assert.Equal(t, nil, err)
 	defer clientConn.Destroy()
 
 	t.Run("TestConfigFields", func(t *testing.T) {
-		defConf := domain.NewDefaultConfig(domain.BaseUrl)
+		defConf := domain.NewDefaultConfig("", domain.GetDevNetBaseUrls())
 		defConf.Abi.MessageExpirationTimeout = util.IntToPointerInt(0)
 		defConf.Network.MaxReconnectTimeOut = util.IntToPointerInt(100)
 		assert.Equal(t, defConf.Crypto.MnemonicWordCount, util.IntToPointerInt(domain.DefaultWordCount))

@@ -9,7 +9,7 @@ import (
 
 func TestDebot(t *testing.T) {
 
-	config := domain.NewDefaultConfig(domain.BaseUrl)
+	config := domain.NewDefaultConfig("", domain.GetDevNetBaseUrls())
 	clientConn, err := client.NewClientGateway(config)
 	assert.Equal(t, nil, err)
 	defer clientConn.Destroy()
