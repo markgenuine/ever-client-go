@@ -180,6 +180,7 @@ type (
 		Functions  []*AbiFunctions `json:"functions,omitempty"`
 		Events     []*AbiEvent     `json:"events,omitempty"`
 		Data       []*AbiData      `json:"data,omitempty"`
+		Fields     []*AbiParam     `json:"fields,omitempty"`
 	}
 
 	// ParamsOfEncodeMessageBody ...
@@ -297,6 +298,15 @@ type (
 		ID      string `json:"id"`
 	}
 
+	ParamsOfDecodeAccountData struct {
+		Abi  *Abi   `json:"abi"`
+		Data string `json:"data"`
+	}
+
+	ResultOfDecodeData struct {
+		Data json.RawMessage `json:"data"`
+	}
+
 	//AbiUseCase ...
 	AbiUseCase interface {
 		EncodeMessageBody(*ParamsOfEncodeMessageBody) (*ResultOfEncodeMessageBody, error)
@@ -307,6 +317,7 @@ type (
 		DecodeMessage(*ParamsOfDecodeMessage) (*DecodedMessageBody, error)
 		DecodeMessageBody(*ParamsOfDecodeMessageBody) (*DecodedMessageBody, error)
 		EncodeAccount(*ParamsOfEncodeAccount) (*ResultOfEncodeAccount, error)
+		DecodeAccountData(*ParamsOfDecodeAccountData) (*ResultOfDecodeData, error)
 	}
 )
 
@@ -324,6 +335,7 @@ func init() {
 		"InvalidSigner":                             310,
 		"InvalidAbi":                                311,
 		"InvalidFunctionId":                         312,
+		"InvalidData":                               313,
 	}
 }
 

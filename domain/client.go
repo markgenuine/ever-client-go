@@ -184,6 +184,7 @@ func init() {
 		"UnexpectedCallbackResponse":          31,
 		"CanNotParseNumber":                   32,
 		"InternalError":                       33,
+		"InvalidHandle":                       34,
 	}
 }
 

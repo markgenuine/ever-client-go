@@ -25,6 +25,15 @@ func (u *utils) ConvertAddress(pOCA *domain.ParamsOfConvertAddress) (*domain.Res
 	return result, err
 }
 
+// GetAddressType - Validates and returns the type of any TON address.
+// Address types are the following
+// 0:919db8e740d50bf349df2eea03fa30c385d846b991ff5542e67098ee833fc7f7 - standart TON address most commonly used in all cases. Also called as hex addres 919db8e740d50bf349df2eea03fa30c385d846b991ff5542e67098ee833fc7f7 - account ID. A part of full address. Identifies account inside particular workchain EQCRnbjnQNUL80nfLuoD+jDDhdhGuZH/VULmcJjugz/H9wam - base64 address. Also called "user-friendly". Was used at the beginning of TON. Now it is supported for compatibility
+func (u *utils) GetAddressType(pOGAT *domain.ParamsOfGetAddressType) (*domain.ResultOfGetAddressType, error) {
+	result := new(domain.ResultOfGetAddressType)
+	err := u.client.GetResult("utils.get_address_type", pOGAT, result)
+	return result, err
+}
+
 // CalcStorageFee - Calculates storage fee for an account over a specified time period.
 func (u *utils) CalcStorageFee(pOCA *domain.ParamsOfCalcStorageFee) (*domain.ResultOfCalcStorageFee, error) {
 	result := new(domain.ResultOfCalcStorageFee)

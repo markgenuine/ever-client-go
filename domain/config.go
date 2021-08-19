@@ -57,7 +57,7 @@ func NewDefaultConfig(address string, endPoints []string) Config {
 	config := Config{
 		Network: &Network{
 			ServerAddress:            address,
-			Endpoints: 				  endPoints,
+			Endpoints:                endPoints,
 			NetworkRetriesCount:      util.IntToPointerInt(5),
 			MessageRetriesCount:      util.IntToPointerInt(5),
 			MessageProcessingTimeout: util.IntToPointerInt(40000), //ms
@@ -100,16 +100,16 @@ func DictionaryList() map[string]*int {
 }
 
 // GetDevNetBaseUrls ...
-func GetDevNetBaseUrls()[]string{
-	return []string{"https://net1.ton.dev/","https://net5.ton.dev/"}
+func GetDevNetBaseUrls() []string {
+	return []string{"https://net1.ton.dev/", "https://net5.ton.dev/"}
 }
 
 // GetMainNetBaseUrls ...
-func GetMainNetBaseUrls()[]string{
+func GetMainNetBaseUrls() []string {
 	return []string{"https://main2.ton.dev/", "https://main3.ton.dev/", "https://main4.ton.dev/"}
 }
 
 // GetLocalNetBaseUrls ...
-func GetLocalNetBaseUrls()[]string{
+func GetLocalNetBaseUrls() []string {
 	return []string{"http://0.0.0.0/", "http://127.0.0.1/", "http://localhost/"}
 }
