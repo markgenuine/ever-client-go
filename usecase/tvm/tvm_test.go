@@ -22,7 +22,7 @@ import (
 )
 
 func TestTvm(t *testing.T) {
-	configConn := domain.NewDefaultConfig(domain.BaseCustomUrl,nil)
+	configConn := domain.NewDefaultConfig(domain.BaseCustomUrl, nil)
 	clientMain, err := client.NewClientGateway(configConn)
 	assert.Equal(t, nil, err)
 
