@@ -5,7 +5,17 @@ import (
 	"fmt"
 )
 
+const (
+	AccountIDAccountAddresType AccountAddressType = "AccountId"
+	HexAccountAddresType       AccountAddressType = "Hex"
+	Base64AccountAddresType    AccountAddressType = "Base64"
+)
+
 type (
+
+	// AccountAddressType ...
+	AccountAddressType string
+
 	// AddressStringFormatAccountID ...
 	AddressStringFormatAccountID struct{}
 
@@ -19,7 +29,7 @@ type (
 		Bounce bool `json:"bounce"`
 	}
 
-	// AddressStringFormat
+	// AddressStringFormat ...
 	AddressStringFormat struct {
 		ValueEnumType interface{}
 	}
@@ -33,6 +43,16 @@ type (
 	// ResultOfConvertAddress ...
 	ResultOfConvertAddress struct {
 		Address string `json:"address"`
+	}
+
+	// ParamsOfGetAddressType ...
+	ParamsOfGetAddressType struct {
+		Address string `json:"address"`
+	}
+
+	// ResultOfGetAddressType ...
+	ResultOfGetAddressType struct {
+		AddressType AccountAddressType `json:"address_type"`
 	}
 
 	// ParamsOfCalcStorageFee ...
@@ -70,6 +90,7 @@ type (
 	//UtilsUseCase ...
 	UtilsUseCase interface {
 		ConvertAddress(*ParamsOfConvertAddress) (*ResultOfConvertAddress, error)
+		GetAddressType(*ParamsOfGetAddressType) (*ResultOfGetAddressType, error)
 		CalcStorageFee(pOCA *ParamsOfCalcStorageFee) (*ResultOfCalcStorageFee, error)
 		CompressZstd(pOCA *ParamsOfCompressZstd) (*ResultOfCompressZstd, error)
 		DecompressZstd(pOCA *ParamsOfDecompressZstd) (*ResultOfDecompressZstd, error)

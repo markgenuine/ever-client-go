@@ -77,3 +77,11 @@ func (a *abi) EncodeAccount(pOEA *domain.ParamsOfEncodeAccount) (*domain.ResultO
 	err := a.client.GetResult("abi.encode_account", pOEA, result)
 	return result, err
 }
+
+// DecodeAccountData - Decodes account data using provided data BOC and ABI.
+// Note: this feature requires ABI 2.1 or higher.
+func (a *abi) DecodeAccountData(pODAD *domain.ParamsOfDecodeAccountData) (*domain.ResultOfDecodeData, error) {
+	result := new(domain.ResultOfDecodeData)
+	err := a.client.GetResult("abi.decode_account_data", pODAD, result)
+	return result, err
+}

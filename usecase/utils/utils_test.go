@@ -11,14 +11,14 @@ import (
 )
 
 func TestUtils(t *testing.T) {
-	configConn := domain.NewDefaultConfig(domain.BaseUrl)
-	client, err := client.NewClientGateway(configConn)
+	configConn := domain.NewDefaultConfig("", domain.GetDevNetBaseUrls())
+	clientConn, err := client.NewClientGateway(configConn)
 	assert.Equal(t, nil, err)
-	defer client.Destroy()
+	defer clientConn.Destroy()
 
 	utilsUC := utils{
 		config: configConn,
-		client: client,
+		client: clientConn,
 	}
 
 	t.Run("TestConvertAddress", func(t *testing.T) {
