@@ -176,6 +176,7 @@ type (
 	// AbiContract ...
 	AbiContract struct {
 		AbiVersion *int            `json:"ABI version,omitempty"`
+		Version    string          `json:"version,omitempty"`
 		Header     []string        `json:"header,omitempty"`
 		Functions  []*AbiFunctions `json:"functions,omitempty"`
 		Events     []*AbiEvent     `json:"events,omitempty"`

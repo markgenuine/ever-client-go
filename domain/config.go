@@ -29,6 +29,7 @@ type (
 		SendingEndpointCount     *int     `toml:"sending_endpoint_count,omitempty" json:"sending_endpoint_count,omitempty"`
 		LatencyDetectionInterval *int     `toml:"latency_detection_interval,omitempty" json:"latency_detection_interval,omitempty"`
 		MaxLatency               *int     `toml:"max_latency,omitempty" json:"max_latency,omitempty"`
+		QueryTimeout               *int     `toml:"query_timeout,omitempty" json:"query_timeout,omitempty"`
 		AccessKey                string   `toml:"access_key" json:"access_key,omitempty"`
 	}
 
