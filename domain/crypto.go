@@ -12,6 +12,21 @@ const (
 
 	// DefaultDictionary dictionary mnemonic phrase on default
 	DefaultDictionary = 1
+
+	// CipherModeCBC ...
+	CipherModeCBC CipherMode = "CBC"
+
+	// CipherModeCFB ...
+	CipherModeCFB CipherMode = "CFB"
+
+	// CipherModeCTR ...
+	CipherModeCTR CipherMode = "CTR"
+
+	// CipherModeECB ...
+	CipherModeECB CipherMode = "ECB"
+
+	// CipherModeOFB ...
+	CipherModeOFB CipherMode = "OFB"
 )
 
 // CryptoErrorCode ...
@@ -30,6 +45,27 @@ type (
 		Algorithm string          `json:"algorithm,omitempty"`
 		Options   json.RawMessage `json:"options,omitempty"`
 		Public    json.RawMessage `json:"public,omitempty"`
+	}
+
+	// EncryptionAlgorithm ...
+	EncryptionAlgorithm struct {
+		ValueEnumType interface{}
+	}
+
+	// CipherMode is type string
+	CipherMode string
+
+	// AesParams ...
+	AesParams struct {
+		Mode CipherMode `json:"mode"`
+		Key  string     `json:"key"`
+		IV   string     `json:"iv,omitempty"`
+	}
+
+	// AesInfo ...
+	AesInfo struct {
+		Mode CipherMode `json:"mode"`
+		IV   string     `json:"iv,omitempty"`
 	}
 
 	// ParamsOfFactorize ...
@@ -466,9 +502,14 @@ type (
 		Data          string              `json:"data"`
 	}
 
-	//ResultOfEncryptionBoxDecrypt ...
+	// ResultOfEncryptionBoxDecrypt ...
 	ResultOfEncryptionBoxDecrypt struct {
 		Data string `json:"data"`
+	}
+
+	// ParamsOfCreateEncryptionBox ...
+	ParamsOfCreateEncryptionBox struct {
+		Algorithm EncryptionAlgorithm `json:"algorithm"`
 	}
 
 	// CryptoUseCase ...
@@ -516,6 +557,7 @@ type (
 		EncryptionBoxGetInfo(*ParamsOfEncryptionBoxGetInfo) (*ResultOfEncryptionBoxGetInfo, error)
 		EncryptionBoxEncrypt(*ParamsOfEncryptionBoxEncrypt) (*ResultOfEncryptionBoxEncrypt, error)
 		EncryptionBoxDecrypt(*ParamsOfEncryptionBoxDecrypt) (*ResultOfEncryptionBoxDecrypt, error)
+		CreateEncryptionBox(*ParamsOfCreateEncryptionBox) (*RegisteredEncryptionBox, error)
 	}
 )
 
@@ -543,6 +585,12 @@ func init() {
 		"SigningBoxNotRegistered":    121,
 		"InvalidSignature":           122,
 		"EncryptionBoxNotRegistered": 123,
+		"InvalidIvSize":              124,
+		"UnsupportedCipherMode":      125,
+		"CannotCreateCipher":         126,
+		"EncryptDataError":           127,
+		"DecryptDataError":           128,
+		"IvRequired":                 129,
 	}
 
 }
@@ -575,6 +623,36 @@ func NewDefaultParamsOfMnemonicDeriveSignKeys() *ParamsOfMnemonicDeriveSignKeys 
 // NewDefaultParamsOfHDKeyXPrvFromMnemonic ...
 func NewDefaultParamsOfHDKeyXPrvFromMnemonic() *ParamsOfHDKeyXPrvFromMnemonic {
 	return &ParamsOfHDKeyXPrvFromMnemonic{Phrase: "", Dictionary: util.IntToPointerInt(DefaultDictionary), WordCount: util.IntToPointerInt(DefaultWordCount)}
+}
+
+func (ea *EncryptionAlgorithm) MarshalJSON() ([]byte, error) {
+	switch value := (ea.ValueEnumType).(type) {
+	case AesParams:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			AesParams
+		}{"AES", value})
+	default:
+		return nil, fmt.Errorf("unsupported type for EncryptionAlgorithm %v", ea.ValueEnumType)
+	}
+}
+
+func (ea *EncryptionAlgorithm) UnmarshalJSON(b []byte) error {
+	var typeD EnumType
+	if err := json.Unmarshal(b, &typeD); err != nil {
+		return err
+	}
+	switch typeD.Type {
+	case "AES":
+		var valueEnum AesParams
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		ea.ValueEnumType = valueEnum
+	default:
+		return fmt.Errorf("unsupported type for EncryptionAlgorithm %v", typeD.Type)
+	}
+	return nil
 }
 
 func (pOASB *ParamsOfAppSigningBox) MarshalJSON() ([]byte, error) {

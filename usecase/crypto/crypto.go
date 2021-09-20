@@ -450,3 +450,10 @@ func (c *crypto) EncryptionBoxDecrypt(pOAEBD *domain.ParamsOfEncryptionBoxDecryp
 	err := c.client.GetResult("crypto.encryption_box_decrypt", pOAEBD, result)
 	return result, err
 }
+
+// CreateEncryptionBox -Creates encryption box with specified algorithm.
+func (c *crypto) CreateEncryptionBox(pOCEB *domain.ParamsOfCreateEncryptionBox) (*domain.RegisteredEncryptionBox, error) {
+	result := new(domain.RegisteredEncryptionBox)
+	err := c.client.GetResult("crypto.create_encryption_box", pOCEB, result)
+	return result, err
+}
