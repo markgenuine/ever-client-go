@@ -128,9 +128,75 @@ type (
 		Builder  []*BuilderOp  `json:"builder"`
 		BocCache *BocCacheType `json:"boc_cache,omitempty"`
 	}
+
 	// ResultOfEncodeBoc ...
 	ResultOfEncodeBoc struct {
 		Boc string
+	}
+
+	// ParamsOfGetCodeSalt ...
+	ParamsOfGetCodeSalt struct {
+		Code     string        `json:"code"`
+		BocCache *BocCacheType `json:"boc_cache,omitempty"`
+	}
+
+	// ResultOfGetCodeSalt ...
+	ResultOfGetCodeSalt struct {
+		Salt string `json:"salt,omitempty"`
+	}
+
+	// ParamsOfSetCodeSalt ...
+	ParamsOfSetCodeSalt struct {
+		Code     string        `json:"code"`
+		Salt     string        `json:"salt"`
+		BocCache *BocCacheType `json:"boc_cache,omitempty"`
+	}
+
+	// ResultOfSetCodeSalt ...
+	ResultOfSetCodeSalt struct {
+		Code string `json:"code"`
+	}
+
+	// ParamsOfDecodeTvc ...
+	ParamsOfDecodeTvc struct {
+		Tvc      string        `json:"tvc"`
+		BocCache *BocCacheType `json:"boc_cache,omitempty"`
+	}
+
+	// ResultOfDecodeTvc ...
+	ResultOfDecodeTvc struct {
+		Code       string `json:"code,omitempty"`
+		Data       string `json:"data,omitempty"`
+		Library    string `json:"library,omitempty"`
+		Tick       *bool  `json:"tick"`
+		Tock       *bool  `json:"tock"`
+		SplitDepth *int   `json:"split_depth,omitempty"`
+	}
+
+	// ParamsOfEncodeTvc ...
+	ParamsOfEncodeTvc struct {
+		Code       string        `json:"code,omitempty"`
+		Data       string        `json:"data,omitempty"`
+		Library    string        `json:"library,omitempty"`
+		Tick       *bool         `json:"tick"`
+		Tock       *bool         `json:"tock"`
+		SplitDepth *int          `json:"split_depth,omitempty"`
+		BocCache   *BocCacheType `json:"boc_cache,omitempty"`
+	}
+
+	// ResultOfEncodeTvc ...
+	ResultOfEncodeTvc struct {
+		Tvc string `json:"tvc"`
+	}
+
+	// ParamsOfGetCompilerVersion ...
+	ParamsOfGetCompilerVersion struct {
+		Code string `json:"code"`
+	}
+
+	// ResultOfGetCompilerVersion ...
+	ResultOfGetCompilerVersion struct {
+		Version string `json:"version,omitempty"`
 	}
 
 	//BocUseCase ...
@@ -147,6 +213,11 @@ type (
 		CacheSet(*ParamsOfBocCacheSet) (*ResultOfBocCacheSet, error)
 		CacheUnpin(*ParamsOfBocCacheUnpin) error
 		EncodeBoc(*ParamsOfEncodeBoc) (*ResultOfEncodeBoc, error)
+		GetCodeSalt(*ParamsOfGetCodeSalt) (*ResultOfGetCodeSalt, error)
+		SetCodeSalt(*ParamsOfSetCodeSalt) (*ResultOfSetCodeSalt, error)
+		DecodeTvc(*ParamsOfDecodeTvc) (*ResultOfDecodeTvc, error)
+		EncodeTvc(*ParamsOfEncodeTvc) (*ResultOfEncodeTvc, error)
+		GetCompilerVersion(version *ParamsOfGetCompilerVersion) (*ResultOfGetCompilerVersion, error)
 	}
 )
 
