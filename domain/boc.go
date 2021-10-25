@@ -60,6 +60,16 @@ type (
 		Hash string `json:"hash"`
 	}
 
+	// ParamsOfGetBocDepth ...
+	ParamsOfGetBocDepth struct {
+		Boc string `json:"boc"`
+	}
+
+	// ResultOfGetBocDepth ...
+	ResultOfGetBocDepth struct {
+		Depth int `json:"depth"`
+	}
+
 	//ParamsOfGetCodeFromTvc ...
 	ParamsOfGetCodeFromTvc struct {
 		Tvc string `json:"tvc"`
@@ -166,11 +176,16 @@ type (
 	// ResultOfDecodeTvc ...
 	ResultOfDecodeTvc struct {
 		Code       string `json:"code,omitempty"`
+		CodeHash string `json:"code_hash,omitempty"`
+		CodeDepth *int `json:"code_depth,omitempty"`
 		Data       string `json:"data,omitempty"`
+		DataHash       string `json:"data_hash,omitempty"`
+		DataDepth *int `json:"data_depth,omitempty"`
 		Library    string `json:"library,omitempty"`
 		Tick       *bool  `json:"tick"`
 		Tock       *bool  `json:"tock"`
 		SplitDepth *int   `json:"split_depth,omitempty"`
+		CompilerVersion       string `json:"compiler_version,omitempty"`
 	}
 
 	// ParamsOfEncodeTvc ...
@@ -208,6 +223,7 @@ type (
 		ParseShardstate(*ParamsOfParseShardstate) (*ResultOfParse, error)
 		GetBlockhainConfig(*ParamsOfGetBlockchainConfig) (*ResultOfGetBlockchainConfig, error)
 		GetBocHash(*ParamsOfGetBocHash) (*ResultOfGetBocHash, error)
+ 		GetBocDepth(*ParamsOfGetBocDepth) (*ResultOfGetBocDepth, error)
 		GetCodeFromTvc(*ParamsOfGetCodeFromTvc) (*ResultOfGetCodeFromTvc, error)
 		CacheGet(*ParamsOfBocCacheGet) (*ResultOfBocCacheGet, error)
 		CacheSet(*ParamsOfBocCacheSet) (*ResultOfBocCacheSet, error)
