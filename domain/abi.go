@@ -299,13 +299,41 @@ type (
 		ID      string `json:"id"`
 	}
 
+	// ParamsOfDecodeAccountData ...
 	ParamsOfDecodeAccountData struct {
 		Abi  *Abi   `json:"abi"`
 		Data string `json:"data"`
 	}
 
+	// ResultOfDecodeData ...
 	ResultOfDecodeData struct {
 		Data json.RawMessage `json:"data"`
+	}
+
+	// ParamsOfUpdateInitialData ...
+	ParamsOfUpdateInitialData struct {
+		Abi           *Abi          `json:"abi,omitempty"`
+		Data          string        `json:"data"`
+		InitialData   interface{}   `json:"initial_data,omitempty"`
+		InitialPubKey string        `json:"initial_pubkey,omitempty"`
+		BocCache      *BocCacheType `json:"boc_cache,omitempty"`
+	}
+
+	// ResultOfUpdateInitialData ...
+	ResultOfUpdateInitialData struct {
+		Data string `json:"data"`
+	}
+
+	// ParamsOfDecodeInitialData ...
+	ParamsOfDecodeInitialData struct {
+		Abi  *Abi   `json:"abi,omitempty"`
+		Data string `json:"data"`
+	}
+
+	//ResultOfDecodeInitialData ...
+	ResultOfDecodeInitialData struct {
+		InitialData   interface{} `json:"initial_data,omitempty"`
+		InitialPubKey string      `json:"initial_pubkey,omitempty"`
 	}
 
 	//AbiUseCase ...
@@ -319,6 +347,8 @@ type (
 		DecodeMessageBody(*ParamsOfDecodeMessageBody) (*DecodedMessageBody, error)
 		EncodeAccount(*ParamsOfEncodeAccount) (*ResultOfEncodeAccount, error)
 		DecodeAccountData(*ParamsOfDecodeAccountData) (*ResultOfDecodeData, error)
+		UpdateInitialData(*ParamsOfUpdateInitialData) (*ResultOfUpdateInitialData, error)
+		DecodeInitialData(*ParamsOfDecodeInitialData) (*ResultOfDecodeInitialData, error)
 	}
 )
 
@@ -337,6 +367,7 @@ func init() {
 		"InvalidAbi":                                311,
 		"InvalidFunctionId":                         312,
 		"InvalidData":                               313,
+		"EncodeInitialDataFailed":                   314,
 	}
 }
 

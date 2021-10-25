@@ -85,3 +85,21 @@ func (a *abi) DecodeAccountData(pODAD *domain.ParamsOfDecodeAccountData) (*domai
 	err := a.client.GetResult("abi.decode_account_data", pODAD, result)
 	return result, err
 }
+
+// UpdateInitialData - Updates initial account data with initial values for the contract's static variables and owner's public key.
+// This operation is applicable only for initial account data (before deploy). If the contract is already deployed, its data doesn't contain
+// this data section any more.
+func (a *abi) UpdateInitialData(pOUID *domain.ParamsOfUpdateInitialData) (*domain.ResultOfUpdateInitialData, error) {
+	result := new(domain.ResultOfUpdateInitialData)
+	err := a.client.GetResult("abi.update_initial_data", pOUID, result)
+	return result, err
+}
+
+// DecodeInitialData - Decodes initial values of a contract's static variables and owner's public key from account initial data
+// This operation is applicable only for initial account data (before deploy). If the contract is already deployed, its data doesn't
+// contain this data section any more.
+func (a *abi) DecodeInitialData(pODID *domain.ParamsOfDecodeInitialData) (*domain.ResultOfDecodeInitialData, error) {
+	result := new(domain.ResultOfDecodeInitialData)
+	err := a.client.GetResult("abi.decode_initial_data", pODID, result)
+	return result, err
+}

@@ -89,7 +89,7 @@ func (b *boc) CacheSet(pOBCS *domain.ParamsOfBocCacheSet) (*domain.ResultOfBocCa
 }
 
 // CacheUnpin - Unpin BOCs with specified pin.
-//BOCs which don't have another pins will be removed from cache.
+// BOCs which don't have another pins will be removed from cache.
 func (b *boc) CacheUnpin(pOBCU *domain.ParamsOfBocCacheUnpin) error {
 	_, err := b.client.GetResponse("boc.cache_unpin", pOBCU)
 	return err
@@ -99,5 +99,41 @@ func (b *boc) CacheUnpin(pOBCU *domain.ParamsOfBocCacheUnpin) error {
 func (b *boc) EncodeBoc(pOEB *domain.ParamsOfEncodeBoc) (*domain.ResultOfEncodeBoc, error) {
 	result := new(domain.ResultOfEncodeBoc)
 	err := b.client.GetResult("boc.encode_boc", pOEB, result)
+	return result, err
+}
+
+// GetCodeSalt - Returns the contract code's salt if it is present.
+func (b *boc) GetCodeSalt(pOGCS *domain.ParamsOfGetCodeSalt) (*domain.ResultOfGetCodeSalt, error) {
+	result := new(domain.ResultOfGetCodeSalt)
+	err := b.client.GetResult("boc.get_code_salt", pOGCS, result)
+	return result, err
+}
+
+// SetCodeSalt - Sets new salt to contract code.
+// Returns the new contract code with salt.
+func (b *boc) SetCodeSalt(pOSCS *domain.ParamsOfSetCodeSalt) (*domain.ResultOfSetCodeSalt, error) {
+	result := new(domain.ResultOfSetCodeSalt)
+	err := b.client.GetResult("boc.set_code_salt", pOSCS, result)
+	return result, err
+}
+
+// DecodeTvc - Decodes tvc into code, data, libraries and special options.
+func (b *boc) DecodeTvc(pODT *domain.ParamsOfDecodeTvc) (*domain.ResultOfDecodeTvc, error) {
+	result := new(domain.ResultOfDecodeTvc)
+	err := b.client.GetResult("boc.decode_tvc", pODT, result)
+	return result, err
+}
+
+// EncodeTvc - Encodes tvc from code, data, libraries ans special options (see input params).
+func (b *boc) EncodeTvc(pOET *domain.ParamsOfEncodeTvc) (*domain.ResultOfEncodeTvc, error) {
+	result := new(domain.ResultOfEncodeTvc)
+	err := b.client.GetResult("boc.encode_tvc", pOET, result)
+	return result, err
+}
+
+// GetCompilerVersion - Returns the compiler version used to compile the code.
+func (b *boc) GetCompilerVersion(pOGCV *domain.ParamsOfGetCompilerVersion) (*domain.ResultOfGetCompilerVersion, error) {
+	result := new(domain.ResultOfGetCompilerVersion)
+	err := b.client.GetResult("boc.get_compiler_version", pOGCV, result)
 	return result, err
 }
