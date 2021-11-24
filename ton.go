@@ -9,6 +9,7 @@ import (
 	"github.com/move-ton/ton-client-go/usecase/debot"
 	"github.com/move-ton/ton-client-go/usecase/net"
 	"github.com/move-ton/ton-client-go/usecase/processing"
+	"github.com/move-ton/ton-client-go/usecase/proofs"
 	"github.com/move-ton/ton-client-go/usecase/tvm"
 	"github.com/move-ton/ton-client-go/usecase/utils"
 )
@@ -22,6 +23,7 @@ type Ton struct {
 	Debot      domain.DebotUseCase
 	Net        domain.NetUseCase
 	Processing domain.ProcessingUseCase
+	Proofs     domain.ProofsUseCase
 	Tvm        domain.TvmUseCase
 	Utils      domain.UtilsUseCase
 }
@@ -39,6 +41,7 @@ func NewTonWithConfig(config domain.Config) (*Ton, error) {
 		Crypto:     crypto.NewCrypto(config, client),
 		Debot:      debot.NewDebot(config, client),
 		Net:        net.NewNet(config, client),
+		Proofs:     proofs.NewProofs(config, client),
 		Processing: processing.NewProcessing(config, client),
 		Tvm:        tvm.NewTvm(config, client),
 		Utils:      utils.NewUtils(config, client),

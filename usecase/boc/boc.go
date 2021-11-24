@@ -69,9 +69,9 @@ func (b *boc) GetBocHash(pOGBH *domain.ParamsOfGetBocHash) (*domain.ResultOfGetB
 
 // GetBocDepth - Calculates BOC depth.
 func (b *boc) GetBocDepth(pOGBD *domain.ParamsOfGetBocDepth) (*domain.ResultOfGetBocDepth, error) {
-result := new(domain.ResultOfGetBocDepth)
-err := b.client.GetResult("boc.get_boc_depth", pOGBD, result)
-return result, err
+	result := new(domain.ResultOfGetBocDepth)
+	err := b.client.GetResult("boc.get_boc_depth", pOGBD, result)
+	return result, err
 }
 
 // GetCodeFromTvc - Extracts code from TVC contract image.

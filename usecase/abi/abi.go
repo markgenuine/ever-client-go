@@ -103,3 +103,22 @@ func (a *abi) DecodeInitialData(pODID *domain.ParamsOfDecodeInitialData) (*domai
 	err := a.client.GetResult("abi.decode_initial_data", pODID, result)
 	return result, err
 }
+
+// DecodeBoc - Decodes BOC into JSON as a set of provided parameters.
+//
+// Solidity functions use ABI types for builder encoding. The simplest way to decode such a BOC is to use ABI decoding.
+// ABI has it own rules for fields layout in cells so manually encoded BOC can not be described in terms of ABI rules.
+//
+// To solve this problem we introduce a new ABI type Ref(<ParamType>) which allows to store ParamType ABI parameter in
+// cell reference and, thus, decode manually encoded BOCs. This type is available only in decode_boc function and will
+// not be available in ABI messages encoding until it is included into some ABI revision.
+//
+// Such BOC descriptions covers most users needs. If someone wants to decode some BOC which can not be described by these
+// rules (i.e. BOC with TLB containing constructors of flags defining some parsing conditions) then they can decode the
+// fields up to fork condition, check the parsed data manually, expand the parsing schema and then decode the whole BOC
+// with the full schema.
+func (a *abi) DecodeBoc(boc *domain.ParamsOfDecodeBoc) (*domain.ResultOfDecodeBoc, error) {
+	result := new(domain.ResultOfDecodeBoc)
+	err := a.client.GetResult("abi.decode_boc", boc, result)
+	return result, err
+}
