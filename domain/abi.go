@@ -330,10 +330,22 @@ type (
 		Data string `json:"data"`
 	}
 
-	//ResultOfDecodeInitialData ...
+	// ResultOfDecodeInitialData ...
 	ResultOfDecodeInitialData struct {
 		InitialData   interface{} `json:"initial_data,omitempty"`
 		InitialPubKey string      `json:"initial_pubkey,omitempty"`
+	}
+
+	// ParamsOfDecodeBoc ...
+	ParamsOfDecodeBoc struct {
+		Params       []*AbiParam `json:"params"`
+		Boc          string      `json:"boc"`
+		AllowPartial bool        `json:"allow_partial"`
+	}
+
+	// ResultOfDecodeBoc ...
+	ResultOfDecodeBoc struct {
+		Data json.RawMessage `json:"data"`
 	}
 
 	//AbiUseCase ...
@@ -349,6 +361,7 @@ type (
 		DecodeAccountData(*ParamsOfDecodeAccountData) (*ResultOfDecodeData, error)
 		UpdateInitialData(*ParamsOfUpdateInitialData) (*ResultOfUpdateInitialData, error)
 		DecodeInitialData(*ParamsOfDecodeInitialData) (*ResultOfDecodeInitialData, error)
+		DecodeBoc(*ParamsOfDecodeBoc) (*ResultOfDecodeBoc, error)
 	}
 )
 

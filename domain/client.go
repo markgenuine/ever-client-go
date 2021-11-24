@@ -185,6 +185,7 @@ func init() {
 		"CanNotParseNumber":                   32,
 		"InternalError":                       33,
 		"InvalidHandle":                       34,
+		"LocalStorageError":                   35,
 	}
 }
 

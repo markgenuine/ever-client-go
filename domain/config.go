@@ -9,10 +9,12 @@ const (
 type (
 	// Config ...
 	Config struct {
-		Network *Network   `toml:"network" json:"network,omitempty"`
-		Crypto  *Crypto    `toml:"crypto" json:"crypto,omitempty"`
-		Abi     *AbiConfig `toml:"abi" json:"abi,omitempty"`
-		Boc     *BocConfig `toml:"boc" json:"boc,omitempty"`
+		Network          *Network      `toml:"network" json:"network,omitempty"`
+		Crypto           *Crypto       `toml:"crypto" json:"crypto,omitempty"`
+		Abi              *AbiConfig    `toml:"abi" json:"abi,omitempty"`
+		Boc              *BocConfig    `toml:"boc" json:"boc,omitempty"`
+		ProofsConfig     *ProofsConfig `toml:"proofs" json:"proofs,omitempty"`
+		LocalStoragePath string        `toml:"local_storage_path" json:"local_storage_path,omitempty"`
 	}
 
 	// Network - Network config.
@@ -50,6 +52,11 @@ type (
 	// BocConfig ...
 	BocConfig struct {
 		CacheMaxSize *int `toml:"cache_max_size" json:"cache_max_size,omitempty"`
+	}
+
+	// ProofsConfig ...
+	ProofsConfig struct {
+		CacheInLocalStorage *bool `toml:"cache_in_local_storage"  json:"cache_in_local_storage,omitempty"`
 	}
 )
 
