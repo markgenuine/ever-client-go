@@ -31,7 +31,8 @@ type (
 		Language   string   `json:"language,omitempty"`
 		Dabi       string   `json:"dabi,omitempty"`
 		Icon       string   `json:"icon,omitempty"`
-		interfaces []string `json:"interfaces"`
+		Interfaces []string `json:"interfaces"`
+		DabiVersion string `json:"dabiVersion"`
 	}
 
 	DebotActivity struct {
@@ -194,5 +195,6 @@ func init() {
 		"DebotExternalCallFailed":    810,
 		"DebotBrowserCallbackFailed": 811,
 		"DebotOperationRejected":     812,
+		"DebotNoCode": 813,
 	}
 }
