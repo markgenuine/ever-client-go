@@ -17,10 +17,16 @@ type (
 		Transaction json.RawMessage `json:"transaction"`
 	}
 
+	// ParamsOfProofMessageData ...
+	ParamsOfProofMessageData struct {
+		Message json.RawMessage `json:"message"`
+	}
+
 	// ProofsUseCase ...
 	ProofsUseCase interface {
 		ProofBlockData(*ParamsOfProofBlockData) error
 		ProofTransactionData(*ParamsOfProofTransactionData) error
+		ParamsMessageData(*ParamsOfProofMessageData) error
 	}
 )
 
