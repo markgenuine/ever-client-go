@@ -324,6 +324,19 @@ type (
 		Data string `json:"data"`
 	}
 
+	// ParamsOfEncodeInitialData ...
+	ParamsOfEncodeInitialData struct {
+		Abi           *Abi          `json:"abi,omitempty"`
+		InitialData   interface{}   `json:"initial_data,omitempty"`
+		InitialPubKey string        `json:"initial_pubkey,omitempty"`
+		BocCache      *BocCacheType `json:"boc_cache,omitempty"`
+	}
+
+	// ResultOfEncodeInitialData ...
+	ResultOfEncodeInitialData struct {
+		Data string `json:"data"`
+	}
+
 	// ParamsOfDecodeInitialData ...
 	ParamsOfDecodeInitialData struct {
 		Abi  *Abi   `json:"abi,omitempty"`
@@ -360,6 +373,7 @@ type (
 		EncodeAccount(*ParamsOfEncodeAccount) (*ResultOfEncodeAccount, error)
 		DecodeAccountData(*ParamsOfDecodeAccountData) (*ResultOfDecodeData, error)
 		UpdateInitialData(*ParamsOfUpdateInitialData) (*ResultOfUpdateInitialData, error)
+		EncodeInitialData(*ParamsOfEncodeInitialData) (*ResultOfEncodeInitialData, error)
 		DecodeInitialData(*ParamsOfDecodeInitialData) (*ResultOfDecodeInitialData, error)
 		DecodeBoc(*ParamsOfDecodeBoc) (*ResultOfDecodeBoc, error)
 	}

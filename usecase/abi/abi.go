@@ -95,6 +95,15 @@ func (a *abi) UpdateInitialData(pOUID *domain.ParamsOfUpdateInitialData) (*domai
 	return result, err
 }
 
+// EncodeInitialData - Encodes initial account data with initial values for the contract's static variables and owner's public key into
+// a data BOC that can be passed to encode_tvc function afterwards.
+// This function is analogue of tvm.buildDataInit function in Solidity
+func(a *abi) EncodeInitialData(pOEID *domain.ParamsOfEncodeInitialData) (*domain.ResultOfEncodeInitialData, error){
+	result := new(domain.ResultOfEncodeInitialData)
+	err := a.client.GetResult("abi.encode_initial_data", pOEID, result)
+	return result, err
+}
+
 // DecodeInitialData - Decodes initial values of a contract's static variables and owner's public key from account initial data
 // This operation is applicable only for initial account data (before deploy). If the contract is already deployed, its data doesn't
 // contain this data section any more.
