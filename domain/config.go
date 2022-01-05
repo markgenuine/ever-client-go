@@ -109,7 +109,7 @@ func DictionaryList() map[string]*int {
 
 // GetDevNetBaseUrls ...
 func GetDevNetBaseUrls() []string {
-	return []string{"https://net1.ton.dev/", "https://net5.ton.dev/"}
+	return []string{"eri01.net.everos.dev", "rbx01.net.everos.dev", "gra01.net.everos.dev"}
 }
 
 // GetMainNetBaseUrls ...
