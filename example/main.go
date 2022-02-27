@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/move-ton/ton-client-go/domain"
+	"github.com/move-ton/ever-client-go/domain"
 	"log"
 
-	goton "github.com/move-ton/ton-client-go"
+	goton "github.com/move-ton/ever-client-go"
 )
 
 func main() {
