@@ -1,4 +1,4 @@
-# TON Client
+# Ever Client
 TON SDK Client library Golang bindings based itself on [TON-SDK](https://github.com/tonlabs/TON-SDK).
 
 [![version](https://img.shields.io/github/v/tag/move-ton/ton-client-go.svg)](https://github.com/move-ton/ton-client-go/releases/latest)
