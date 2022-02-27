@@ -1,5 +1,5 @@
-# Ever Client
-TON SDK Client library Golang bindings based itself on [TON-SDK](https://github.com/tonlabs/TON-SDK).
+# Everscale Client
+Everscale SDK Client library Golang bindings based itself on [Everscale-SDK](https://github.com/tonlabs/TON-SDK).
 
 [![version](https://img.shields.io/github/v/tag/move-ton/ton-client-go.svg)](https://github.com/move-ton/ton-client-go/releases/latest)
 [![license](https://img.shields.io/github/license/move-ton/ton-client-go.svg)](https://github.com/move-ton/ton-client-go/blob/master/LICENSE)
@@ -12,13 +12,13 @@ Many thanks to [@temamagic](https://github.com/temamagic) for advice on architec
 ## Installation
 
 ```sh
-$ go get -u github.com/move-ton/ton-client-go
+$ go get -u github.com/move-ton/ever-client-go
 ```
 or
 
 ```sh
-$ git clone https://github.com/move-ton/ton-client-go.git
-$ cd ton-client-go
+$ git clone https://github.com/move-ton/ever-client-go.git
+$ cd ever-client-go
 ```
 
 #### Installation for MAC OS 
@@ -51,7 +51,7 @@ $ go run ./example/*.go
 
 ## Usage
 ```golang
-import goton "github.com/move-ton/ton-client-go"
+import goever "github.com/move-ton/ever-client-go"
 ```
 
 ## Example
@@ -60,21 +60,21 @@ package main
 
 import (
 	"fmt"
-	"github.com/move-ton/ton-client-go/domain"
+	"github.com/move-ton/ever-client-go/domain"
 	"log"
 
-	goton "github.com/move-ton/ton-client-go"
+	goton "github.com/move-ton/ever-client-go"
 )
 
 func main() {
-	ton, err := goton.NewTon("", domain.GetDevNetBaseUrls())
+	ever, err := goever.NewEver("", domain.GetDevNetBaseUrls())
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	defer ton.Client.Destroy()
+	defer ever.Client.Destroy()
 
-	value, err := ton.Client.Version()
+	value, err := ever.Client.Version()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -83,4 +83,4 @@ func main() {
 }
 ```
 For more examples see *_test.go files
-[ton-client-go/usecase](https://github.com/move-ton/ton-client-go/tree/master/usecase)
+[ever-client-go/usecase](https://github.com/move-ton/ever-client-go/tree/master/usecase)

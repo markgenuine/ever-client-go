@@ -21,18 +21,18 @@ type (
 
 	// DebotInfo - Describes DeBot metadata.
 	DebotInfo struct {
-		Name       string   `json:"name,omitempty"`
-		Version    string   `json:"version,omitempty"`
-		Publisher  string   `json:"publisher,omitempty"`
-		Caption    string   `json:"caption,omitempty"`
-		Author     string   `json:"author,omitempty"`
-		Support    string   `json:"support,omitempty"`
-		Hello      string   `json:"hello,omitempty"`
-		Language   string   `json:"language,omitempty"`
-		Dabi       string   `json:"dabi,omitempty"`
-		Icon       string   `json:"icon,omitempty"`
-		Interfaces []string `json:"interfaces"`
-		DabiVersion string `json:"dabiVersion"`
+		Name        string   `json:"name,omitempty"`
+		Version     string   `json:"version,omitempty"`
+		Publisher   string   `json:"publisher,omitempty"`
+		Caption     string   `json:"caption,omitempty"`
+		Author      string   `json:"author,omitempty"`
+		Support     string   `json:"support,omitempty"`
+		Hello       string   `json:"hello,omitempty"`
+		Language    string   `json:"language,omitempty"`
+		Dabi        string   `json:"dabi,omitempty"`
+		Icon        string   `json:"icon,omitempty"`
+		Interfaces  []string `json:"interfaces"`
+		DabiVersion string   `json:"dabiVersion"`
 	}
 
 	DebotActivity struct {
@@ -195,6 +195,6 @@ func init() {
 		"DebotExternalCallFailed":    810,
 		"DebotBrowserCallbackFailed": 811,
 		"DebotOperationRejected":     812,
-		"DebotNoCode": 813,
+		"DebotNoCode":                813,
 	}
 }

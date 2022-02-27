@@ -361,6 +361,18 @@ type (
 		Data json.RawMessage `json:"data"`
 	}
 
+	// ParamsOfAbiEncodeBoc ...
+	ParamsOfAbiEncodeBoc struct {
+		Params []*AbiParam `json:"params"`
+		Data json.RawMessage `json:"data"`
+		BocCache *BocCacheType `json:"boc_cache,omitempty"`
+	}
+
+	// ResultOfAbiEncodeBoc ...
+	ResultOfAbiEncodeBoc struct {
+		Boc string `json:"boc"`
+	}
+
 	//AbiUseCase ...
 	AbiUseCase interface {
 		EncodeMessageBody(*ParamsOfEncodeMessageBody) (*ResultOfEncodeMessageBody, error)
@@ -376,6 +388,7 @@ type (
 		EncodeInitialData(*ParamsOfEncodeInitialData) (*ResultOfEncodeInitialData, error)
 		DecodeInitialData(*ParamsOfDecodeInitialData) (*ResultOfDecodeInitialData, error)
 		DecodeBoc(*ParamsOfDecodeBoc) (*ResultOfDecodeBoc, error)
+		EncodeBoc(*ParamsOfAbiEncodeBoc) (*ResultOfAbiEncodeBoc, error)
 	}
 )
 

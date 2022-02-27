@@ -8,10 +8,10 @@ import (
 	"os"
 	"testing"
 
-	"github.com/move-ton/ton-client-go/domain"
-	"github.com/move-ton/ton-client-go/gateway/client"
-	"github.com/move-ton/ton-client-go/usecase/abi"
-	"github.com/move-ton/ton-client-go/usecase/crypto"
+	"github.com/move-ton/ever-client-go/domain"
+	"github.com/move-ton/ever-client-go/gateway/client"
+	"github.com/move-ton/ever-client-go/usecase/abi"
+	"github.com/move-ton/ever-client-go/usecase/crypto"
 	"github.com/stretchr/testify/assert"
 )
 

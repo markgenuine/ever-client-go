@@ -1,7 +1,7 @@
 package abi
 
 import (
-	"github.com/move-ton/ton-client-go/domain"
+	"github.com/move-ton/ever-client-go/domain"
 )
 
 type abi struct {
@@ -98,7 +98,7 @@ func (a *abi) UpdateInitialData(pOUID *domain.ParamsOfUpdateInitialData) (*domai
 // EncodeInitialData - Encodes initial account data with initial values for the contract's static variables and owner's public key into
 // a data BOC that can be passed to encode_tvc function afterwards.
 // This function is analogue of tvm.buildDataInit function in Solidity
-func(a *abi) EncodeInitialData(pOEID *domain.ParamsOfEncodeInitialData) (*domain.ResultOfEncodeInitialData, error){
+func (a *abi) EncodeInitialData(pOEID *domain.ParamsOfEncodeInitialData) (*domain.ResultOfEncodeInitialData, error) {
 	result := new(domain.ResultOfEncodeInitialData)
 	err := a.client.GetResult("abi.encode_initial_data", pOEID, result)
 	return result, err
@@ -129,5 +129,12 @@ func (a *abi) DecodeInitialData(pODID *domain.ParamsOfDecodeInitialData) (*domai
 func (a *abi) DecodeBoc(boc *domain.ParamsOfDecodeBoc) (*domain.ResultOfDecodeBoc, error) {
 	result := new(domain.ResultOfDecodeBoc)
 	err := a.client.GetResult("abi.decode_boc", boc, result)
+	return result, err
+}
+
+// EncodeBoc - Encodes given parameters in JSON into a BOC using param types from ABI.
+func (a *abi) EncodeBoc(boc *domain.ParamsOfAbiEncodeBoc) (*domain.ResultOfAbiEncodeBoc, error) {
+	result := new(domain.ResultOfAbiEncodeBoc)
+	err := a.client.GetResult("encode_bocs", boc, result)
 	return result, err
 }

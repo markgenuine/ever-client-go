@@ -9,14 +9,14 @@ import (
 )
 
 func main() {
-	ton, err := goton.NewTon("", domain.GetDevNetBaseUrls())
+	ever, err := goton.NewTon("", domain.GetDevNetBaseUrls())
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	defer ton.Client.Destroy()
+	defer ever.Client.Destroy()
 
-	value, err := ton.Client.Version()
+	value, err := ever.Client.Version()
 	if err != nil {
 		log.Fatal(err)
 	}

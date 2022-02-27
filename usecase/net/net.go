@@ -2,7 +2,7 @@ package net
 
 import (
 	"encoding/json"
-	"github.com/move-ton/ton-client-go/domain"
+	"github.com/move-ton/ever-client-go/domain"
 )
 
 type net struct {
@@ -138,8 +138,8 @@ func (n *net) GetEndpoints() (*domain.ResultOfGetEndpoints, error) {
 // QueryCounterparties - Allows to query and paginate through the list of accounts that the specified account
 // has interacted with, sorted by the time of the last internal message between accounts
 // Attention this query retrieves data from 'Counterparties' service which is not supported
-// in the opensource version of DApp Server (and will not be supported) as well as in TON OS SE
-// (will be supported in SE in future), but is always accessible via TON OS Devnet/Mainnet Clouds
+// in the opensource version of DApp Server (and will not be supported) as well as in EVER OS SE
+// (will be supported in SE in future), but is always accessible via EVER OS Devnet/Mainnet Clouds
 func (n *net) QueryCounterparties(pOQC *domain.ParamsOfQueryCounterparties) (*domain.ResultOfQueryCollection, error) {
 	result := new(domain.ResultOfQueryCollection)
 	err := n.client.GetResult("net.query_counterparties", pOQC, result)

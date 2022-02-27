@@ -3,14 +3,14 @@ package net
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/move-ton/ton-client-go/util"
+	"github.com/move-ton/ever-client-go/util"
 	"strconv"
 	"sync"
 	"testing"
 	"time"
 
-	"github.com/move-ton/ton-client-go/domain"
-	"github.com/move-ton/ton-client-go/gateway/client"
+	"github.com/move-ton/ever-client-go/domain"
+	"github.com/move-ton/ever-client-go/gateway/client"
 	"github.com/stretchr/testify/assert"
 )
 

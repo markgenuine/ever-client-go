@@ -1,6 +1,6 @@
 package boc
 
-import "github.com/move-ton/ton-client-go/domain"
+import "github.com/move-ton/ever-client-go/domain"
 
 type boc struct {
 	config domain.Config

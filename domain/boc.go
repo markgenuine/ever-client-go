@@ -133,6 +133,11 @@ type (
 		Boc string `json:"boc"`
 	}
 
+	// BuilderOpAddress ..
+	BuilderOpAddress struct {
+		Address string `json:"address"`
+	}
+
 	// ParamsOfEncodeBoc ...
 	ParamsOfEncodeBoc struct {
 		Builder  []*BuilderOp  `json:"builder"`
@@ -318,6 +323,11 @@ func (bO *BuilderOp) MarshalJSON() ([]byte, error) {
 			Type string `json:"type"`
 			BuilderOpCellBoc
 		}{"CellBoc", value})
+	case BuilderOpAddress:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			BuilderOpAddress
+		}{"Address", value})
 	default:
 		return nil, fmt.Errorf("unsupported type for BuilderOp %v", bO.ValueEnumType)
 	}
@@ -350,6 +360,12 @@ func (bO *BuilderOp) UnmarshalJSON(b []byte) error {
 		bO.ValueEnumType = valueEnum
 	case "CellBoc":
 		var valueEnum BuilderOpCellBoc
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		bO.ValueEnumType = valueEnum
+	case "Address":
+		var valueEnum BuilderOpAddress
 		if err := json.Unmarshal(b, &valueEnum); err != nil {
 			return err
 		}

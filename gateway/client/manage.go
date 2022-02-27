@@ -3,7 +3,7 @@ package client
 import (
 	"sync"
 
-	"github.com/move-ton/ton-client-go/domain"
+	"github.com/move-ton/ever-client-go/domain"
 )
 
 // Manager ...

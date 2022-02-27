@@ -1,7 +1,7 @@
 package tvm
 
 import (
-	"github.com/move-ton/ton-client-go/domain"
+	"github.com/move-ton/ever-client-go/domain"
 )
 
 type tvm struct {

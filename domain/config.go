@@ -1,9 +1,9 @@
 package domain
 
-import "github.com/move-ton/ton-client-go/util"
+import "github.com/move-ton/ever-client-go/util"
 
 const (
-	BaseCustomUrl = "https://tonos.freeton.surf/"
+	BaseCustomUrl = "https://everos.freeton.surf/"
 )
 
 type (
@@ -83,7 +83,6 @@ func NewDefaultConfig(address string, endPoints []string) Config {
 			MessageExpirationTimeout:           util.IntToPointerInt(40000), //ms
 			MessageExpirationTimeoutGrowFactor: util.Float32ToPointerFloat32(1.5)},
 	}
-
 	return config
 }
 
@@ -95,7 +94,7 @@ func WordCountList() map[int]*int {
 // DictionaryList list dictionary mnemonic phrase
 func DictionaryList() map[string]*int {
 	return map[string]*int{
-		"TON":                 util.IntToPointerInt(0),
+		"EVER":                util.IntToPointerInt(0),
 		"ENGLISH":             util.IntToPointerInt(1),
 		"CHINESE_SIMPLIFIED":  util.IntToPointerInt(2),
 		"CHINESE_TRADITIONAL": util.IntToPointerInt(3),
@@ -107,17 +106,17 @@ func DictionaryList() map[string]*int {
 	}
 }
 
-// GetDevNetBaseUrls ...
-func GetDevNetBaseUrls() []string {
-	return []string{"eri01.net.everos.dev", "rbx01.net.everos.dev", "gra01.net.everos.dev"}
-}
-
-// GetMainNetBaseUrls ...
+// GetMainNetBaseUrls return endpoints main net.
 func GetMainNetBaseUrls() []string {
-	return []string{"https://main2.ton.dev/", "https://main3.ton.dev/", "https://main4.ton.dev/"}
+	return []string{"https://eri01.main.everos.dev/", "https://gra01.main.everos.dev/", "https://gra02.main.everos.dev/", "https://rbx01.main.everos.dev/"}
 }
 
-// GetLocalNetBaseUrls ...
+// GetDevNetBaseUrls return endpoint dev net.
+func GetDevNetBaseUrls() []string {
+	return []string{"https://eri01.net.everos.dev/", "rbx01.net.everos.dev", "gra01.net.everos.dev"}
+}
+
+// GetLocalNetBaseUrls return endpoint localhost net.
 func GetLocalNetBaseUrls() []string {
 	return []string{"http://0.0.0.0/", "http://127.0.0.1/", "http://localhost/"}
 }

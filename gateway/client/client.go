@@ -15,12 +15,12 @@ import (
 	"fmt"
 	"unsafe"
 
-	"github.com/move-ton/ton-client-go/domain"
+	"github.com/move-ton/ever-client-go/domain"
 )
 
 const (
 	// VersionLibSDK ...
-	VersionLibSDK = "1.28.0"
+	VersionLibSDK = "1.29.0"
 )
 
 var mainStore = NewStore()

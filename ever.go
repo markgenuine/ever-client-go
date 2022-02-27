@@ -1,21 +1,21 @@
 package goton
 
 import (
-	"github.com/move-ton/ton-client-go/domain"
-	clientgw "github.com/move-ton/ton-client-go/gateway/client"
-	"github.com/move-ton/ton-client-go/usecase/abi"
-	"github.com/move-ton/ton-client-go/usecase/boc"
-	"github.com/move-ton/ton-client-go/usecase/crypto"
-	"github.com/move-ton/ton-client-go/usecase/debot"
-	"github.com/move-ton/ton-client-go/usecase/net"
-	"github.com/move-ton/ton-client-go/usecase/processing"
-	"github.com/move-ton/ton-client-go/usecase/proofs"
-	"github.com/move-ton/ton-client-go/usecase/tvm"
-	"github.com/move-ton/ton-client-go/usecase/utils"
+	"github.com/move-ton/ever-client-go/domain"
+	clientgw "github.com/move-ton/ever-client-go/gateway/client"
+	"github.com/move-ton/ever-client-go/usecase/abi"
+	"github.com/move-ton/ever-client-go/usecase/boc"
+	"github.com/move-ton/ever-client-go/usecase/crypto"
+	"github.com/move-ton/ever-client-go/usecase/debot"
+	"github.com/move-ton/ever-client-go/usecase/net"
+	"github.com/move-ton/ever-client-go/usecase/processing"
+	"github.com/move-ton/ever-client-go/usecase/proofs"
+	"github.com/move-ton/ever-client-go/usecase/tvm"
+	"github.com/move-ton/ever-client-go/usecase/utils"
 )
 
 // Ton ...
-type Ton struct {
+type Ever struct {
 	Abi        domain.AbiUseCase
 	Boc        domain.BocUseCase
 	Client     domain.ClientGateway
@@ -28,13 +28,13 @@ type Ton struct {
 	Utils      domain.UtilsUseCase
 }
 
-// NewTonWithConfig ...
-func NewTonWithConfig(config domain.Config) (*Ton, error) {
+// NewEverWithConfig ...
+func NewEverWithConfig(config domain.Config) (*Ever, error) {
 	client, err := clientgw.NewClientGateway(config)
 	if err != nil {
 		return nil, err
 	}
-	ton := &Ton{
+	ever := &Ever{
 		Abi:        abi.NewAbi(config, client),
 		Boc:        boc.NewBoc(config, client),
 		Client:     client,
@@ -46,11 +46,11 @@ func NewTonWithConfig(config domain.Config) (*Ton, error) {
 		Tvm:        tvm.NewTvm(config, client),
 		Utils:      utils.NewUtils(config, client),
 	}
-	return ton, nil
+	return ever, nil
 }
 
 // NewTon ...
-func NewTon(address string, endPoints []string) (*Ton, error) {
+func NewTon(address string, endPoints []string) (*Ever, error) {
 	conf := domain.NewDefaultConfig(address, endPoints)
-	return NewTonWithConfig(conf)
+	return NewEverWithConfig(conf)
 }

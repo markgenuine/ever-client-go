@@ -1,4 +1,4 @@
-module github.com/move-ton/ton-client-go
+module github.com/move-ton/ever-client-go
 
 go 1.14
 

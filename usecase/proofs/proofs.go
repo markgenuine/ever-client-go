@@ -1,7 +1,7 @@
 package proofs
 
 import (
-	"github.com/move-ton/ton-client-go/domain"
+	"github.com/move-ton/ever-client-go/domain"
 )
 
 type proofs struct {
@@ -20,7 +20,7 @@ func NewProofs(
 	}
 }
 
-// ProofBlockData - Proves that a given block's data, which is queried from TONOS API, can be trusted.
+// ProofBlockData - Proves that a given block's data, which is queried from EverOS API, can be trusted.
 //
 // This function checks block proofs and compares given data with the proven. If the given data differs from the proven,
 // the exception will be thrown. The input param is a single block's JSON object, which was queried from DApp server
@@ -38,14 +38,14 @@ func (pr *proofs) ProofBlockData(data *domain.ParamsOfProofBlockData) error {
 	return err
 }
 
-// ProofTransactionData - Proves that a given transaction's data, which is queried from TONOS API, can be trusted.
+// ProofTransactionData - Proves that a given transaction's data, which is queried from EverOS API, can be trusted.
 //
 // This function requests the corresponding block, checks block proofs, ensures that given transaction exists in the
 // proven block and compares given data with the proven. If the given data differs from the proven, the exception will
 // be thrown. The input parameter is a single transaction's JSON object (see params description), which was queried from
-// TONOS API using functions such as net.query, net.query_collection or net.wait_for_collection.
+// EverOS API using functions such as net.query, net.query_collection or net.wait_for_collection.
 //
-// If transaction's BOC and/or block_id are not provided in the JSON, they will be queried from TONOS API (in this case
+// If transaction's BOC and/or block_id are not provided in the JSON, they will be queried from EverOS API (in this case
 // it is required to provide at least id of transaction).
 //
 // Please note, that joins (like account, in_message, out_messages, etc. in Transaction entity) are separated entities
@@ -59,15 +59,15 @@ func (pr *proofs) ProofTransactionData(data *domain.ParamsOfProofTransactionData
 	return err
 }
 
-// ParamsMessageData - Proves that a given message's data, which is queried from TONOS API, can be trusted.
+// ParamsMessageData - Proves that a given message's data, which is queried from EverOS API, can be trusted.
 //
 // This function first proves the corresponding transaction, ensures that the proven transaction refers to the given
 // message and compares given data with the proven. If the given data differs from the proven, the exception will be
-// thrown. The input parameter is a single message's JSON object (see params description), which was queried from TONOS
+// thrown. The input parameter is a single message's JSON object (see params description), which was queried from EverOS
 // API using functions such as net.query, net.query_collection or net.wait_for_collection.
 //
 // If message's BOC and/or non-null src_transaction.id or dst_transaction.id are not provided in the JSON, they will be
-// queried from TONOS API.
+// queried from EverOS API.
 //
 // Please note, that joins (like block, dst_account, dst_transaction, src_account, src_transaction, etc. in Message
 // entity) are separated entities and not supported, so function will throw an exception in a case if JSON being checked has such entities in it.

@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/move-ton/ton-client-go/domain"
-	"github.com/move-ton/ton-client-go/gateway/client"
-	"github.com/move-ton/ton-client-go/util"
+	"github.com/move-ton/ever-client-go/domain"
+	"github.com/move-ton/ever-client-go/gateway/client"
+	"github.com/move-ton/ever-client-go/util"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -271,7 +271,7 @@ func TestCrypto(t *testing.T) {
 
 		// Derive from provided phrase amd conver public to ton_safe
 		phrase := "unit follow zone decline glare flower crisp vocal adapt magic much mesh cherry teach mechanic rain float vicious solution assume hedgehog rail sort chuckle"
-		deriveParams := &domain.ParamsOfMnemonicDeriveSignKeys{Phrase: phrase, Dictionary: dictMnem["TON"], WordCount: util.IntToPointerInt(24)}
+		deriveParams := &domain.ParamsOfMnemonicDeriveSignKeys{Phrase: phrase, Dictionary: dictMnem["EVER"], WordCount: util.IntToPointerInt(24)}
 		keyPair1, err := cryptoUC.MnemonicDeriveSignKeys(deriveParams)
 		assert.Equal(t, nil, err)
 
