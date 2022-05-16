@@ -138,6 +138,14 @@ func (b *boc) EncodeTvc(pOET *domain.ParamsOfEncodeTvc) (*domain.ResultOfEncodeT
 	return result, err
 }
 
+// EncodeExternalInMessage - Encodes a message.
+// Allows to encode any external inbound message.
+func (b *boc) EncodeExternalInMessage(pOEEIM *domain.ParamsOfEncodeExternalInMessage) (*domain.ResultOfEncodeExternalInMessage, error) {
+	result := new(domain.ResultOfEncodeExternalInMessage)
+	err := b.client.GetResult("boc.encode_external_in_message", pOEEIM, result)
+	return result, err
+}
+
 // GetCompilerVersion - Returns the compiler version used to compile the code.
 func (b *boc) GetCompilerVersion(pOGCV *domain.ParamsOfGetCompilerVersion) (*domain.ResultOfGetCompilerVersion, error) {
 	result := new(domain.ResultOfGetCompilerVersion)

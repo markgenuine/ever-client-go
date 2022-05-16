@@ -3,7 +3,7 @@ Everscale SDK Client library Golang bindings based itself on [Everscale-SDK](htt
 
 [![version](https://img.shields.io/github/v/tag/move-ton/ton-client-go.svg)](https://github.com/move-ton/ton-client-go/releases/latest)
 [![license](https://img.shields.io/github/license/move-ton/ton-client-go.svg)](https://github.com/move-ton/ton-client-go/blob/master/LICENSE)
-[![Go version](https://img.shields.io/badge/go-1.14+-blue.svg)](https://github.com/moovweb/gvm)
+[![Go version](https://img.shields.io/badge/go-1.16+-blue.svg)](https://github.com/moovweb/gvm)
 [![Chat on Telegram RU](https://img.shields.io/badge/Chat%20on-Telegram%20RU-blue)](https://t.me/MOVETON_SDK_RU)
 [![Chat on Telegram EN](https://img.shields.io/badge/Chat%20on-Telegram%20EN-blue)](https://t.me/MOVETON_SDK_EN)
 
@@ -24,7 +24,7 @@ $ cd ever-client-go
 #### Installation for MAC OS 
 ```
 #Set path to library
-install_name_tool -id PATH_WITH_BINDING/gateway/client/lib/darwin/libton_client.dylib PATH_WITH_BINDING/gateway/client/lib/darwin/libton_client.dylib```
+install_name_tool -id PATH_WITH_BINDING/gateway/client/lib/darwin/libton_client.dylib PATH_WITH_BINDING/gateway/client/lib/darwin/libton_client.dylib
 
 #Add to ~/.bashrc or execute everytime 
 export CGO_LDFLAGS="-LPATH_WITH_BINDING/gateway/client/lib/darwin -lton_client"
