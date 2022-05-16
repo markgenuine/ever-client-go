@@ -219,6 +219,20 @@ type (
 		Version string `json:"version,omitempty"`
 	}
 
+	// ParamsOfEncodeExternalInMessage ...
+	ParamsOfEncodeExternalInMessage struct {
+		Src      string        `json:"src,omitempty"`
+		Dst      string        `json:"dst"`
+		Init     string        `json:"init,omitempty"`
+		Body     string        `json:"body"`
+		BocCache *BocCacheType `json:"boc_cache,omitempty"`
+	}
+	// ResultOfEncodeExternalInMessage ...
+	ResultOfEncodeExternalInMessage struct {
+		message   string `json:"message"`
+		MessageID string `json:"message_id"`
+	}
+
 	//BocUseCase ...
 	BocUseCase interface {
 		ParseMessage(*ParamsOfParse) (*ResultOfParse, error)
@@ -238,6 +252,7 @@ type (
 		SetCodeSalt(*ParamsOfSetCodeSalt) (*ResultOfSetCodeSalt, error)
 		DecodeTvc(*ParamsOfDecodeTvc) (*ResultOfDecodeTvc, error)
 		EncodeTvc(*ParamsOfEncodeTvc) (*ResultOfEncodeTvc, error)
+		EncodeExternalInMessage(*ParamsOfEncodeExternalInMessage) (*ResultOfEncodeExternalInMessage, error)
 		GetCompilerVersion(version *ParamsOfGetCompilerVersion) (*ResultOfGetCompilerVersion, error)
 	}
 )

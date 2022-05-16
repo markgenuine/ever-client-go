@@ -363,9 +363,9 @@ type (
 
 	// ParamsOfAbiEncodeBoc ...
 	ParamsOfAbiEncodeBoc struct {
-		Params []*AbiParam `json:"params"`
-		Data json.RawMessage `json:"data"`
-		BocCache *BocCacheType `json:"boc_cache,omitempty"`
+		Params   []*AbiParam     `json:"params"`
+		Data     json.RawMessage `json:"data"`
+		BocCache *BocCacheType   `json:"boc_cache,omitempty"`
 	}
 
 	// ResultOfAbiEncodeBoc ...

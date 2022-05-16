@@ -42,7 +42,7 @@ type (
 		Direction SortDirection `json:"direction"`
 	}
 
-	// ParamsOfQueryOperation
+	// ParamsOfQueryOperation ...
 	ParamsOfQueryOperation struct {
 		ValueEnumType interface{}
 	}
@@ -138,11 +138,6 @@ type (
 		Result json.RawMessage `json:"result"`
 	}
 
-	// ResultOfSubscribeCollection ...
-	ResultOfSubscribeCollection struct {
-		Handle int `json:"handle"`
-	}
-
 	// ParamsOfSubscribeCollection ...
 	ParamsOfSubscribeCollection struct {
 		Collection string          `json:"collection"`
@@ -150,9 +145,20 @@ type (
 		Result     string          `json:"result"`
 	}
 
+	// ResultOfSubscribeCollection ...
+	ResultOfSubscribeCollection struct {
+		Handle int `json:"handle"`
+	}
+
+	// ParamsOfSubscribe ...
+	ParamsOfSubscribe struct {
+		Subscription string          `json:"subscription"`
+		Variables    json.RawMessage `json:"variables,omitempty"`
+	}
+
 	// ParamsOfFindLastShardBlock ...
 	ParamsOfFindLastShardBlock struct {
-		Address string `json:"address""`
+		Address string `json:"address"`
 	}
 
 	// ResultOfFindLastShardBlock ...
@@ -171,7 +177,7 @@ type (
 		Endpoints []string `json:"endpoints"`
 	}
 
-	// ParamsOfQueryCounterparties
+	// ParamsOfQueryCounterparties ...
 	ParamsOfQueryCounterparties struct {
 		Account string `json:"account"`
 		Result  string `json:"result"`
@@ -179,14 +185,14 @@ type (
 		After   string `json:"after,omitempty"`
 	}
 
-	//ParamsOfQueryTransactionTree
+	// ParamsOfQueryTransactionTree ...
 	ParamsOfQueryTransactionTree struct {
 		InMsg       string `json:"in_msg"`
 		AbiRegistry []*Abi `json:"abi_registry,omitempty"`
 		TimeOut     *int   `json:"timeout,omitempty"`
 	}
 
-	// ResultOfQueryTransactionTree
+	// ResultOfQueryTransactionTree ...
 	ResultOfQueryTransactionTree struct {
 		Messages     []MessageNode     `json:"messages"`
 		Transactions []TransactionNode `json:"transactions"`
@@ -249,6 +255,7 @@ type (
 		WaitForCollection(*ParamsOfWaitForCollection) (*ResultOfWaitForCollection, error)
 		Unsubscribe(*ResultOfSubscribeCollection) error
 		SubscribeCollection(*ParamsOfSubscribeCollection) (<-chan json.RawMessage, *ResultOfSubscribeCollection, error)
+		Subscribe(*ParamsOfSubscribe) (<-chan json.RawMessage, *ResultOfSubscribeCollection, error)
 		Suspend() error
 		Resume() error
 		FindLastShardBlock(*ParamsOfFindLastShardBlock) (*ResultOfFindLastShardBlock, error)
