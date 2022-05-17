@@ -113,7 +113,7 @@ func (c *crypto) NaclSign(pONS *domain.ParamsOfNaclSign) (*domain.ResultOfNaclSi
 }
 
 // NaclSignOpen - Verifies the signature and returns the unsigned message.
-//Verifies the signature in signed using the signer's public key public and returns the message unsigned.
+// Verifies the signature in signed using the signer's public key public and returns the message unsigned.
 //If the signature fails verification, crypto_sign_open raises an exception.
 func (c *crypto) NaclSignOpen(pONSO *domain.ParamsOfNaclSignOpen) (*domain.ResultOfNaclSignOpen, error) {
 	result := new(domain.ResultOfNaclSignOpen)
@@ -257,6 +257,124 @@ func (c *crypto) Chacha20(pOFCC *domain.ParamsOfChaCha20) (*domain.ResultOfChaCh
 	result := new(domain.ResultOfChaCha20)
 	err := c.client.GetResult("crypto.chacha20", pOFCC, result)
 	return result, err
+}
+
+// CreateCryptoBox - Creates a Crypto Box instance.
+// Crypto Box is a root crypto object, that encapsulates some secret (seed phrase usually) in encrypted form and acts as
+// a factory for all crypto primitives used in SDK: keys for signing and encryption, derived from this secret.
+// Crypto Box encrypts original Seed Phrase with salt and password that is retrieved from password_provider callback,
+// implemented on Application side.
+// When used, decrypted secret shows up in core library's memory for a very short period of time and then is immediately
+// overwritten with zeroes.
+func (c *crypto) CreateCryptoBox(pOCCB *domain.ParamsOfCreateCryptoBox, app domain.AppPasswordProvider) (*domain.RegisteredCryptoBox, error) {
+	result := new(domain.RegisteredCryptoBox)
+	responses, err := c.client.Request("crypto.create_crypto_box", pOCCB)
+	if err != nil {
+		return nil, err
+	}
+	response := <-responses
+	if response.Code == 1 {
+		return nil, response.Error
+	}
+
+	if err := json.Unmarshal(response.Data, result); err != nil {
+		return nil, err
+	}
+
+	go func() {
+		for r := range responses {
+			if r.Code == 3 {
+				c.appRequestCreateCryptoBox(r.Data, app)
+			}
+		}
+	}()
+
+	return result, nil
+}
+
+func (c *crypto) appRequestCreateCryptoBox(payload []byte, app domain.AppPasswordProvider) {
+	var appRequest domain.ParamsOfAppRequest
+	var appParams domain.ParamsOfAppPasswordProvider
+	err := json.Unmarshal(payload, &appRequest)
+	if err != nil {
+		panic(err)
+	}
+	err = json.Unmarshal(appRequest.RequestData, &appParams)
+	if err != nil {
+		panic(err)
+	}
+	var appResponse interface{}
+	switch value := (appParams.ValueEnumType).(type) {
+	case domain.ParamsOfAppPasswordProviderGetPassword:
+		appResponse, err = app.GetPassword(value)
+	default:
+		err = fmt.Errorf("unsupported type for request %v", appParams.ValueEnumType)
+	}
+
+	appReqResult := &domain.AppRequestResult{}
+	if err != nil {
+		appReqResult.ValueEnumType = domain.AppRequestResultError{Text: err.Error()}
+	} else {
+		marsh, err := json.Marshal(&domain.ResultOfAppPasswordProvider{ValueEnumType: appResponse})
+		if err != nil {
+			panic(err)
+		}
+		appReqResult.ValueEnumType = domain.AppRequestResultOk{Result: marsh}
+	}
+	err = c.client.ResolveAppRequest(&domain.ParamsOfResolveAppRequest{
+		AppRequestID: appRequest.AppRequestID,
+		Result:       appReqResult,
+	})
+	if err != nil || errors.Is(err, errors.New("channels is closed")) {
+		return
+	}
+	panic(err)
+}
+
+// RemoveCryptoBox - Removes Crypto Box. Clears all secret data.
+func (c *crypto) RemoveCryptoBox(box *domain.RegisteredCryptoBox) error {
+	_, err := c.client.GetResponse("crypto.remove_crypto_box", box)
+	return err
+}
+
+// GetCryptoBoxInfo - Get Crypto Box Info. Used to get encrypted_secret that should be used for all the cryptobox
+// initializations except the first one.
+func (c *crypto) GetCryptoBoxInfo(box *domain.RegisteredCryptoBox) (*domain.ResultOfGetCryptoBoxInfo, error) {
+	result := new(domain.ResultOfGetCryptoBoxInfo)
+	err := c.client.GetResult("crypto.get_crypto_box_info", box, result)
+	return result, err
+}
+
+// GetCryptoBoxSeedPhrase - Get Crypto Box Seed Phrase.
+// Attention! Store this data in your application for a very short period of time and overwrite it with zeroes ASAP.
+func (c *crypto) GetCryptoBoxSeedPhrase(box *domain.RegisteredCryptoBox) (*domain.ResultOfGetCryptoBoxSeedPhrase, error) {
+	result := new(domain.ResultOfGetCryptoBoxSeedPhrase)
+	err := c.client.GetResult("crypto.get_crypto_box_seed_phrase", box, result)
+	return result, err
+}
+
+// GetSigningBoxFromCryptoBox - Get handle of Signing Box derived from Crypto Box.
+func (c *crypto) GetSigningBoxFromCryptoBox(box *domain.ParamsOfGetSigningBoxFromCryptoBox) (*domain.RegisteredSigningBox, error) {
+	result := new(domain.RegisteredSigningBox)
+	err := c.client.GetResult("crypto.get_signing_box_from_crypto_box", box, result)
+	return result, err
+}
+
+// GetEncryptionBoxFromCryptoBox - Gets Encryption Box from Crypto Box.
+// Derives encryption keypair from cryptobox secret and hdpath and stores it in cache for secret_lifetime or until
+// explicitly cleared by clear_crypto_box_secret_cache method. If secret_lifetime is not specified - overwrites
+// encryption secret with zeroes immediately after encryption operation.
+func (c *crypto) GetEncryptionBoxFromCryptoBox(box *domain.ParamsOfGetEncryptionBoxFromCryptoBox) (*domain.RegisteredEncryptionBox, error) {
+	result := new(domain.RegisteredEncryptionBox)
+	err := c.client.GetResult("crypto.get_encryption_box_from_crypto_box", box, result)
+	return result, err
+}
+
+// ClearCryptoBoxSecretCache - Removes cached secrets (overwrites with zeroes) from all signing and encryption boxes,
+// derived from crypto box.
+func (c *crypto) ClearCryptoBoxSecretCache(box *domain.RegisteredCryptoBox) error {
+	_, err := c.client.GetResponse("crypto.clear_crypto_box_secret_cache", box)
+	return err
 }
 
 // RegisterSigningBox - Register an application implemented signing box.

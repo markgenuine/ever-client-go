@@ -33,6 +33,9 @@ const (
 var CryptoErrorCode map[string]int
 
 type (
+	// CryptoBoxHandle ...
+	CryptoBoxHandle int
+
 	// SigningBoxHandle ...
 	SigningBoxHandle int
 
@@ -52,6 +55,11 @@ type (
 		ValueEnumType interface{}
 	}
 
+	// BoxEncryptionAlgorithm ...
+	BoxEncryptionAlgorithm struct {
+		ValueEnumType interface{}
+	}
+
 	// CipherMode is type string
 	CipherMode string
 
@@ -66,6 +74,48 @@ type (
 	AesInfo struct {
 		Mode CipherMode `json:"mode"`
 		IV   string     `json:"iv,omitempty"`
+	}
+
+	// ChaCha20ParamsEB ...
+	ChaCha20ParamsEB struct {
+		Key   string `json:"key"`
+		Nonce string `json:"nonce"`
+	}
+
+	// NaclBoxParamsEB ...
+	NaclBoxParamsEB struct {
+		TheirPublic string `json:"their_public"`
+		Secret      string `json:"secret"`
+		Nonce       string `json:"nonce"`
+	}
+
+	// NaclSecretBoxParamsEB ...
+	NaclSecretBoxParamsEB struct {
+		Key   string `json:"key"`
+		Nonce string `json:"nonce"`
+	}
+
+	// CryptoBoxSecret ...
+	CryptoBoxSecret struct {
+		ValueEnumType interface{}
+	}
+
+	// CryptoBoxSecretRandomSeedPhrase ...
+	CryptoBoxSecretRandomSeedPhrase struct {
+		Dictionary int `json:"dictionary"`
+		WordCount  int `json:"wordcount"`
+	}
+
+	// CryptoBoxSecretPredefinedSeedPhrase ...
+	CryptoBoxSecretPredefinedSeedPhrase struct {
+		Phrase     string `json:"phrase"`
+		Dictionary int    `json:"dictionary"`
+		WordCount  int    `json:"wordcount"`
+	}
+
+	// CryptoBoxSecretEncryptedSecret ...
+	CryptoBoxSecretEncryptedSecret struct {
+		EncryptedSecret string `json:"encrypted_secret"`
 	}
 
 	// ParamsOfFactorize ...
@@ -383,6 +433,43 @@ type (
 		Data string `json:"data"`
 	}
 
+	// ParamsOfCreateCryptoBox ...
+	ParamsOfCreateCryptoBox struct {
+		SecretEncryptionSalt string          `json:"secret_encryption_salt"`
+		Secret               CryptoBoxSecret `json:"secret"`
+	}
+
+	// RegisteredCryptoBox ...
+	RegisteredCryptoBox struct {
+		Handle CryptoBoxHandle `json:"handle"`
+	}
+
+	// ResultOfGetCryptoBoxInfo ...
+	ResultOfGetCryptoBoxInfo struct {
+		EncryptedSecret string `json:"encrypted_secret"`
+	}
+
+	// ResultOfGetCryptoBoxSeedPhrase ...
+	ResultOfGetCryptoBoxSeedPhrase struct {
+		Phrase     string `json:"phrase"`
+		Dictionary int    `json:"dictionary"`
+		Wordcount  int    `json:"wordcount"`
+	}
+
+	// ParamsOfGetSigningBoxFromCryptoBox ...
+	ParamsOfGetSigningBoxFromCryptoBox struct {
+		Handle         int    `json:"handle"`
+		HdPath         string `json:"hdpath,omitempty"`
+		SecretLifetime int    `json:"secret_lifetime,omitempty"`
+	}
+
+	ParamsOfGetEncryptionBoxFromCryptoBox struct {
+		Handle         int                     `json:"handle"`
+		HdPath         string                  `json:"hdpath,omitempty"`
+		Algorithm      *BoxEncryptionAlgorithm `json:"algorithm"`
+		SecretLifetime int                     `json:"secret_lifetime,omitempty"`
+	}
+
 	// RegisteredSigningBox ...
 	RegisteredSigningBox struct {
 		Handle SigningBoxHandle `json:"handle"`
@@ -401,6 +488,27 @@ type (
 		Unsigned string `json:"unsigned"`
 	}
 
+	// ParamsOfAppPasswordProvider ...
+	ParamsOfAppPasswordProvider struct {
+		ValueEnumType interface{}
+	}
+
+	// ParamsOfAppPasswordProviderGetPassword ...
+	ParamsOfAppPasswordProviderGetPassword struct {
+		EncryptionPublicKey string `json:"encryption_public_key"`
+	}
+
+	// ResultOfAppPasswordProvider ...
+	ResultOfAppPasswordProvider struct {
+		ValueEnumType interface{}
+	}
+
+	// ResultOfAppPasswordProviderGetPassword ...
+	ResultOfAppPasswordProviderGetPassword struct {
+		EncryptedPassword   string `json:"encrypted_password"`
+		AppEncryptionPubkey string `json:"app_encryption_pubkey"`
+	}
+
 	// ResultOfAppSigningBox ...
 	ResultOfAppSigningBox struct {
 		ValueEnumType interface{}
@@ -411,7 +519,7 @@ type (
 		PublicKey string `json:"public_key"`
 	}
 
-	// ResultOfAppSigningBoxSign...
+	// ResultOfAppSigningBoxSign ...
 	ResultOfAppSigningBoxSign struct {
 		Signature string `json:"signature"`
 	}
@@ -547,11 +655,18 @@ type (
 		HDKeySecretFromXprv(*ParamsOfHDKeySecretFromXPrv) (*ResultOfHDKeySecretFromXPrv, error)
 		HDKeyPublicFromXprv(*ParamsOfHDKeyPublicFromXPrv) (*ResultOfHDKeyPublicFromXPrv, error)
 		Chacha20(*ParamsOfChaCha20) (*ResultOfChaCha20, error)
+		CreateCryptoBox(*ParamsOfCreateCryptoBox, AppPasswordProvider) (*RegisteredCryptoBox, error)
+		RemoveCryptoBox(*RegisteredCryptoBox) error
+		GetCryptoBoxInfo(*RegisteredCryptoBox) (*ResultOfGetCryptoBoxInfo, error)
+		GetCryptoBoxSeedPhrase(*RegisteredCryptoBox) (*ResultOfGetCryptoBoxSeedPhrase, error)
+		GetSigningBoxFromCryptoBox(*ParamsOfGetSigningBoxFromCryptoBox) (*RegisteredSigningBox, error)
+		GetEncryptionBoxFromCryptoBox(box *ParamsOfGetEncryptionBoxFromCryptoBox) (*RegisteredEncryptionBox, error)
+		ClearCryptoBoxSecretCache(*RegisteredCryptoBox) error
 		RegisterSigningBox(AppSigningBox) (*RegisteredSigningBox, error)
 		GetSigningBox(*KeyPair) (*RegisteredSigningBox, error)
 		SigningBoxGetPublicKey(*RegisteredSigningBox) (*ResultOfSigningBoxGetPublicKey, error)
 		SigningBoxSign(*ParamsOfSigningBoxSign) (*ResultOfSigningBoxSign, error)
-		RemoveSigningBox(rSB *RegisteredSigningBox) error
+		RemoveSigningBox(*RegisteredSigningBox) error
 		RegisterEncryptionBox(AppEncryptionBox) (*RegisteredEncryptionBox, error)
 		RemoveEncryptionBox(*RegisteredEncryptionBox) error
 		EncryptionBoxGetInfo(*ParamsOfEncryptionBoxGetInfo) (*ResultOfEncryptionBoxGetInfo, error)
@@ -564,35 +679,38 @@ type (
 func init() {
 	// List errors crypto module
 	CryptoErrorCode = map[string]int{
-		"InvalidPublicKey":           100,
-		"InvalidSecretKey":           101,
-		"InvalidKey":                 102,
-		"InvalidFactorizeChallenge":  106,
-		"InvalidBigInt":              107,
-		"ScryptFailed":               108,
-		"InvalidKeySize":             109,
-		"NaclSecretBoxFailed":        110,
-		"NaclBoxFailed":              111,
-		"NaclSignFailed":             112,
-		"Bip39InvalidEntropy":        113,
-		"Bip39InvalidPhrase":         114,
-		"Bip32InvalidKey":            115,
-		"Bip32InvalidDerivePath":     116,
-		"Bip39InvalidDictionary":     117,
-		"Bip39InvalidWordCount":      118,
-		"MnemonicGenerationFailed":   119,
-		"MnemonicFromEntropyFailed":  120,
-		"SigningBoxNotRegistered":    121,
-		"InvalidSignature":           122,
-		"EncryptionBoxNotRegistered": 123,
-		"InvalidIvSize":              124,
-		"UnsupportedCipherMode":      125,
-		"CannotCreateCipher":         126,
-		"EncryptDataError":           127,
-		"DecryptDataError":           128,
-		"IvRequired":                 129,
+		"InvalidPublicKey":                    100,
+		"InvalidSecretKey":                    101,
+		"InvalidKey":                          102,
+		"InvalidFactorizeChallenge":           106,
+		"InvalidBigInt":                       107,
+		"ScryptFailed":                        108,
+		"InvalidKeySize":                      109,
+		"NaclSecretBoxFailed":                 110,
+		"NaclBoxFailed":                       111,
+		"NaclSignFailed":                      112,
+		"Bip39InvalidEntropy":                 113,
+		"Bip39InvalidPhrase":                  114,
+		"Bip32InvalidKey":                     115,
+		"Bip32InvalidDerivePath":              116,
+		"Bip39InvalidDictionary":              117,
+		"Bip39InvalidWordCount":               118,
+		"MnemonicGenerationFailed":            119,
+		"MnemonicFromEntropyFailed":           120,
+		"SigningBoxNotRegistered":             121,
+		"InvalidSignature":                    122,
+		"EncryptionBoxNotRegistered":          123,
+		"InvalidIvSize":                       124,
+		"UnsupportedCipherMode":               125,
+		"CannotCreateCipher":                  126,
+		"EncryptDataError":                    127,
+		"DecryptDataError":                    128,
+		"IvRequired":                          129,
+		"CryptoBoxNotRegistered":              130,
+		"InvalidCryptoBoxType":                131,
+		"CryptoBoxSecretSerializationError":   132,
+		"CryptoBoxSecretDeserializationError": 133,
 	}
-
 }
 
 // NewDefaultParamsOfMnemonicWords ...
@@ -625,6 +743,130 @@ func NewDefaultParamsOfHDKeyXPrvFromMnemonic() *ParamsOfHDKeyXPrvFromMnemonic {
 	return &ParamsOfHDKeyXPrvFromMnemonic{Phrase: "", Dictionary: util.IntToPointerInt(DefaultDictionary), WordCount: util.IntToPointerInt(DefaultWordCount)}
 }
 
+func (cbs *CryptoBoxSecret) MarshalJSON() ([]byte, error) {
+	switch value := (cbs.ValueEnumType).(type) {
+	case CryptoBoxSecretRandomSeedPhrase:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			CryptoBoxSecretRandomSeedPhrase
+		}{"RandomSeedPhrase", value})
+	case CryptoBoxSecretPredefinedSeedPhrase:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			CryptoBoxSecretPredefinedSeedPhrase
+		}{"PredefinedSeedPhrase", value})
+	case CryptoBoxSecretEncryptedSecret:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			CryptoBoxSecretEncryptedSecret
+		}{"EncryptedSecret", value})
+	default:
+		return nil, fmt.Errorf("unsupported type for CryptoBoxSecret %v", cbs.ValueEnumType)
+	}
+}
+
+func (cbs *CryptoBoxSecret) UnmarshalJSON(b []byte) error {
+	var typeD EnumType
+	if err := json.Unmarshal(b, &typeD); err != nil {
+		return err
+	}
+	switch typeD.Type {
+	case "RandomSeedPhrase":
+		var valueEnum CryptoBoxSecretRandomSeedPhrase
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		cbs.ValueEnumType = valueEnum
+	case "PredefinedSeedPhrase":
+		var valueEnum CryptoBoxSecretPredefinedSeedPhrase
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		cbs.ValueEnumType = valueEnum
+	case "EncryptedSecret":
+		var valueEnum CryptoBoxSecretEncryptedSecret
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		cbs.ValueEnumType = valueEnum
+	default:
+		return fmt.Errorf("unsupported type for CryptoBoxSecret %v", typeD.Type)
+	}
+	return nil
+}
+
+func (pOAPP *ParamsOfAppPasswordProvider) MarshalJSON() ([]byte, error) {
+	switch value := (pOAPP.ValueEnumType).(type) {
+	case ParamsOfAppPasswordProviderGetPassword:
+		return json.Marshal(struct {
+			ParamsOfAppPasswordProviderGetPassword
+			Type string `json:"type"`
+		}{
+			value,
+			"GetPassword",
+		})
+
+	default:
+		return nil, fmt.Errorf("unsupported type for ParamsOfAppPasswordProvider %v", pOAPP.ValueEnumType)
+	}
+}
+
+func (pOAPP *ParamsOfAppPasswordProvider) UnmarshalJSON(b []byte) error {
+	var typeD EnumType
+	if err := json.Unmarshal(b, &typeD); err != nil {
+		return err
+	}
+	switch typeD.Type {
+	case "GetPassword":
+		var valueEnum ParamsOfAppPasswordProviderGetPassword
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		pOAPP.ValueEnumType = valueEnum
+
+	default:
+		return fmt.Errorf("unsupported type for ParamsOfAppPasswordProvider %v", typeD.Type)
+	}
+
+	return nil
+}
+
+func (rOAPP *ResultOfAppPasswordProvider) MarshalJSON() ([]byte, error) {
+	switch value := (rOAPP.ValueEnumType).(type) {
+	case ResultOfAppPasswordProviderGetPassword:
+		return json.Marshal(struct {
+			ResultOfAppPasswordProviderGetPassword
+			Type string `json:"type"`
+		}{
+			value,
+			"GetPassword",
+		})
+
+	default:
+		return nil, fmt.Errorf("unsupported type for ResultOfAppPasswordProvider %v", rOAPP.ValueEnumType)
+	}
+}
+
+func (rOAPP *ResultOfAppPasswordProvider) UnmarshalJSON(b []byte) error {
+	var typeD EnumType
+	if err := json.Unmarshal(b, &typeD); err != nil {
+		return err
+	}
+	switch typeD.Type {
+	case "GetPassword":
+		var valueEnum ResultOfAppPasswordProviderGetPassword
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		rOAPP.ValueEnumType = valueEnum
+
+	default:
+		return fmt.Errorf("unsupported type for ResultOfAppPasswordProvider %v", typeD.Type)
+	}
+
+	return nil
+}
+
 func (ea *EncryptionAlgorithm) MarshalJSON() ([]byte, error) {
 	switch value := (ea.ValueEnumType).(type) {
 	case AesParams:
@@ -632,6 +874,21 @@ func (ea *EncryptionAlgorithm) MarshalJSON() ([]byte, error) {
 			Type string `json:"type"`
 			AesParams
 		}{"AES", value})
+	case ChaCha20ParamsEB:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			ChaCha20ParamsEB
+		}{"ChaCha20", value})
+	case NaclBoxParamsEB:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			NaclBoxParamsEB
+		}{"NaclBox", value})
+	case NaclSecretBoxParamsEB:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			NaclSecretBoxParamsEB
+		}{"NaclSecretBox", value})
 	default:
 		return nil, fmt.Errorf("unsupported type for EncryptionAlgorithm %v", ea.ValueEnumType)
 	}
@@ -649,8 +906,78 @@ func (ea *EncryptionAlgorithm) UnmarshalJSON(b []byte) error {
 			return err
 		}
 		ea.ValueEnumType = valueEnum
+	case "ChaCha20":
+		var valueEnum ChaCha20ParamsEB
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		ea.ValueEnumType = valueEnum
+	case "NaclBox":
+		var valueEnum NaclBoxParamsEB
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		ea.ValueEnumType = valueEnum
+	case "NaclSecretBox":
+		var valueEnum NaclSecretBoxParamsEB
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		ea.ValueEnumType = valueEnum
 	default:
 		return fmt.Errorf("unsupported type for EncryptionAlgorithm %v", typeD.Type)
+	}
+	return nil
+}
+
+func (bea *BoxEncryptionAlgorithm) MarshalJSON() ([]byte, error) {
+	switch value := (bea.ValueEnumType).(type) {
+	case ChaCha20ParamsEB:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			ChaCha20ParamsEB
+		}{"ChaCha20", value})
+	case NaclBoxParamsEB:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			NaclBoxParamsEB
+		}{"NaclBox", value})
+	case NaclSecretBoxParamsEB:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			NaclSecretBoxParamsEB
+		}{"NaclSecretBox", value})
+	default:
+		return nil, fmt.Errorf("unsupported type for BoxEncryptionAlgorithm %v", bea.ValueEnumType)
+	}
+}
+
+func (bea *BoxEncryptionAlgorithm) UnmarshalJSON(b []byte) error {
+	var typeD EnumType
+	if err := json.Unmarshal(b, &typeD); err != nil {
+		return err
+	}
+	switch typeD.Type {
+	case "ChaCha20":
+		var valueEnum ChaCha20ParamsEB
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		bea.ValueEnumType = valueEnum
+	case "NaclBox":
+		var valueEnum NaclBoxParamsEB
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		bea.ValueEnumType = valueEnum
+	case "NaclSecretBox":
+		var valueEnum NaclSecretBoxParamsEB
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		bea.ValueEnumType = valueEnum
+	default:
+		return fmt.Errorf("unsupported type for BoxEncryptionAlgorithm %v", typeD.Type)
 	}
 	return nil
 }

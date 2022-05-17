@@ -121,6 +121,11 @@ type (
 		ResolveAppRequest(*ParamsOfResolveAppRequest) error
 	}
 
+	// AppPasswordProvider ...
+	AppPasswordProvider interface {
+		GetPassword(ParamsOfAppPasswordProviderGetPassword) (ResultOfAppPasswordProviderGetPassword, error)
+	}
+
 	// AppSigningBox ...
 	AppSigningBox interface {
 		GetPublicKey() (ResultOfAppSigningBoxGetPublicKey, error)
