@@ -4,9 +4,17 @@ import "github.com/move-ton/ever-client-go/util"
 
 const (
 	BaseCustomUrl = "https://everos.freeton.surf/"
+
+	// NetworkQueriesProtocolHTTP -  Each GraphQL query uses separate HTTP request.
+	NetworkQueriesProtocolHTTP NetworkQueriesProtocol = "HTTP"
+	// NetworkQueriesProtocolWS - All GraphQL queries will be served using single web socket connection.
+	NetworkQueriesProtocolWS NetworkQueriesProtocol = "WS"
 )
 
 type (
+	// NetworkQueriesProtocol - Network protocol used to perform GraphQL queries.
+	NetworkQueriesProtocol string
+
 	// Config ...
 	Config struct {
 		Network          *Network      `toml:"network" json:"network,omitempty"`
@@ -19,20 +27,21 @@ type (
 
 	// Network - Network config.
 	Network struct {
-		ServerAddress            string   `toml:"server_address" json:"server_address,omitempty"`
-		Endpoints                []string `toml:"endpoints" json:"endpoints,omitempty"`
-		NetworkRetriesCount      *int     `toml:"network_retries_count" json:"network_retries_count,omitempty"`
-		MaxReconnectTimeOut      *int     `toml:"max_reconnect_timeout" json:"max_reconnect_timeout,omitempty"`
-		ReconnectTimeout         *int     `toml:"reconnect_timeout" json:"reconnect_timeout,omitempty"`
-		MessageRetriesCount      *int     `toml:"message_retries_count" json:"message_retries_count,omitempty"`
-		MessageProcessingTimeout *int     `toml:"message_processing_timeout" json:"message_processing_timeout,omitempty"`
-		WaitForTimeout           *int     `toml:"wait_for_timeout" json:"wait_for_timeout,omitempty"`
-		OutOfSyncThreshold       *int     `toml:"out_of_sync_threshold" json:"out_of_sync_threshold,omitempty"`
-		SendingEndpointCount     *int     `toml:"sending_endpoint_count,omitempty" json:"sending_endpoint_count,omitempty"`
-		LatencyDetectionInterval *int     `toml:"latency_detection_interval,omitempty" json:"latency_detection_interval,omitempty"`
-		MaxLatency               *int     `toml:"max_latency,omitempty" json:"max_latency,omitempty"`
-		QueryTimeout             *int     `toml:"query_timeout,omitempty" json:"query_timeout,omitempty"`
-		AccessKey                string   `toml:"access_key" json:"access_key,omitempty"`
+		ServerAddress            string                  `toml:"server_address" json:"server_address,omitempty"`
+		Endpoints                []string                `toml:"endpoints" json:"endpoints,omitempty"`
+		NetworkRetriesCount      *int                    `toml:"network_retries_count" json:"network_retries_count,omitempty"`
+		MaxReconnectTimeOut      *int                    `toml:"max_reconnect_timeout" json:"max_reconnect_timeout,omitempty"`
+		ReconnectTimeout         *int                    `toml:"reconnect_timeout" json:"reconnect_timeout,omitempty"`
+		MessageRetriesCount      *int                    `toml:"message_retries_count" json:"message_retries_count,omitempty"`
+		MessageProcessingTimeout *int                    `toml:"message_processing_timeout" json:"message_processing_timeout,omitempty"`
+		WaitForTimeout           *int                    `toml:"wait_for_timeout" json:"wait_for_timeout,omitempty"`
+		OutOfSyncThreshold       *int                    `toml:"out_of_sync_threshold" json:"out_of_sync_threshold,omitempty"`
+		SendingEndpointCount     *int                    `toml:"sending_endpoint_count,omitempty" json:"sending_endpoint_count,omitempty"`
+		LatencyDetectionInterval *int                    `toml:"latency_detection_interval,omitempty" json:"latency_detection_interval,omitempty"`
+		MaxLatency               *int                    `toml:"max_latency,omitempty" json:"max_latency,omitempty"`
+		QueryTimeout             *int                    `toml:"query_timeout,omitempty" json:"query_timeout,omitempty"`
+		QueriesProtocol          *NetworkQueriesProtocol `toml:"queries_protocol,omitempty" json:"queries_protocol,omitempty"`
+		AccessKey                string                  `toml:"access_key" json:"access_key,omitempty"`
 	}
 
 	// Crypto ...
