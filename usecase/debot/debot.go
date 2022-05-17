@@ -21,6 +21,7 @@ func NewDebot(config domain.Config, client domain.ClientGateway) domain.DebotUse
 }
 
 // Init - Creates and instance of DeBot.
+// Downloads debot smart contract (code and data) from blockchain and creates an instance of Debot Engine for it.
 func (d *debot) Init(pOI *domain.ParamsOfInit, app domain.AppDebotBrowser) (*domain.RegisteredDebot, error) {
 	result := new(domain.RegisteredDebot)
 	responses, err := d.client.Request("debot.init", pOI)
@@ -117,13 +118,19 @@ func (d *debot) appNotifyDebotInit(payload []byte, app domain.AppDebotBrowser) {
 	}
 }
 
-//Start - Starts the DeBot.
+// Start - Starts the DeBot.
+// Downloads debot smart contract from blockchain and switches it to context zero.
+// This function must be used by Debot Browser to start a dialog with debot. While the function is executing, several
+// Browser Callbacks can be called, since the debot tries to display all actions from the context 0 to the user.
+// When the debot starts SDK registers BrowserCallbacks AppObject. Therefore when debote.remove is called the debot is
+// being deleted and the callback is called with finish=true which indicates that it will never be used again.
 func (d *debot) Start(poS *domain.ParamsOfStart) error {
 	_, err := d.client.GetResponse("debot.start", poS)
 	return err
 }
 
 // Fetch - Fetches DeBot metadata from blockchain.
+// Downloads DeBot from blockchain and creates and fetches its metadata.
 func (d *debot) Fetch(pOF *domain.ParamsOfFetch) (*domain.ResultOfFetch, error) {
 	result := new(domain.ResultOfFetch)
 	err := d.client.GetResult("debot.fetch", pOF, result)
@@ -131,18 +138,21 @@ func (d *debot) Fetch(pOF *domain.ParamsOfFetch) (*domain.ResultOfFetch, error) 
 }
 
 // Execute - Executes debot action.
+// Calls debot engine referenced by debot handle to execute input action. Calls Debot Browser Callbacks if needed.
 func (d *debot) Execute(pOE *domain.ParamsOfExecute) error {
 	_, err := d.client.GetResponse("debot.execute", pOE)
 	return err
 }
 
 // Send - Sends message to Debot.
+// Used by Debot Browser to send response on Dinterface call or from other Debots.
 func (d *debot) Send(pOS *domain.ParamsOfSend) error {
 	_, err := d.client.GetResponse("debot.send", pOS)
 	return err
 }
 
 // Remove - Destroys debot handle.
+// Removes handle from Client Context and drops debot engine referenced by that handle.
 func (d *debot) Remove(pOR *domain.ParamsOfRemove) error {
 	_, err := d.client.GetResponse("debot.remove", pOR)
 	return err
