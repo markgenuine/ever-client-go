@@ -50,7 +50,8 @@ func (a *abi) EncodeInternalMessage(pOEIM *domain.ParamsOfEncodeInternalMessage)
 	return result, err
 }
 
-// AttachSignature сombines hex-encoded signature with base64-encoded unsigned_message. Returns signed message encoded in base64.
+// AttachSignature - сombines hex-encoded signature with base64-encoded unsigned_message.
+// Returns signed message encoded in base64.
 func (a *abi) AttachSignature(pOAS *domain.ParamsOfAttachSignature) (*domain.ResultOfAttachSignature, error) {
 	result := new(domain.ResultOfAttachSignature)
 	err := a.client.GetResult("abi.attach_signature", pOAS, result)

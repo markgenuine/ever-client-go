@@ -187,8 +187,8 @@ type (
 		DataHash        string `json:"data_hash,omitempty"`
 		DataDepth       *int   `json:"data_depth,omitempty"`
 		Library         string `json:"library,omitempty"`
-		Tick            *bool  `json:"tick"`
-		Tock            *bool  `json:"tock"`
+		Tick            *bool  `json:"tick,omitempty"`
+		Tock            *bool  `json:"tock,omitempty"`
 		SplitDepth      *int   `json:"split_depth,omitempty"`
 		CompilerVersion string `json:"compiler_version,omitempty"`
 	}
@@ -198,8 +198,8 @@ type (
 		Code       string        `json:"code,omitempty"`
 		Data       string        `json:"data,omitempty"`
 		Library    string        `json:"library,omitempty"`
-		Tick       *bool         `json:"tick"`
-		Tock       *bool         `json:"tock"`
+		Tick       *bool         `json:"tick,omitempty"`
+		Tock       *bool         `json:"tock,omitempty"`
 		SplitDepth *int          `json:"split_depth,omitempty"`
 		BocCache   *BocCacheType `json:"boc_cache,omitempty"`
 	}
