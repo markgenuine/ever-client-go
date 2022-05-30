@@ -41,6 +41,8 @@ type (
 		MaxLatency               *int                    `toml:"max_latency,omitempty" json:"max_latency,omitempty"`
 		QueryTimeout             *int                    `toml:"query_timeout,omitempty" json:"query_timeout,omitempty"`
 		QueriesProtocol          *NetworkQueriesProtocol `toml:"queries_protocol,omitempty" json:"queries_protocol,omitempty"`
+		FirstRempStatusTimeout   *int                    `toml:"first_remp_status_timeout,omitempty" json:"first_remp_status_timeout,omitempty"`
+		NextRempStatusTimeout    *int                    `toml:"next_remp_status_timeout,omitempty" json:"next_remp_status_timeout,omitempty"`
 		AccessKey                string                  `toml:"access_key" json:"access_key,omitempty"`
 	}
 
@@ -75,11 +77,16 @@ func NewDefaultConfig(address string, endPoints []string) Config {
 		Network: &Network{
 			ServerAddress:            address,
 			Endpoints:                endPoints,
-			NetworkRetriesCount:      util.IntToPointerInt(5),
 			MessageRetriesCount:      util.IntToPointerInt(5),
 			MessageProcessingTimeout: util.IntToPointerInt(40000), //ms
 			WaitForTimeout:           util.IntToPointerInt(40000), //ms
 			OutOfSyncThreshold:       util.IntToPointerInt(15000), //ms
+			SendingEndpointCount:     util.IntToPointerInt(1),
+			LatencyDetectionInterval: util.IntToPointerInt(60000), //1 min
+			MaxLatency:               util.IntToPointerInt(60000), //1 min
+			QueryTimeout:             util.IntToPointerInt(60000), //1 min
+			FirstRempStatusTimeout:   util.IntToPointerInt(1000),  //1 sec
+			NextRempStatusTimeout:    util.IntToPointerInt(5000),  //5 sec
 			AccessKey:                "",
 		},
 		Crypto: &Crypto{

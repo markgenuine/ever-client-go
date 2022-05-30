@@ -710,6 +710,7 @@ func init() {
 		"InvalidCryptoBoxType":                131,
 		"CryptoBoxSecretSerializationError":   132,
 		"CryptoBoxSecretDeserializationError": 133,
+		"InvalidNonceSize":                    134,
 	}
 }
 

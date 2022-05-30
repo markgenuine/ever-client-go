@@ -3,6 +3,7 @@ package domain
 import (
 	"encoding/json"
 	"fmt"
+	"math/big"
 )
 
 // ProcessingErrorCode ...
@@ -66,6 +67,39 @@ type (
 		Error     ClientError `json:"error"`
 	}
 
+	// ProcessingRempSentToValidators ...
+	ProcessingRempSentToValidators struct {
+		MessageID string          `json:"message_id"`
+		Message   string          `json:"message"`
+		JSON      json.RawMessage `json:"json"`
+	}
+
+	// ProcessingRempIncludedIntoBlock ...
+	ProcessingRempIncludedIntoBlock struct {
+		MessageID string          `json:"message_id"`
+		Timestamp big.Int         `json:"timestamp"`
+		JSON      json.RawMessage `json:"json"`
+	}
+
+	// ProcessingRempIncludedIntoAcceptedBlock ...
+	ProcessingRempIncludedIntoAcceptedBlock struct {
+		MessageID string          `json:"message_id"`
+		Timestamp big.Int         `json:"timestamp"`
+		JSON      json.RawMessage `json:"json"`
+	}
+
+	// ProcessingRempOther ...
+	ProcessingRempOther struct {
+		MessageID string          `json:"message_id"`
+		Timestamp big.Int         `json:"timestamp"`
+		JSON      json.RawMessage `json:"json"`
+	}
+
+	// ProcessingRempError ...
+	ProcessingRempError struct {
+		Error ClientError `json:"error"`
+	}
+
 	// ParamsOfSendMessage ...
 	ParamsOfSendMessage struct {
 		Message    string `json:"message"`
@@ -98,7 +132,7 @@ type (
 
 	// DecodedOutput ...
 	DecodedOutput struct {
-		OutMessages []*DecodedMessageBody `json:"out_messages,omitempty"`
+		OutMessages []*DecodedMessageBody `json:"out_messages"`
 		Output      json.RawMessage       `json:"output,omitempty"`
 	}
 
@@ -134,6 +168,9 @@ func init() {
 		"BlockNotFound                  ": 511,
 		"InvalidData                    ": 512,
 		"ExternalSignerMustNotBeUsed    ": 513,
+		"MessageRejected				": 514,
+		"InvalidRempStatus				": 515,
+		"NextRempStatusTimeout			": 516,
 	}
 }
 
@@ -179,6 +216,31 @@ func (pE *ProcessingEvent) MarshalJSON() ([]byte, error) {
 			Type string `json:"type"`
 			ProcessingEventMessageExpired
 		}{"MessageExpired", value})
+	case ProcessingRempSentToValidators:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			ProcessingRempSentToValidators
+		}{"RempSentToValidators", value})
+	case ProcessingRempIncludedIntoBlock:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			ProcessingRempIncludedIntoBlock
+		}{"RempIncludedIntoBlock", value})
+	case ProcessingRempIncludedIntoAcceptedBlock:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			ProcessingRempIncludedIntoAcceptedBlock
+		}{"RempIncludedIntoAcceptedBlock", value})
+	case ProcessingRempOther:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			ProcessingRempOther
+		}{"RempOther", value})
+	case ProcessingRempError:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			ProcessingRempError
+		}{"RempError", value})
 	default:
 		return nil, fmt.Errorf("unsupported type for ProcessingEvent %v", pE.ValueEnumType)
 	}
@@ -235,6 +297,36 @@ func (pE *ProcessingEvent) UnmarshalJSON(b []byte) error {
 		pE.ValueEnumType = valueEnum
 	case "MessageExpired":
 		var valueEnum ProcessingEventMessageExpired
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		pE.ValueEnumType = valueEnum
+	case "RempSentToValidators":
+		var valueEnum ProcessingRempSentToValidators
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		pE.ValueEnumType = valueEnum
+	case "RempIncludedIntoBlock":
+		var valueEnum ProcessingRempIncludedIntoBlock
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		pE.ValueEnumType = valueEnum
+	case "RempIncludedIntoAcceptedBlock":
+		var valueEnum ProcessingRempIncludedIntoAcceptedBlock
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		pE.ValueEnumType = valueEnum
+	case "RempOther":
+		var valueEnum ProcessingRempOther
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		pE.ValueEnumType = valueEnum
+	case "RempError":
+		var valueEnum ProcessingRempError
 		if err := json.Unmarshal(b, &valueEnum); err != nil {
 			return err
 		}

@@ -238,8 +238,8 @@ type (
 		DeploySet  *DeploySet `json:"deploy_set,omitempty"`
 		CallSet    *CallSet   `json:"call_set,omitempty"`
 		Value      string     `json:"value"`
-		Bounce     *bool      `json:"bounce"`
-		EnableIhr  *bool      `json:"enable_ihr"`
+		Bounce     *bool      `json:"bounce,omitempty"`
+		EnableIhr  *bool      `json:"enable_ihr,omitempty"`
 	}
 
 	// ResultOfEncodeInternalMessage ...
@@ -265,8 +265,9 @@ type (
 
 	// ParamsOfDecodeMessage ...
 	ParamsOfDecodeMessage struct {
-		Abi     *Abi   `json:"abi"`
-		Message string `json:"message"`
+		Abi          *Abi   `json:"abi"`
+		Message      string `json:"message"`
+		AllowPartial *bool  `json:"allow_partial,omitempty"`
 	}
 
 	// DecodedMessageBody ...
@@ -279,9 +280,10 @@ type (
 
 	// ParamsOfDecodeMessageBody ...
 	ParamsOfDecodeMessageBody struct {
-		Abi        *Abi   `json:"abi"`
-		Body       string `json:"body"`
-		IsInternal bool   `json:"is_internal"`
+		Abi          *Abi   `json:"abi"`
+		Body         string `json:"body"`
+		IsInternal   bool   `json:"is_internal"`
+		AllowPartial *bool  `json:"allow_partial,omitempty"`
 	}
 
 	// ParamsOfEncodeAccount ...
@@ -301,8 +303,9 @@ type (
 
 	// ParamsOfDecodeAccountData ...
 	ParamsOfDecodeAccountData struct {
-		Abi  *Abi   `json:"abi"`
-		Data string `json:"data"`
+		Abi          *Abi   `json:"abi"`
+		Data         string `json:"data"`
+		AllowPartial *bool  `json:"allow_partial,omitempty"`
 	}
 
 	// ResultOfDecodeData ...
@@ -339,8 +342,9 @@ type (
 
 	// ParamsOfDecodeInitialData ...
 	ParamsOfDecodeInitialData struct {
-		Abi  *Abi   `json:"abi,omitempty"`
-		Data string `json:"data"`
+		Abi          *Abi   `json:"abi,omitempty"`
+		Data         string `json:"data"`
+		AllowPartial *bool  `json:"allow_partial,omitempty"`
 	}
 
 	// ResultOfDecodeInitialData ...
