@@ -8,12 +8,12 @@ import (
 )
 
 type debot struct {
-	config domain.Config
+	config domain.ClientConfig
 	client domain.ClientGateway
 }
 
 // NewDebot ...
-func NewDebot(config domain.Config, client domain.ClientGateway) domain.DebotUseCase {
+func NewDebot(config domain.ClientConfig, client domain.ClientGateway) domain.DebotUseCase {
 	return &debot{
 		config: config,
 		client: client,

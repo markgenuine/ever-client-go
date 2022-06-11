@@ -7,13 +7,13 @@ import (
 )
 
 type processing struct {
-	config domain.Config
+	config domain.ClientConfig
 	client domain.ClientGateway
 }
 
 // NewProcessing ...
 func NewProcessing(
-	config domain.Config,
+	config domain.ClientConfig,
 	client domain.ClientGateway,
 ) domain.ProcessingUseCase {
 	return &processing{

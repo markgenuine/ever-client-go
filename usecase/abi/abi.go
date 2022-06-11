@@ -5,13 +5,13 @@ import (
 )
 
 type abi struct {
-	config domain.Config
+	config domain.ClientConfig
 	client domain.ClientGateway
 }
 
 // NewAbi ...
 func NewAbi(
-	config domain.Config,
+	config domain.ClientConfig,
 	client domain.ClientGateway,
 ) domain.AbiUseCase {
 	return &abi{

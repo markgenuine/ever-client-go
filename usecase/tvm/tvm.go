@@ -5,13 +5,13 @@ import (
 )
 
 type tvm struct {
-	config domain.Config
+	config domain.ClientConfig
 	client domain.ClientGateway
 }
 
 // NewTvm ...
 func NewTvm(
-	config domain.Config,
+	config domain.ClientConfig,
 	client domain.ClientGateway,
 ) domain.TvmUseCase {
 	return &tvm{

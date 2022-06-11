@@ -6,13 +6,13 @@ import (
 )
 
 type net struct {
-	config domain.Config
+	config domain.ClientConfig
 	client domain.ClientGateway
 }
 
 // NewNet ...
 func NewNet(
-	config domain.Config,
+	config domain.ClientConfig,
 	client domain.ClientGateway,
 ) domain.NetUseCase {
 	return &net{

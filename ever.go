@@ -29,7 +29,7 @@ type Ever struct {
 }
 
 // NewEverWithConfig ...
-func NewEverWithConfig(config domain.Config) (*Ever, error) {
+func NewEverWithConfig(config domain.ClientConfig) (*Ever, error) {
 	client, err := clientgw.NewClientGateway(config)
 	if err != nil {
 		return nil, err

@@ -18,6 +18,13 @@ func (c *clientGateway) Version() (*domain.ResultOfVersion, error) {
 	return result, err
 }
 
+// Config -Returns Core Library API reference.
+func (c *clientGateway) Config() (*domain.ClientConfig, error) {
+	result := new(domain.ClientConfig)
+	err := c.GetResult("client.config", nil, result)
+	return result, err
+}
+
 // GetBuildInfo - Returns detailed information about this build.
 func (c *clientGateway) GetBuildInfo() (*domain.ResultOfBuildInfo, error) {
 	result := new(domain.ResultOfBuildInfo)

@@ -94,6 +94,9 @@ type (
 		OutMsgsFwdFee    *big.Int `json:"out_msgs_fwd_fee"`
 		TotalAccountFees *big.Int `json:"total_account_fees"`
 		TotalOutput      *big.Int `json:"total_output"`
+		ExtInMsgFee      *big.Int `json:"ext_in_msg_fee"`
+		TotalFwdFees     *big.Int `json:"total_fwd_fees"`
+		AccountFees      *big.Int `json:"account_fees"`
 	}
 
 	// TvmUseCase ...

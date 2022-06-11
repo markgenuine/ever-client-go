@@ -3,13 +3,13 @@ package boc
 import "github.com/move-ton/ever-client-go/domain"
 
 type boc struct {
-	config domain.Config
+	config domain.ClientConfig
 	client domain.ClientGateway
 }
 
 // NewBoc ...
 func NewBoc(
-	config domain.Config,
+	config domain.ClientConfig,
 	client domain.ClientGateway,
 ) domain.BocUseCase {
 	return &boc{
