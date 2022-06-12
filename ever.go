@@ -1,4 +1,4 @@
-package goton
+package goever
 
 import (
 	"github.com/move-ton/ever-client-go/domain"
@@ -14,7 +14,7 @@ import (
 	"github.com/move-ton/ever-client-go/usecase/utils"
 )
 
-// Ton ...
+// Ever Obj ...
 type Ever struct {
 	Abi        domain.AbiUseCase
 	Boc        domain.BocUseCase
@@ -49,8 +49,8 @@ func NewEverWithConfig(config domain.ClientConfig) (*Ever, error) {
 	return ever, nil
 }
 
-// NewTon ...
-func NewTon(address string, endPoints []string) (*Ever, error) {
+// NewEver ...
+func NewEver(address string, endPoints []string) (*Ever, error) {
 	conf := domain.NewDefaultConfig(address, endPoints)
 	return NewEverWithConfig(conf)
 }

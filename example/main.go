@@ -5,11 +5,11 @@ import (
 	"github.com/move-ton/ever-client-go/domain"
 	"log"
 
-	goton "github.com/move-ton/ever-client-go"
+	goever "github.com/move-ton/ever-client-go"
 )
 
 func main() {
-	ever, err := goton.NewTon("", domain.GetDevNetBaseUrls())
+	ever, err := goever.NewEver("", domain.GetDevNetBaseUrls())
 	if err != nil {
 		log.Fatal(err)
 	}
