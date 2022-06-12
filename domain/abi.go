@@ -38,17 +38,37 @@ var AbiErrorCode map[string]int
 
 type (
 
+	// AbiHandle ...
+	AbiHandle int
+
 	// AbiType ...
 	AbiType string
+
+	// AbiContractVariant ...
+	AbiContractVariant struct {
+		Value AbiContract `json:"value"`
+	}
+
+	// AbiJsonVariant ...
+	AbiJsonVariant struct {
+		Value string `json:"value"`
+	}
+
+	// AbiHandleVariant ...
+	AbiHandleVariant struct {
+		Value AbiHandle `json:"value"`
+	}
+
+	// AbiSerializedVariant ...
+	AbiSerializedVariant struct {
+		Value AbiContract `json:"value"`
+	}
 
 	// Abi ...
 	Abi struct {
 		Type  AbiType     `json:"type"`
 		Value interface{} `json:"value"`
 	}
-
-	// AbiHandle ...
-	AbiHandle int
 
 	// FunctionHeader ...
 	FunctionHeader struct {
@@ -600,7 +620,7 @@ func (ms *MessageSource) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// NewStateInitSource ...
+// NewMessageSource ...
 func NewMessageSource(value interface{}) *MessageSource {
 	return &MessageSource{ValueEnumType: value}
 }

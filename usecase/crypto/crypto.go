@@ -8,12 +8,12 @@ import (
 )
 
 type crypto struct {
-	config domain.Config
+	config domain.ClientConfig
 	client domain.ClientGateway
 }
 
 // NewCrypto ...
-func NewCrypto(config domain.Config, client domain.ClientGateway) domain.CryptoUseCase {
+func NewCrypto(config domain.ClientConfig, client domain.ClientGateway) domain.CryptoUseCase {
 	return &crypto{
 		config: config,
 		client: client,

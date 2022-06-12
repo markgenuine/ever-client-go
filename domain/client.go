@@ -117,6 +117,7 @@ type (
 		GetResponse(string, interface{}) ([]byte, error)
 		GetAPIReference() (*ResultOfGetAPIReference, error)
 		Version() (*ResultOfVersion, error)
+		Config() (*ClientConfig, error)
 		GetBuildInfo() (*ResultOfBuildInfo, error)
 		ResolveAppRequest(*ParamsOfResolveAppRequest) error
 	}

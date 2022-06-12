@@ -15,8 +15,8 @@ type (
 	// NetworkQueriesProtocol - Network protocol used to perform GraphQL queries.
 	NetworkQueriesProtocol string
 
-	// Config ...
-	Config struct {
+	// ClientConfig ...
+	ClientConfig struct {
 		Network          *Network      `toml:"network" json:"network,omitempty"`
 		Crypto           *Crypto       `toml:"crypto" json:"crypto,omitempty"`
 		Abi              *AbiConfig    `toml:"abi" json:"abi,omitempty"`
@@ -72,8 +72,8 @@ type (
 )
 
 // NewDefaultConfig create new config for connect client.
-func NewDefaultConfig(address string, endPoints []string) Config {
-	config := Config{
+func NewDefaultConfig(address string, endPoints []string) ClientConfig {
+	config := ClientConfig{
 		Network: &Network{
 			ServerAddress:            address,
 			Endpoints:                endPoints,

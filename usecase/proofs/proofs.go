@@ -5,13 +5,13 @@ import (
 )
 
 type proofs struct {
-	config domain.Config
+	config domain.ClientConfig
 	client domain.ClientGateway
 }
 
 // NewProofs ...
 func NewProofs(
-	config domain.Config,
+	config domain.ClientConfig,
 	client domain.ClientGateway,
 ) domain.ProofsUseCase {
 	return &proofs{
