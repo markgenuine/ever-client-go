@@ -20,14 +20,14 @@ import (
 
 const (
 	// VersionLibSDK ...
-	VersionLibSDK = "1.34.0"
+	VersionLibSDK = "1.34.1"
 )
 
 var mainStore = NewStore()
 
 type clientGateway struct {
 	client      C.uint32_t
-	config      domain.Config
+	config      domain.ClientConfig
 	closeCanals chan struct{}
 }
 
@@ -47,7 +47,7 @@ func tcStringToByte(data C.tc_string_data_t) []byte {
 }
 
 // NewClientGateway ...
-func NewClientGateway(config domain.Config) (domain.ClientGateway, error) {
+func NewClientGateway(config domain.ClientConfig) (domain.ClientGateway, error) {
 	cc := clientGateway{
 		config:      config,
 		closeCanals: make(chan struct{}),
