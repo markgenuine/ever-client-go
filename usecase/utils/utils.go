@@ -3,13 +3,13 @@ package utils
 import "github.com/move-ton/ever-client-go/domain"
 
 type utils struct {
-	config domain.Config
+	config domain.ClientConfig
 	client domain.ClientGateway
 }
 
 // NewUtils ...
 func NewUtils(
-	config domain.Config,
+	config domain.ClientConfig,
 	client domain.ClientGateway,
 ) domain.UtilsUseCase {
 	return &utils{
