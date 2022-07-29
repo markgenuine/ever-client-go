@@ -170,33 +170,33 @@ type (
 
 	// ClientConfig ...
 	ClientConfig struct {
-		Network          *Network      `toml:"network" json:"network,omitempty"`
-		Crypto           *Crypto       `toml:"crypto" json:"crypto,omitempty"`
-		Abi              *AbiConfig    `toml:"abi" json:"abi,omitempty"`
-		Boc              *BocConfig    `toml:"boc" json:"boc,omitempty"`
-		ProofsConfig     *ProofsConfig `toml:"proofs" json:"proofs,omitempty"`
-		LocalStoragePath string        `toml:"local_storage_path" json:"local_storage_path,omitempty"`
+		Network          *Network      `json:"network,omitempty"`
+		Crypto           *Crypto       `json:"crypto,omitempty"`
+		Abi              *AbiConfig    `json:"abi,omitempty"`
+		Boc              *BocConfig    `json:"boc,omitempty"`
+		ProofsConfig     *ProofsConfig `json:"proofs,omitempty"`
+		LocalStoragePath string        `json:"local_storage_path,omitempty"`
 	}
 
 	// Network - Network config.
 	Network struct {
-		ServerAddress            string                  `toml:"server_address" json:"server_address,omitempty"`
-		Endpoints                []string                `toml:"endpoints" json:"endpoints,omitempty"`
-		NetworkRetriesCount      *int                    `toml:"network_retries_count" json:"network_retries_count,omitempty"`
-		MaxReconnectTimeOut      *int                    `toml:"max_reconnect_timeout" json:"max_reconnect_timeout,omitempty"`
-		ReconnectTimeout         *int                    `toml:"reconnect_timeout" json:"reconnect_timeout,omitempty"`
-		MessageRetriesCount      *int                    `toml:"message_retries_count" json:"message_retries_count,omitempty"`
-		MessageProcessingTimeout *int                    `toml:"message_processing_timeout" json:"message_processing_timeout,omitempty"`
-		WaitForTimeout           *int                    `toml:"wait_for_timeout" json:"wait_for_timeout,omitempty"`
-		OutOfSyncThreshold       *int                    `toml:"out_of_sync_threshold" json:"out_of_sync_threshold,omitempty"`
-		SendingEndpointCount     *int                    `toml:"sending_endpoint_count,omitempty" json:"sending_endpoint_count,omitempty"`
-		LatencyDetectionInterval *int                    `toml:"latency_detection_interval,omitempty" json:"latency_detection_interval,omitempty"`
-		MaxLatency               *int                    `toml:"max_latency,omitempty" json:"max_latency,omitempty"`
-		QueryTimeout             *int                    `toml:"query_timeout,omitempty" json:"query_timeout,omitempty"`
-		QueriesProtocol          *NetworkQueriesProtocol `toml:"queries_protocol,omitempty" json:"queries_protocol,omitempty"`
-		FirstRempStatusTimeout   *int                    `toml:"first_remp_status_timeout,omitempty" json:"first_remp_status_timeout,omitempty"`
-		NextRempStatusTimeout    *int                    `toml:"next_remp_status_timeout,omitempty" json:"next_remp_status_timeout,omitempty"`
-		AccessKey                string                  `toml:"access_key" json:"access_key,omitempty"`
+		ServerAddress            string                  `json:"server_address,omitempty"`
+		Endpoints                []string                `json:"endpoints,omitempty"`
+		NetworkRetriesCount      *int                    `json:"network_retries_count,omitempty"`
+		MaxReconnectTimeOut      *int                    `json:"max_reconnect_timeout,omitempty"`
+		ReconnectTimeout         *int                    `json:"reconnect_timeout,omitempty"`
+		MessageRetriesCount      *int                    `json:"message_retries_count,omitempty"`
+		MessageProcessingTimeout *int                    `json:"message_processing_timeout,omitempty"`
+		WaitForTimeout           *int                    `json:"wait_for_timeout,omitempty"`
+		OutOfSyncThreshold       *int                    `json:"out_of_sync_threshold,omitempty"`
+		SendingEndpointCount     *int                    `json:"sending_endpoint_count,omitempty"`
+		LatencyDetectionInterval *int                    `json:"latency_detection_interval,omitempty"`
+		MaxLatency               *int                    `json:"max_latency,omitempty"`
+		QueryTimeout             *int                    `json:"query_timeout,omitempty"`
+		QueriesProtocol          *NetworkQueriesProtocol `json:"queries_protocol,omitempty"`
+		FirstRempStatusTimeout   *int                    `json:"first_remp_status_timeout,omitempty"`
+		NextRempStatusTimeout    *int                    `json:"next_remp_status_timeout,omitempty"`
+		AccessKey                string                  `json:"access_key,omitempty"`
 	}
 
 	// Crypto ...
