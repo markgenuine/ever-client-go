@@ -211,6 +211,7 @@ type (
 		IsInternal         bool     `json:"is_internal"`
 		Signer             *Signer  `json:"signer"`
 		ProcessingTryIndex *int     `json:"processing_try_index,omitempty"`
+		Address            string   `json:"address,omitempty"`
 	}
 
 	// ResultOfEncodeMessageBody ...
