@@ -397,6 +397,18 @@ type (
 		Boc string `json:"boc"`
 	}
 
+	// ParamsOfCalcFunctionId ...
+	ParamsOfCalcFunctionId struct {
+		Abi          Abi    `json:"abi"`
+		FunctionName string `json:"function_name"`
+		Output       *bool  `json:"output,omitempty"`
+	}
+
+	// ResultOfCalcFunctionId ...
+	ResultOfCalcFunctionId struct {
+		FunctionID int `json:"function_id"`
+	}
+
 	//AbiUseCase ...
 	AbiUseCase interface {
 		EncodeMessageBody(*ParamsOfEncodeMessageBody) (*ResultOfEncodeMessageBody, error)
@@ -413,6 +425,7 @@ type (
 		DecodeInitialData(*ParamsOfDecodeInitialData) (*ResultOfDecodeInitialData, error)
 		DecodeBoc(*ParamsOfDecodeBoc) (*ResultOfDecodeBoc, error)
 		EncodeBoc(*ParamsOfAbiEncodeBoc) (*ResultOfAbiEncodeBoc, error)
+		CalcFunctionID(*ParamsOfCalcFunctionId) (*ResultOfCalcFunctionId, error)
 	}
 )
 
@@ -432,6 +445,7 @@ func init() {
 		"InvalidFunctionId":                         312,
 		"InvalidData":                               313,
 		"EncodeInitialDataFailed":                   314,
+		"InvalidFunctionName":                       315,
 	}
 }
 

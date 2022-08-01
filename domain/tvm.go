@@ -12,10 +12,11 @@ var TVMErrorCode map[string]int
 type (
 	// ExecutionOptions ...
 	ExecutionOptions struct {
-		BlockchainConfig string   `json:"blockchain_config,omitempty"`
-		BlockTime        *int     `json:"block_time,omitempty"`
-		BlockLt          *big.Int `json:"block_lt,omitempty"`
-		TransactionLt    *big.Int `json:"transaction_lt,omitempty"`
+		BlockchainConfig    string   `json:"blockchain_config,omitempty"`
+		BlockTime           *int     `json:"block_time,omitempty"`
+		BlockLt             *big.Int `json:"block_lt,omitempty"`
+		TransactionLt       *big.Int `json:"transaction_lt,omitempty"`
+		ChksigAlwaysSucceed *bool    `json:"chksig_always_succeed,omitempty"`
 	}
 
 	// AccountForExecutor ...

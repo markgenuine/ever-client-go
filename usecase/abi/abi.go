@@ -139,3 +139,10 @@ func (a *abi) EncodeBoc(boc *domain.ParamsOfAbiEncodeBoc) (*domain.ResultOfAbiEn
 	err := a.client.GetResult("encode_bocs", boc, result)
 	return result, err
 }
+
+// CalcFunctionID - Calculates contract function ID by contract ABI
+func (a *abi) CalcFunctionID(functionID *domain.ParamsOfCalcFunctionId) (*domain.ResultOfCalcFunctionId, error) {
+	result := new(domain.ResultOfCalcFunctionId)
+	err := a.client.GetResult("calc_function_id", functionID, result)
+	return result, err
+}
