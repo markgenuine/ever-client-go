@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	ever, err := goever.NewEver("", domain.GetDevNetBaseUrls())
+	ever, err := goever.NewEver("", domain.GetDevNetBaseUrls(), "")
 	if err != nil {
 		log.Fatal(err)
 	}

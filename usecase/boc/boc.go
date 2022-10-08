@@ -88,15 +88,17 @@ func (b *boc) CacheGet(pOBCG *domain.ParamsOfBocCacheGet) (*domain.ResultOfBocCa
 	return result, err
 }
 
-// CacheSet - Save BOC into cache.
+// CacheSet - Save BOC into cache or increase pin counter for existing pinned BOC.
 func (b *boc) CacheSet(pOBCS *domain.ParamsOfBocCacheSet) (*domain.ResultOfBocCacheSet, error) {
 	result := new(domain.ResultOfBocCacheSet)
 	err := b.client.GetResult("boc.cache_set", pOBCS, result)
 	return result, err
 }
 
-// CacheUnpin - Unpin BOCs with specified pin.
-// BOCs which don't have another pins will be removed from cache.
+// CacheUnpin - Unpin BOCs with specified pin defined in the `cache_set`.
+// Decrease pin reference counter for BOCs with specified pin defined in
+// the `cache_set`. BOCs which have only 1 pin and its reference counter
+// become 0 will be removed from cache
 func (b *boc) CacheUnpin(pOBCU *domain.ParamsOfBocCacheUnpin) error {
 	_, err := b.client.GetResponse("boc.cache_unpin", pOBCU)
 	return err

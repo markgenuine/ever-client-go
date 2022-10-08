@@ -29,8 +29,8 @@ type (
 
 	// ClientResponse ...
 	ClientResponse struct {
-		Code  uint32
 		Data  []byte
+		Code  uint32
 		Error error
 	}
 
@@ -180,23 +180,23 @@ type (
 
 	// Network - Network config.
 	Network struct {
-		ServerAddress            string                  `json:"server_address,omitempty"`
-		Endpoints                []string                `json:"endpoints,omitempty"`
-		NetworkRetriesCount      *int                    `json:"network_retries_count,omitempty"`
-		MaxReconnectTimeOut      *int                    `json:"max_reconnect_timeout,omitempty"`
-		ReconnectTimeout         *int                    `json:"reconnect_timeout,omitempty"`
-		MessageRetriesCount      *int                    `json:"message_retries_count,omitempty"`
-		MessageProcessingTimeout *int                    `json:"message_processing_timeout,omitempty"`
-		WaitForTimeout           *int                    `json:"wait_for_timeout,omitempty"`
-		OutOfSyncThreshold       *int                    `json:"out_of_sync_threshold,omitempty"`
-		SendingEndpointCount     *int                    `json:"sending_endpoint_count,omitempty"`
-		LatencyDetectionInterval *int                    `json:"latency_detection_interval,omitempty"`
-		MaxLatency               *int                    `json:"max_latency,omitempty"`
-		QueryTimeout             *int                    `json:"query_timeout,omitempty"`
-		QueriesProtocol          *NetworkQueriesProtocol `json:"queries_protocol,omitempty"`
-		FirstRempStatusTimeout   *int                    `json:"first_remp_status_timeout,omitempty"`
-		NextRempStatusTimeout    *int                    `json:"next_remp_status_timeout,omitempty"`
-		AccessKey                string                  `json:"access_key,omitempty"`
+		ServerAddress            string                 `json:"server_address,omitempty"`
+		Endpoints                []string               `json:"endpoints,omitempty"`
+		NetworkRetriesCount      *int                   `json:"network_retries_count,omitempty"`
+		MaxReconnectTimeOut      *int                   `json:"max_reconnect_timeout,omitempty"`
+		ReconnectTimeout         *int                   `json:"reconnect_timeout,omitempty"`
+		MessageRetriesCount      *int                   `json:"message_retries_count,omitempty"`
+		MessageProcessingTimeout *int                   `json:"message_processing_timeout,omitempty"`
+		WaitForTimeout           *int                   `json:"wait_for_timeout,omitempty"`
+		OutOfSyncThreshold       *int                   `json:"out_of_sync_threshold,omitempty"`
+		SendingEndpointCount     *int                   `json:"sending_endpoint_count,omitempty"`
+		LatencyDetectionInterval *int                   `json:"latency_detection_interval,omitempty"`
+		MaxLatency               *int                   `json:"max_latency,omitempty"`
+		QueryTimeout             *int                   `json:"query_timeout,omitempty"`
+		QueriesProtocol          NetworkQueriesProtocol `json:"queries_protocol,omitempty"`
+		FirstRempStatusTimeout   *int                   `json:"first_remp_status_timeout,omitempty"`
+		NextRempStatusTimeout    *int                   `json:"next_remp_status_timeout,omitempty"`
+		AccessKey                string                 `json:"access_key,omitempty"`
 	}
 
 	// Crypto ...
@@ -225,7 +225,7 @@ type (
 )
 
 // NewDefaultConfig create new config for connect client.
-func NewDefaultConfig(address string, endPoints []string) ClientConfig {
+func NewDefaultConfig(address string, endPoints []string, accessKey string) ClientConfig {
 	config := ClientConfig{
 		Network: &Network{
 			ServerAddress:            address,
@@ -240,7 +240,7 @@ func NewDefaultConfig(address string, endPoints []string) ClientConfig {
 			QueryTimeout:             util.IntToPointerInt(60000), //1 min
 			FirstRempStatusTimeout:   util.IntToPointerInt(1000),  //1 sec
 			NextRempStatusTimeout:    util.IntToPointerInt(5000),  //5 sec
-			AccessKey:                "",
+			AccessKey:                accessKey,
 		},
 		Crypto: &Crypto{
 			MnemonicDictionary:  util.IntToPointerInt(1),
@@ -277,12 +277,12 @@ func DictionaryList() map[string]*int {
 
 // GetMainNetBaseUrls return endpoints main net.
 func GetMainNetBaseUrls() []string {
-	return []string{"https://eri01.main.everos.dev/", "https://gra01.main.everos.dev/", "https://gra02.main.everos.dev/", "https://rbx01.main.everos.dev/"}
+	return []string{"https://mainnet.evercloud.dev/662c63951d884a52bbc20f775b5c4baf/graphql"}
 }
 
 // GetDevNetBaseUrls return endpoint dev net.
 func GetDevNetBaseUrls() []string {
-	return []string{"https://eri01.net.everos.dev/", "rbx01.net.everos.dev", "gra01.net.everos.dev"}
+	return []string{"https://devnet.evercloud.dev/662c63951d884a52bbc20f775b5c4baf/graphql"}
 }
 
 // GetLocalNetBaseUrls return endpoint localhost net.

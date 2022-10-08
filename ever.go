@@ -50,7 +50,7 @@ func NewEverWithConfig(config domain.ClientConfig) (*Ever, error) {
 }
 
 // NewEver ...
-func NewEver(address string, endPoints []string) (*Ever, error) {
-	conf := domain.NewDefaultConfig(address, endPoints)
+func NewEver(address string, endPoints []string, accessKey string) (*Ever, error) {
+	conf := domain.NewDefaultConfig(address, endPoints, accessKey)
 	return NewEverWithConfig(conf)
 }

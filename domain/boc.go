@@ -20,7 +20,8 @@ type (
 		Pin string `json:"pin"`
 	}
 
-	// BocCacheTypeUnpinned ...
+	// BocCacheTypeUnpinned - BOC is placed into a common BOC pool with
+	// limited size regulated by LRU (least recently used) cache lifecycle.
 	BocCacheTypeUnpinned struct{}
 
 	// ParamsOfParse ...

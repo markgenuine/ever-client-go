@@ -7,6 +7,7 @@ package client
 
 #include "client_method.h"
 void callB(uint32_t request_id, tc_string_data_t paramsJson, uint32_t response_type, bool finished);
+
 */
 import "C"
 import (
@@ -20,7 +21,7 @@ import (
 
 const (
 	// VersionLibSDK ...
-	VersionLibSDK = "1.37.0"
+	VersionLibSDK = "1.37.1"
 )
 
 var mainStore = NewStore()
@@ -146,7 +147,6 @@ func (c *clientGateway) Request(method string, paramIn interface{}) (<-chan *dom
 	responsChan := make(chan *domain.ClientResponse, 1)
 	requestID := mainStore.SetChannels(responsChan, c.closeCanals)
 	C.tc_request(c.client, tcStringData([]byte(method)), tcStringData(rawBody), C.uint32_t(requestID), C.tc_response_handler_t(C.callB))
-
 	return responsChan, nil
 }
 
