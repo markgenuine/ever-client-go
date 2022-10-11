@@ -50,9 +50,44 @@ type (
 		Public    json.RawMessage `json:"public,omitempty"`
 	}
 
+	// EncryptionAlgorithmAESVariant ...
+	EncryptionAlgorithmAESVariant struct {
+		Value AesParamsEB `json:"value"`
+	}
+
+	// EncryptionAlgorithmChaCha20Variant ...
+	EncryptionAlgorithmChaCha20Variant struct {
+		Value ChaCha20ParamsEB `json:"value"`
+	}
+
+	// EncryptionAlgorithmNaclBoxVariant ...
+	EncryptionAlgorithmNaclBoxVariant struct {
+		Value NaclBoxParamsEB `json:"value"`
+	}
+
+	// EncryptionAlgorithmNaclSecretBoxVariant ...
+	EncryptionAlgorithmNaclSecretBoxVariant struct {
+		Value NaclSecretBoxParamsEB `json:"value"`
+	}
+
 	// EncryptionAlgorithm ...
 	EncryptionAlgorithm struct {
 		ValueEnumType interface{}
+	}
+
+	// BoxEncryptionAlgorithmChaCha20Variant ...
+	BoxEncryptionAlgorithmChaCha20Variant struct {
+		Value ChaCha20ParamsCB `json:"value"`
+	}
+
+	// BoxEncryptionAlgorithmNaclBoxVariant ...
+	BoxEncryptionAlgorithmNaclBoxVariant struct {
+		Value NaclBoxParamsCB `json:"value"`
+	}
+
+	// BoxEncryptionAlgorithmNaclSecretBoxVariant ...
+	BoxEncryptionAlgorithmNaclSecretBoxVariant struct {
+		Value NaclSecretBoxParamsCB `json:"value"`
 	}
 
 	// BoxEncryptionAlgorithm ...
@@ -63,8 +98,8 @@ type (
 	// CipherMode is type string
 	CipherMode string
 
-	// AesParams ...
-	AesParams struct {
+	// AesParamsEB ...
+	AesParamsEB struct {
 		Mode CipherMode `json:"mode"`
 		Key  string     `json:"key"`
 		IV   string     `json:"iv,omitempty"`
@@ -95,26 +130,56 @@ type (
 		Nonce string `json:"nonce"`
 	}
 
+	// ChaCha20ParamsCB ...
+	ChaCha20ParamsCB struct {
+		Nonce string `json:"nonce"`
+	}
+
+	// NaclBoxParamsCB ...
+	NaclBoxParamsCB struct {
+		TheirPublic string `json:"their_public"`
+		Nonce       string `json:"nonce"`
+	}
+
+	// NaclSecretBoxParamsCB ...
+	NaclSecretBoxParamsCB struct {
+		Nonce string `json:"nonce"`
+	}
+
 	// CryptoBoxSecret ...
 	CryptoBoxSecret struct {
 		ValueEnumType interface{}
 	}
 
-	// CryptoBoxSecretRandomSeedPhrase ...
-	CryptoBoxSecretRandomSeedPhrase struct {
+	// CryptoBoxSecretRandomSeedPhraseVariant - Creates Crypto Box from a random seed phrase. This option can be
+	// used if a developer doesn't want the seed phrase to leave the core library's memory, where it is stored encrypted.
+	// This type should be used upon the first wallet initialization, all further initializations should use
+	// EncryptedSecret type instead.
+	// Get encrypted_secret with get_crypto_box_info function and store it on your side.
+	CryptoBoxSecretRandomSeedPhraseVariant struct {
 		Dictionary int `json:"dictionary"`
 		WordCount  int `json:"wordcount"`
 	}
 
-	// CryptoBoxSecretPredefinedSeedPhrase ...
-	CryptoBoxSecretPredefinedSeedPhrase struct {
+	// CryptoBoxSecretPredefinedSeedPhraseVariant - Restores crypto box instance from an existing seed phrase.
+	// This type should be used when Crypto Box is initialized from a seed phrase, entered by a user.
+	// This type should be used only upon the first wallet initialization, all further initializations should
+	// use EncryptedSecret type instead.
+	//Get encrypted_secret with get_crypto_box_info function and store it on your side.
+	CryptoBoxSecretPredefinedSeedPhraseVariant struct {
 		Phrase     string `json:"phrase"`
 		Dictionary int    `json:"dictionary"`
 		WordCount  int    `json:"wordcount"`
 	}
 
-	// CryptoBoxSecretEncryptedSecret ...
-	CryptoBoxSecretEncryptedSecret struct {
+	// CryptoBoxSecretEncryptedSecret - Use this type for wallet reinitializations, when you already
+	// have encrypted_secret on hands. To get encrypted_secret, use get_crypto_box_info function after
+	// you initialized your crypto box for the first time.
+	// It is an object, containing seed phrase or private key, encrypted with secret_encryption_salt
+	// and password from password_provider.
+	// Note that if you want to change salt or password provider, then you need to reinitialize the wallet
+	// with PredefinedSeedPhrase, then get EncryptedSecret via get_crypto_box_info, store it somewhere, and only after that initialize the wallet with EncryptedSecret type
+	CryptoBoxSecretEncryptedSecretVariant struct {
 		EncryptedSecret string `json:"encrypted_secret"`
 	}
 
@@ -746,20 +811,20 @@ func NewDefaultParamsOfHDKeyXPrvFromMnemonic() *ParamsOfHDKeyXPrvFromMnemonic {
 
 func (cbs *CryptoBoxSecret) MarshalJSON() ([]byte, error) {
 	switch value := (cbs.ValueEnumType).(type) {
-	case CryptoBoxSecretRandomSeedPhrase:
+	case CryptoBoxSecretRandomSeedPhraseVariant:
 		return json.Marshal(struct {
 			Type string `json:"type"`
-			CryptoBoxSecretRandomSeedPhrase
+			CryptoBoxSecretRandomSeedPhraseVariant
 		}{"RandomSeedPhrase", value})
-	case CryptoBoxSecretPredefinedSeedPhrase:
+	case CryptoBoxSecretPredefinedSeedPhraseVariant:
 		return json.Marshal(struct {
 			Type string `json:"type"`
-			CryptoBoxSecretPredefinedSeedPhrase
+			CryptoBoxSecretPredefinedSeedPhraseVariant
 		}{"PredefinedSeedPhrase", value})
-	case CryptoBoxSecretEncryptedSecret:
+	case CryptoBoxSecretEncryptedSecretVariant:
 		return json.Marshal(struct {
 			Type string `json:"type"`
-			CryptoBoxSecretEncryptedSecret
+			CryptoBoxSecretEncryptedSecretVariant
 		}{"EncryptedSecret", value})
 	default:
 		return nil, fmt.Errorf("unsupported type for CryptoBoxSecret %v", cbs.ValueEnumType)
@@ -773,19 +838,19 @@ func (cbs *CryptoBoxSecret) UnmarshalJSON(b []byte) error {
 	}
 	switch typeD.Type {
 	case "RandomSeedPhrase":
-		var valueEnum CryptoBoxSecretRandomSeedPhrase
+		var valueEnum CryptoBoxSecretRandomSeedPhraseVariant
 		if err := json.Unmarshal(b, &valueEnum); err != nil {
 			return err
 		}
 		cbs.ValueEnumType = valueEnum
 	case "PredefinedSeedPhrase":
-		var valueEnum CryptoBoxSecretPredefinedSeedPhrase
+		var valueEnum CryptoBoxSecretPredefinedSeedPhraseVariant
 		if err := json.Unmarshal(b, &valueEnum); err != nil {
 			return err
 		}
 		cbs.ValueEnumType = valueEnum
 	case "EncryptedSecret":
-		var valueEnum CryptoBoxSecretEncryptedSecret
+		var valueEnum CryptoBoxSecretEncryptedSecretVariant
 		if err := json.Unmarshal(b, &valueEnum); err != nil {
 			return err
 		}
@@ -870,25 +935,25 @@ func (rOAPP *ResultOfAppPasswordProvider) UnmarshalJSON(b []byte) error {
 
 func (ea *EncryptionAlgorithm) MarshalJSON() ([]byte, error) {
 	switch value := (ea.ValueEnumType).(type) {
-	case AesParams:
+	case EncryptionAlgorithmAESVariant:
 		return json.Marshal(struct {
 			Type string `json:"type"`
-			AesParams
+			EncryptionAlgorithmAESVariant
 		}{"AES", value})
-	case ChaCha20ParamsEB:
+	case EncryptionAlgorithmChaCha20Variant:
 		return json.Marshal(struct {
 			Type string `json:"type"`
-			ChaCha20ParamsEB
+			EncryptionAlgorithmChaCha20Variant
 		}{"ChaCha20", value})
-	case NaclBoxParamsEB:
+	case EncryptionAlgorithmNaclBoxVariant:
 		return json.Marshal(struct {
 			Type string `json:"type"`
-			NaclBoxParamsEB
+			EncryptionAlgorithmNaclBoxVariant
 		}{"NaclBox", value})
-	case NaclSecretBoxParamsEB:
+	case EncryptionAlgorithmNaclSecretBoxVariant:
 		return json.Marshal(struct {
 			Type string `json:"type"`
-			NaclSecretBoxParamsEB
+			EncryptionAlgorithmNaclSecretBoxVariant
 		}{"NaclSecretBox", value})
 	default:
 		return nil, fmt.Errorf("unsupported type for EncryptionAlgorithm %v", ea.ValueEnumType)
@@ -902,25 +967,25 @@ func (ea *EncryptionAlgorithm) UnmarshalJSON(b []byte) error {
 	}
 	switch typeD.Type {
 	case "AES":
-		var valueEnum AesParams
+		var valueEnum EncryptionAlgorithmAESVariant
 		if err := json.Unmarshal(b, &valueEnum); err != nil {
 			return err
 		}
 		ea.ValueEnumType = valueEnum
 	case "ChaCha20":
-		var valueEnum ChaCha20ParamsEB
+		var valueEnum EncryptionAlgorithmChaCha20Variant
 		if err := json.Unmarshal(b, &valueEnum); err != nil {
 			return err
 		}
 		ea.ValueEnumType = valueEnum
 	case "NaclBox":
-		var valueEnum NaclBoxParamsEB
+		var valueEnum EncryptionAlgorithmNaclBoxVariant
 		if err := json.Unmarshal(b, &valueEnum); err != nil {
 			return err
 		}
 		ea.ValueEnumType = valueEnum
 	case "NaclSecretBox":
-		var valueEnum NaclSecretBoxParamsEB
+		var valueEnum EncryptionAlgorithmNaclSecretBoxVariant
 		if err := json.Unmarshal(b, &valueEnum); err != nil {
 			return err
 		}
@@ -933,20 +998,20 @@ func (ea *EncryptionAlgorithm) UnmarshalJSON(b []byte) error {
 
 func (bea *BoxEncryptionAlgorithm) MarshalJSON() ([]byte, error) {
 	switch value := (bea.ValueEnumType).(type) {
-	case ChaCha20ParamsEB:
+	case BoxEncryptionAlgorithmChaCha20Variant:
 		return json.Marshal(struct {
 			Type string `json:"type"`
-			ChaCha20ParamsEB
+			BoxEncryptionAlgorithmChaCha20Variant
 		}{"ChaCha20", value})
-	case NaclBoxParamsEB:
+	case BoxEncryptionAlgorithmNaclBoxVariant:
 		return json.Marshal(struct {
 			Type string `json:"type"`
-			NaclBoxParamsEB
+			BoxEncryptionAlgorithmNaclBoxVariant
 		}{"NaclBox", value})
-	case NaclSecretBoxParamsEB:
+	case BoxEncryptionAlgorithmNaclSecretBoxVariant:
 		return json.Marshal(struct {
 			Type string `json:"type"`
-			NaclSecretBoxParamsEB
+			BoxEncryptionAlgorithmNaclSecretBoxVariant
 		}{"NaclSecretBox", value})
 	default:
 		return nil, fmt.Errorf("unsupported type for BoxEncryptionAlgorithm %v", bea.ValueEnumType)
@@ -960,19 +1025,19 @@ func (bea *BoxEncryptionAlgorithm) UnmarshalJSON(b []byte) error {
 	}
 	switch typeD.Type {
 	case "ChaCha20":
-		var valueEnum ChaCha20ParamsEB
+		var valueEnum BoxEncryptionAlgorithmChaCha20Variant
 		if err := json.Unmarshal(b, &valueEnum); err != nil {
 			return err
 		}
 		bea.ValueEnumType = valueEnum
 	case "NaclBox":
-		var valueEnum NaclBoxParamsEB
+		var valueEnum BoxEncryptionAlgorithmNaclBoxVariant
 		if err := json.Unmarshal(b, &valueEnum); err != nil {
 			return err
 		}
 		bea.ValueEnumType = valueEnum
 	case "NaclSecretBox":
-		var valueEnum NaclSecretBoxParamsEB
+		var valueEnum BoxEncryptionAlgorithmNaclSecretBoxVariant
 		if err := json.Unmarshal(b, &valueEnum); err != nil {
 			return err
 		}
