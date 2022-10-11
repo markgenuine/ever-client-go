@@ -277,12 +277,12 @@ func DictionaryList() map[string]*int {
 
 // GetMainNetBaseUrls return endpoints main net.
 func GetMainNetBaseUrls() []string {
-	return []string{"https://mainnet.evercloud.dev/662c63951d884a52bbc20f775b5c4baf/graphql"}
+	return []string{"https://mainnet.evercloud.dev/662c63951d884a52bbc20f775b5c4baf/graphql/"}
 }
 
 // GetDevNetBaseUrls return endpoint dev net.
 func GetDevNetBaseUrls() []string {
-	return []string{"https://devnet.evercloud.dev/662c63951d884a52bbc20f775b5c4baf/graphql"}
+	return []string{"https://devnet.evercloud.dev/662c63951d884a52bbc20f775b5c4baf/graphql/"}
 }
 
 // GetLocalNetBaseUrls return endpoint localhost net.

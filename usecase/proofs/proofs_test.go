@@ -9,7 +9,7 @@ import (
 
 func TestProofs(t *testing.T) {
 
-	config := domain.NewDefaultConfig("", domain.GetDevNetBaseUrls())
+	config := domain.NewDefaultConfig("", domain.GetDevNetBaseUrls(), "")
 	clientConn, err := client.NewClientGateway(config)
 	assert.Equal(t, nil, err)
 	defer clientConn.Destroy()
