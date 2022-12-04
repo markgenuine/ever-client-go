@@ -290,6 +290,7 @@ func init() {
 		"NoEndpointsProvided":         612,
 		"GraphqlWebsocketInitError":   613,
 		"NetworkModuleResumed":        614,
+		"Unauthorized":                615,
 	}
 }
 
