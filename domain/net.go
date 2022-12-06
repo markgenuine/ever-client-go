@@ -291,6 +291,7 @@ func init() {
 		"GraphqlWebsocketInitError":   613,
 		"NetworkModuleResumed":        614,
 		"Unauthorized":                615,
+		"QueryTransactionTreeTimeout": 616,
 	}
 }
 
