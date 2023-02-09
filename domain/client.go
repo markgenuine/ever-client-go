@@ -15,7 +15,7 @@ const (
 	NetworkQueriesProtocolWS NetworkQueriesProtocol = "WS"
 )
 
-//ClientErrorCode ...
+// ClientErrorCode ...
 var ClientErrorCode map[string]int
 
 type (
@@ -328,6 +328,7 @@ func init() {
 		"InternalError":                       33,
 		"InvalidHandle":                       34,
 		"LocalStorageError":                   35,
+		"InvalidData":                         36,
 	}
 }
 

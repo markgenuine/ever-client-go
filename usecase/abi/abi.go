@@ -146,3 +146,10 @@ func (a *abi) CalcFunctionID(functionID *domain.ParamsOfCalcFunctionId) (*domain
 	err := a.client.GetResult("calc_function_id", functionID, result)
 	return result, err
 }
+
+// GetSignatureData -Extracts signature from message body and calculates hash to verify the signature
+func (a *abi) GetSignatureData(data *domain.ParamsOfGetSignatureData) (*domain.ResultOfGetSignatureData, error) {
+	result := new(domain.ResultOfGetSignatureData)
+	err := a.client.GetResult("get_signature_data", data, result)
+	return result, err
+}
