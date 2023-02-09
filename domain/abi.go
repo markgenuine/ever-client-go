@@ -424,6 +424,18 @@ type (
 		FunctionID int `json:"function_id"`
 	}
 
+	// ParamsOfGetSignatureData ...
+	ParamsOfGetSignatureData struct {
+		Abi     Abi    `json:"abi"`
+		Message string `json:"message"`
+	}
+
+	// ResultOfGetSignatureData ...
+	ResultOfGetSignatureData struct {
+		Signature string `json:"signature"`
+		Hash      string `json:"hash"`
+	}
+
 	//AbiUseCase ...
 	AbiUseCase interface {
 		EncodeMessageBody(*ParamsOfEncodeMessageBody) (*ResultOfEncodeMessageBody, error)
@@ -441,6 +453,7 @@ type (
 		DecodeBoc(*ParamsOfDecodeBoc) (*ResultOfDecodeBoc, error)
 		EncodeBoc(*ParamsOfAbiEncodeBoc) (*ResultOfAbiEncodeBoc, error)
 		CalcFunctionID(*ParamsOfCalcFunctionId) (*ResultOfCalcFunctionId, error)
+		GetSignatureData(*ParamsOfGetSignatureData) (*ResultOfGetSignatureData, error)
 	}
 )
 
