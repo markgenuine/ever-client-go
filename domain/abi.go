@@ -19,6 +19,12 @@ const (
 	// SerializedAbiType ...
 	SerializedAbiType AbiType = "Serialized"
 
+	// DataLayoutInput ..
+	InputDataLayout DataLayoutType = "Input"
+
+	// DataLayoutOutput ..
+	OutputDataLayout DataLayoutType = "Output"
+
 	// MessageBodyTypeInput - Message contains the input of the ABI function.
 	MessageBodyTypeInput MessageBodyType = "Input"
 
@@ -43,6 +49,9 @@ type (
 
 	// AbiType ...
 	AbiType string
+
+	// DataLayoutType
+	DataLayoutType string
 
 	// AbiContractVariant ...
 	AbiContractVariant struct {
@@ -195,13 +204,14 @@ type (
 
 	// AbiContract ...
 	AbiContract struct {
-		AbiVersion *int            `json:"ABI version,omitempty"`
-		Version    string          `json:"version,omitempty"`
-		Header     []string        `json:"header,omitempty"`
-		Functions  []*AbiFunctions `json:"functions,omitempty"`
-		Events     []*AbiEvent     `json:"events,omitempty"`
-		Data       []*AbiData      `json:"data,omitempty"`
-		Fields     []*AbiParam     `json:"fields,omitempty"`
+		Abi_Version *int            `json:"ABI version,omitempty"`
+		AbiVersion  *int            `json:"abi_version,omitempty"`
+		Version     string          `json:"version,omitempty"`
+		Header      []string        `json:"header,omitempty"`
+		Functions   []*AbiFunctions `json:"functions,omitempty"`
+		Events      []*AbiEvent     `json:"events,omitempty"`
+		Data        []*AbiData      `json:"data,omitempty"`
+		Fields      []*AbiParam     `json:"fields,omitempty"`
 	}
 
 	// ParamsOfEncodeMessageBody ...
@@ -286,9 +296,11 @@ type (
 
 	// ParamsOfDecodeMessage ...
 	ParamsOfDecodeMessage struct {
-		Abi          *Abi   `json:"abi"`
-		Message      string `json:"message"`
-		AllowPartial *bool  `json:"allow_partial,omitempty"`
+		Abi          *Abi            `json:"abi"`
+		Message      string          `json:"message"`
+		AllowPartial *bool           `json:"allow_partial,omitempty"`
+		FunctionName string          `json:"function_name,omitempty"`
+		DataLayout   *DataLayoutType `json:"data_layout,omitempty"`
 	}
 
 	// DecodedMessageBody ...
@@ -301,10 +313,12 @@ type (
 
 	// ParamsOfDecodeMessageBody ...
 	ParamsOfDecodeMessageBody struct {
-		Abi          *Abi   `json:"abi"`
-		Body         string `json:"body"`
-		IsInternal   bool   `json:"is_internal"`
-		AllowPartial *bool  `json:"allow_partial,omitempty"`
+		Abi          *Abi            `json:"abi"`
+		Body         string          `json:"body"`
+		IsInternal   bool            `json:"is_internal"`
+		AllowPartial *bool           `json:"allow_partial,omitempty"`
+		FunctionName string          `json:"function_name,omitempty"`
+		DataLayout   *DataLayoutType `json:"data_layout,omitempty"`
 	}
 
 	// ParamsOfEncodeAccount ...

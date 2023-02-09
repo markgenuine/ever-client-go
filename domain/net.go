@@ -187,9 +187,10 @@ type (
 
 	// ParamsOfQueryTransactionTree ...
 	ParamsOfQueryTransactionTree struct {
-		InMsg       string `json:"in_msg"`
-		AbiRegistry []*Abi `json:"abi_registry,omitempty"`
-		TimeOut     *int   `json:"timeout,omitempty"`
+		InMsg               string `json:"in_msg"`
+		AbiRegistry         []*Abi `json:"abi_registry,omitempty"`
+		TimeOut             *int   `json:"timeout,omitempty"`
+		TransactionMaxCount *int   `json:"transaction_max_count, omitempty"`
 	}
 
 	// ResultOfQueryTransactionTree ...
@@ -292,6 +293,7 @@ func init() {
 		"NetworkModuleResumed":        614,
 		"Unauthorized":                615,
 		"QueryTransactionTreeTimeout": 616,
+		"GraphqlConnectionError":      617,
 	}
 }
 
