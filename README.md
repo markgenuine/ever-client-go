@@ -1,8 +1,8 @@
 # Everscale Client
-Everscale SDK Client library Golang bindings based itself on [Everscale-SDK](https://github.com/tonlabs/TON-SDK).
+Everscale SDK Client library Golang bindings based itself on [Ever SDK](https://github.com/tonlabs/ever-sdk).
 
-[![version](https://img.shields.io/github/v/tag/move-ton/ton-client-go.svg)](https://github.com/move-ton/ton-client-go/releases/latest)
-[![license](https://img.shields.io/github/license/move-ton/ton-client-go.svg)](https://github.com/move-ton/ton-client-go/blob/master/LICENSE)
+[![version](https://img.shields.io/github/v/tag/move-ton/ton-client-go.svg)](https://github.com/markgenuine/ever-client-go/releases/latest)
+[![license](https://img.shields.io/github/license/move-ton/ton-client-go.svg)](https://github.com/markgenuine/ever-client-go/blob/master/LICENSE)
 [![Go version](https://img.shields.io/badge/go-1.16+-blue.svg)](https://github.com/moovweb/gvm)
 [![Chat on Telegram RU](https://img.shields.io/badge/Chat%20on-Telegram%20RU-blue)](https://t.me/MOVETON_SDK_RU)
 [![Chat on Telegram EN](https://img.shields.io/badge/Chat%20on-Telegram%20EN-blue)](https://t.me/MOVETON_SDK_EN)
@@ -12,12 +12,12 @@ Many thanks to [@temamagic](https://github.com/temamagic) for advice on architec
 ## Installation
 
 ```sh
-$ go get -u github.com/move-ton/ever-client-go
+$ go get -u github.com/markgenuine/ever-client-go
 ```
 or
 
 ```sh
-$ git clone https://github.com/move-ton/ever-client-go.git
+$ git clone https://github.com/markgenuine/ever-client-go.git
 $ cd ever-client-go
 ```
 
@@ -51,7 +51,7 @@ $ go run ./example/*.go
 
 ## Usage
 ```golang
-import goever "github.com/move-ton/ever-client-go"
+import goever "github.com/markgenuine/ever-client-go"
 ```
 
 ## Example
@@ -60,10 +60,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/move-ton/ever-client-go/domain"
+	"github.com/markgenuine/ever-client-go/domain"
 	"log"
 
-	goton "github.com/move-ton/ever-client-go"
+	goton "github.com/markgenuine/ever-client-go"
 )
 
 func main() {
@@ -83,4 +83,4 @@ func main() {
 }
 ```
 For more examples see *_test.go files
-[ever-client-go/usecase](https://github.com/move-ton/ever-client-go/tree/master/usecase)
+[ever-client-go/usecase](https://github.com/markgenuine/ever-client-go/tree/master/usecase)
