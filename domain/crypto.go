@@ -13,6 +13,33 @@ const (
 	// DefaultDictionary dictionary mnemonic phrase on default
 	DefaultDictionary = 1
 
+	// TonMnemonicDictionary ...
+	TonMnemonicDictionary MnemonicDictionary = 0
+
+	// EnglishMnemonicDictionary ...
+	EnglishMnemonicDictionary MnemonicDictionary = 1
+
+	// ChineseSimplifiedMnemonicDictionary ...
+	ChineseSimplifiedMnemonicDictionary MnemonicDictionary = 2
+
+	// ChineseTraditionalMnemonicDictionary ...
+	ChineseTraditionalMnemonicDictionary MnemonicDictionary = 3
+
+	// FrenchMnemonicDictionary ...
+	FrenchMnemonicDictionary MnemonicDictionary = 4
+
+	// ItalianMnemonicDictionary ...
+	ItalianMnemonicDictionary MnemonicDictionary = 5
+
+	// JapaneseMnemonicDictionary ...
+	JapaneseMnemonicDictionary MnemonicDictionary = 6
+
+	// KoreanMnemonicDictionary ...
+	KoreanMnemonicDictionary MnemonicDictionary = 7
+
+	// SpanishMnemonicDictionary ...
+	SpanishMnemonicDictionary MnemonicDictionary = 8
+
 	// CipherModeCBC ...
 	CipherModeCBC CipherMode = "CBC"
 
@@ -41,6 +68,8 @@ type (
 
 	// EncryptionBoxHandle ...
 	EncryptionBoxHandle int
+
+	MnemonicDictionary int
 
 	// EncryptionBoxInfo - Encryption box information.
 	EncryptionBoxInfo struct {
@@ -157,22 +186,22 @@ type (
 	// EncryptedSecret type instead.
 	// Get encrypted_secret with get_crypto_box_info function and store it on your side.
 	CryptoBoxSecretRandomSeedPhraseVariant struct {
-		Dictionary int `json:"dictionary"`
-		WordCount  int `json:"wordcount"`
+		Dictionary MnemonicDictionary `json:"dictionary"`
+		WordCount  int                `json:"wordcount"`
 	}
 
 	// CryptoBoxSecretPredefinedSeedPhraseVariant - Restores crypto box instance from an existing seed phrase.
 	// This type should be used when Crypto Box is initialized from a seed phrase, entered by a user.
 	// This type should be used only upon the first wallet initialization, all further initializations should
 	// use EncryptedSecret type instead.
-	//Get encrypted_secret with get_crypto_box_info function and store it on your side.
+	// Get encrypted_secret with get_crypto_box_info function and store it on your side.
 	CryptoBoxSecretPredefinedSeedPhraseVariant struct {
-		Phrase     string `json:"phrase"`
-		Dictionary int    `json:"dictionary"`
-		WordCount  int    `json:"wordcount"`
+		Phrase     string             `json:"phrase"`
+		Dictionary MnemonicDictionary `json:"dictionary"`
+		WordCount  int                `json:"wordcount"`
 	}
 
-	// CryptoBoxSecretEncryptedSecret - Use this type for wallet reinitializations, when you already
+	// CryptoBoxSecretEncryptedSecretVariant - Use this type for wallet reinitializations, when you already
 	// have encrypted_secret on hands. To get encrypted_secret, use get_crypto_box_info function after
 	// you initialized your crypto box for the first time.
 	// It is an object, containing seed phrase or private key, encrypted with secret_encryption_salt
@@ -380,7 +409,7 @@ type (
 
 	// ParamsOfMnemonicWords ...
 	ParamsOfMnemonicWords struct {
-		Dictionary *int `json:"dictionary,omitempty"`
+		Dictionary *MnemonicDictionary `json:"dictionary,omitempty"`
 	}
 
 	// ResultOfMnemonicWords ...
@@ -390,8 +419,8 @@ type (
 
 	// ParamsOfMnemonicFromRandom ...
 	ParamsOfMnemonicFromRandom struct {
-		Dictionary *int `json:"dictionary,omitempty"`
-		WordCount  *int `json:"word_count,omitempty"`
+		Dictionary *MnemonicDictionary `json:"dictionary,omitempty"`
+		WordCount  *int                `json:"word_count,omitempty"`
 	}
 
 	// ResultOfMnemonicFromRandom ...
@@ -401,9 +430,9 @@ type (
 
 	// ParamsOfMnemonicFromEntropy ...
 	ParamsOfMnemonicFromEntropy struct {
-		Entropy    string `json:"entropy"`
-		Dictionary *int   `json:"dictionary,omitempty"`
-		WordCount  *int   `json:"word_count,omitempty"`
+		Entropy    string              `json:"entropy"`
+		Dictionary *MnemonicDictionary `json:"dictionary,omitempty"`
+		WordCount  *int                `json:"word_count,omitempty"`
 	}
 
 	// ResultOfMnemonicFromEntropy ...
@@ -413,9 +442,9 @@ type (
 
 	// ParamsOfMnemonicVerify ...
 	ParamsOfMnemonicVerify struct {
-		Phrase     string `json:"phrase"`
-		Dictionary *int   `json:"dictionary,omitempty"`
-		WordCount  *int   `json:"word_count,omitempty"`
+		Phrase     string              `json:"phrase"`
+		Dictionary *MnemonicDictionary `json:"dictionary,omitempty"`
+		WordCount  *int                `json:"word_count,omitempty"`
 	}
 
 	// ResultOfMnemonicVerify ...
@@ -425,17 +454,17 @@ type (
 
 	// ParamsOfMnemonicDeriveSignKeys ...
 	ParamsOfMnemonicDeriveSignKeys struct {
-		Phrase     string `json:"phrase"`
-		Path       string `json:"path,omitempty"`
-		Dictionary *int   `json:"dictionary,omitempty"`
-		WordCount  *int   `json:"word_count,omitempty"`
+		Phrase     string              `json:"phrase"`
+		Path       string              `json:"path,omitempty"`
+		Dictionary *MnemonicDictionary `json:"dictionary,omitempty"`
+		WordCount  *int                `json:"word_count,omitempty"`
 	}
 
 	// ParamsOfHDKeyXPrvFromMnemonic ...
 	ParamsOfHDKeyXPrvFromMnemonic struct {
-		Phrase     string `json:"phrase"`
-		Dictionary *int   `json:"dictionary,omitempty"`
-		WordCount  *int   `json:"word_count,omitempty"`
+		Phrase     string              `json:"phrase"`
+		Dictionary *MnemonicDictionary `json:"dictionary,omitempty"`
+		WordCount  *int                `json:"word_count,omitempty"`
 	}
 
 	// ResultOfHDKeyXPrvFromMnemonic ...
@@ -516,9 +545,9 @@ type (
 
 	// ResultOfGetCryptoBoxSeedPhrase ...
 	ResultOfGetCryptoBoxSeedPhrase struct {
-		Phrase     string `json:"phrase"`
-		Dictionary int    `json:"dictionary"`
-		Wordcount  int    `json:"wordcount"`
+		Phrase     string             `json:"phrase"`
+		Dictionary MnemonicDictionary `json:"dictionary"`
+		Wordcount  int                `json:"wordcount"`
 	}
 
 	// ParamsOfGetSigningBoxFromCryptoBox ...
@@ -781,32 +810,38 @@ func init() {
 
 // NewDefaultParamsOfMnemonicWords ...
 func NewDefaultParamsOfMnemonicWords() *ParamsOfMnemonicWords {
-	return &ParamsOfMnemonicWords{Dictionary: util.IntToPointerInt(DefaultDictionary)}
+	dict := MnemonicDictionary(DefaultDictionary)
+	return &ParamsOfMnemonicWords{Dictionary: &dict}
 }
 
 // NewDefaultParamsOfMnemonicFromRandom ...
 func NewDefaultParamsOfMnemonicFromRandom() *ParamsOfMnemonicFromRandom {
-	return &ParamsOfMnemonicFromRandom{Dictionary: util.IntToPointerInt(DefaultDictionary), WordCount: util.IntToPointerInt(DefaultWordCount)}
+	dict := MnemonicDictionary(DefaultDictionary)
+	return &ParamsOfMnemonicFromRandom{Dictionary: &dict, WordCount: util.IntToPointerInt(DefaultWordCount)}
 }
 
 // NewDefaultParamsOfMnemonicFromEntropy ...
 func NewDefaultParamsOfMnemonicFromEntropy() *ParamsOfMnemonicFromEntropy {
-	return &ParamsOfMnemonicFromEntropy{Entropy: "", Dictionary: util.IntToPointerInt(DefaultDictionary), WordCount: util.IntToPointerInt(DefaultWordCount)}
+	dict := MnemonicDictionary(DefaultDictionary)
+	return &ParamsOfMnemonicFromEntropy{Entropy: "", Dictionary: &dict, WordCount: util.IntToPointerInt(DefaultWordCount)}
 }
 
 // NewDefaultParamsOfMnemonicVerify ...
 func NewDefaultParamsOfMnemonicVerify() *ParamsOfMnemonicVerify {
-	return &ParamsOfMnemonicVerify{Phrase: "", Dictionary: util.IntToPointerInt(DefaultDictionary), WordCount: util.IntToPointerInt(DefaultWordCount)}
+	dict := MnemonicDictionary(DefaultDictionary)
+	return &ParamsOfMnemonicVerify{Phrase: "", Dictionary: &dict, WordCount: util.IntToPointerInt(DefaultWordCount)}
 }
 
 // NewDefaultParamsOfMnemonicDeriveSignKeys ...
 func NewDefaultParamsOfMnemonicDeriveSignKeys() *ParamsOfMnemonicDeriveSignKeys {
-	return &ParamsOfMnemonicDeriveSignKeys{Phrase: "", Dictionary: util.IntToPointerInt(DefaultDictionary), WordCount: util.IntToPointerInt(DefaultWordCount)}
+	dict := MnemonicDictionary(DefaultDictionary)
+	return &ParamsOfMnemonicDeriveSignKeys{Phrase: "", Dictionary: &dict, WordCount: util.IntToPointerInt(DefaultWordCount)}
 }
 
 // NewDefaultParamsOfHDKeyXPrvFromMnemonic ...
 func NewDefaultParamsOfHDKeyXPrvFromMnemonic() *ParamsOfHDKeyXPrvFromMnemonic {
-	return &ParamsOfHDKeyXPrvFromMnemonic{Phrase: "", Dictionary: util.IntToPointerInt(DefaultDictionary), WordCount: util.IntToPointerInt(DefaultWordCount)}
+	dict := MnemonicDictionary(DefaultDictionary)
+	return &ParamsOfHDKeyXPrvFromMnemonic{Phrase: "", Dictionary: &dict, WordCount: util.IntToPointerInt(DefaultWordCount)}
 }
 
 func (cbs *CryptoBoxSecret) MarshalJSON() ([]byte, error) {

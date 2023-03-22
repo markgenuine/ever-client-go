@@ -16,17 +16,23 @@ type (
 	}
 
 	// ProcessingEventWillFetchFirstBlock ...
-	ProcessingEventWillFetchFirstBlock struct{}
+	ProcessingEventWillFetchFirstBlock struct {
+		MessageID  string `json:"message_id"`
+		MessageDst string `json:"message_dst"`
+	}
 
 	// ProcessingEventFetchFirstBlockFailed ...
 	ProcessingEventFetchFirstBlockFailed struct {
-		Error ClientError `json:"error"`
+		Error      ClientError `json:"error"`
+		MessageID  string      `json:"message_id"`
+		MessageDst string      `json:"message_dst"`
 	}
 
 	// ProcessingEventWillSend ...
 	ProcessingEventWillSend struct {
 		ShardBlockID string `json:"shard_block_id"`
 		MessageID    string `json:"message_id"`
+		MessageDst   string `json:"message_dst"`
 		Message      string `json:"message"`
 	}
 
@@ -34,6 +40,7 @@ type (
 	ProcessingEventDidSend struct {
 		ShardBlockID string `json:"shard_block_id"`
 		MessageID    string `json:"message_id"`
+		MessageDst   string `json:"message_dst"`
 		Message      string `json:"message"`
 	}
 
@@ -41,6 +48,7 @@ type (
 	ProcessingEventSendFailed struct {
 		ShardBlockID string      `json:"shard_block_id"`
 		MessageID    string      `json:"message_id"`
+		MessageDst   string      `json:"message_dst"`
 		Message      string      `json:"message"`
 		Error        ClientError `json:"error"`
 	}
@@ -49,6 +57,7 @@ type (
 	ProcessingEventWillFetchNextBlock struct {
 		ShardBlockID string `json:"shard_block_id"`
 		MessageID    string `json:"message_id"`
+		MessageDst   string `json:"message_dst"`
 		Message      string `json:"message"`
 	}
 
@@ -56,48 +65,56 @@ type (
 	ProcessingEventFetchNextBlockFailed struct {
 		ShardBlockID string      `json:"shard_block_id"`
 		MessageID    string      `json:"message_id"`
+		MessageDst   string      `json:"message_dst"`
 		Message      string      `json:"message"`
 		Error        ClientError `json:"error"`
 	}
 
 	// ProcessingEventMessageExpired ...
 	ProcessingEventMessageExpired struct {
-		MessageID string      `json:"message_id"`
-		Message   string      `json:"message"`
-		Error     ClientError `json:"error"`
+		MessageID  string      `json:"message_id"`
+		MessageDst string      `json:"message_dst"`
+		Message    string      `json:"message"`
+		Error      ClientError `json:"error"`
 	}
 
 	// ProcessingRempSentToValidators ...
 	ProcessingRempSentToValidators struct {
-		MessageID string          `json:"message_id"`
-		Message   string          `json:"message"`
-		JSON      json.RawMessage `json:"json"`
+		MessageID  string          `json:"message_id"`
+		MessageDst string          `json:"message_dst"`
+		TimeStamp  big.Int         `json:"timestamp"`
+		JSON       json.RawMessage `json:"json"`
 	}
 
 	// ProcessingRempIncludedIntoBlock ...
 	ProcessingRempIncludedIntoBlock struct {
-		MessageID string          `json:"message_id"`
-		Timestamp big.Int         `json:"timestamp"`
-		JSON      json.RawMessage `json:"json"`
+		MessageID  string          `json:"message_id"`
+		MessageDst string          `json:"message_dst"`
+		Timestamp  big.Int         `json:"timestamp"`
+		JSON       json.RawMessage `json:"json"`
 	}
 
 	// ProcessingRempIncludedIntoAcceptedBlock ...
 	ProcessingRempIncludedIntoAcceptedBlock struct {
-		MessageID string          `json:"message_id"`
-		Timestamp big.Int         `json:"timestamp"`
-		JSON      json.RawMessage `json:"json"`
+		MessageID  string          `json:"message_id"`
+		MessageDst string          `json:"message_dst"`
+		Timestamp  big.Int         `json:"timestamp"`
+		JSON       json.RawMessage `json:"json"`
 	}
 
 	// ProcessingRempOther ...
 	ProcessingRempOther struct {
-		MessageID string          `json:"message_id"`
-		Timestamp big.Int         `json:"timestamp"`
-		JSON      json.RawMessage `json:"json"`
+		MessageID  string          `json:"message_id"`
+		MessageDst string          `json:"message_dst"`
+		Timestamp  big.Int         `json:"timestamp"`
+		JSON       json.RawMessage `json:"json"`
 	}
 
 	// ProcessingRempError ...
 	ProcessingRempError struct {
-		Error ClientError `json:"error"`
+		MessageID  string      `json:"message_id"`
+		MessageDst string      `json:"message_dst"`
+		Error      ClientError `json:"error"`
 	}
 
 	// ParamsOfSendMessage ...
@@ -168,9 +185,9 @@ func init() {
 		"BlockNotFound                  ": 511,
 		"InvalidData                    ": 512,
 		"ExternalSignerMustNotBeUsed    ": 513,
-		"MessageRejected				": 514,
-		"InvalidRempStatus				": 515,
-		"NextRempStatusTimeout			": 516,
+		"MessageRejected				":             514,
+		"InvalidRempStatus				":           515,
+		"NextRempStatusTimeout			":        516,
 	}
 }
 

@@ -17,6 +17,7 @@ type (
 		BlockLt             *big.Int `json:"block_lt,omitempty"`
 		TransactionLt       *big.Int `json:"transaction_lt,omitempty"`
 		ChksigAlwaysSucceed *bool    `json:"chksig_always_succeed,omitempty"`
+		SignatureID         *int     `json:"signature_id,omitempty"`
 	}
 
 	// AccountForExecutor ...

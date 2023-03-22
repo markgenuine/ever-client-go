@@ -222,6 +222,7 @@ type (
 		Signer             *Signer  `json:"signer"`
 		ProcessingTryIndex *int     `json:"processing_try_index,omitempty"`
 		Address            string   `json:"address,omitempty"`
+		SignatureID        *int     `json:"signature_id,omitempty"`
 	}
 
 	// ResultOfEncodeMessageBody ...
@@ -251,6 +252,7 @@ type (
 		CallSet            *CallSet   `json:"call_set,omitempty"`
 		Signer             *Signer    `json:"signer"`
 		ProcessingTryIndex *int       `json:"processing_try_index"`
+		SignatureID        *int       `json:"signature_id,omitempty"`
 	}
 
 	// ResultOfEncodeMessage ...
@@ -426,14 +428,15 @@ type (
 
 	// ParamsOfGetSignatureData ...
 	ParamsOfGetSignatureData struct {
-		Abi     Abi    `json:"abi"`
-		Message string `json:"message"`
+		Abi         Abi    `json:"abi"`
+		Message     string `json:"message"`
+		SignatureID *int   `json:"signature_id,omitempty"`
 	}
 
 	// ResultOfGetSignatureData ...
 	ResultOfGetSignatureData struct {
 		Signature string `json:"signature"`
-		Hash      string `json:"hash"`
+		Unsigned  string `json:"unsigned"`
 	}
 
 	//AbiUseCase ...
