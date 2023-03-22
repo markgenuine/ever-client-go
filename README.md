@@ -4,8 +4,10 @@ Everscale SDK Client library Golang bindings based itself on [Ever SDK](https://
 [![version](https://img.shields.io/github/v/tag/move-ton/ton-client-go.svg)](https://github.com/markgenuine/ever-client-go/releases/latest)
 [![license](https://img.shields.io/github/license/move-ton/ton-client-go.svg)](https://github.com/markgenuine/ever-client-go/blob/master/LICENSE)
 [![Go version](https://img.shields.io/badge/go-1.16+-blue.svg)](https://github.com/moovweb/gvm)
-[![Chat on Telegram RU](https://img.shields.io/badge/Chat%20on-Telegram%20RU-blue)](https://t.me/MOVETON_SDK_RU)
-[![Chat on Telegram EN](https://img.shields.io/badge/Chat%20on-Telegram%20EN-blue)](https://t.me/MOVETON_SDK_EN)
+
+[![Channel on Telegram](https://img.shields.io/badge/%20Channel-Telegram%20-blue)](https://t.me/ever_go)
+[![Chat on Telegram RU](https://img.shields.io/badge/Chat%20on-Telegram%20RU-blue)](https://t.me/ever_go_ru)
+[![Chat on Telegram EN](https://img.shields.io/badge/Chat%20on-Telegram%20EN-blue)](https://t.me/ever_go_en)
 
 Many thanks to [@temamagic](https://github.com/temamagic) for advice on architecture, tests, code and commit style.
 
