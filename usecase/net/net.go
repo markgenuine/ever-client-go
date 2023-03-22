@@ -261,3 +261,11 @@ func (n *net) RemoveIterator(iterator *domain.RegisteredIterator) error {
 	_, err := n.client.GetResponse("net.remove_iterator", iterator)
 	return err
 }
+
+// GetSignatureID
+// Returns signature ID for configured network if it should be used in messages signature
+func (n *net) GetSignatureID() (*domain.ResultOfGetSignatureId, error) {
+	result := new(domain.ResultOfGetSignatureId)
+	err := n.client.GetResult("net.get_signature_id", nil, result)
+	return result, err
+}

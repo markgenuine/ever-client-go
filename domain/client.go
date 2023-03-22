@@ -170,16 +170,23 @@ type (
 
 	// ClientConfig ...
 	ClientConfig struct {
-		Network          *Network      `json:"network,omitempty"`
-		Crypto           *Crypto       `json:"crypto,omitempty"`
-		Abi              *AbiConfig    `json:"abi,omitempty"`
-		Boc              *BocConfig    `json:"boc,omitempty"`
-		ProofsConfig     *ProofsConfig `json:"proofs,omitempty"`
-		LocalStoragePath string        `json:"local_storage_path,omitempty"`
+		Binding          *BindingConfig `json:"binding,omitempty"`
+		Network          *NetworkConfig `json:"network,omitempty"`
+		Crypto           *CryptoConfig  `json:"crypto,omitempty"`
+		Abi              *AbiConfig     `json:"abi,omitempty"`
+		Boc              *BocConfig     `json:"boc,omitempty"`
+		ProofsConfig     *ProofsConfig  `json:"proofs,omitempty"`
+		LocalStoragePath string         `json:"local_storage_path,omitempty"`
+	}
+
+	// Binding config for information about Binding
+	BindingConfig struct {
+		Library string `json:"library,omitempty"`
+		Version string `json:"version,omitempty"`
 	}
 
 	// Network - Network config.
-	Network struct {
+	NetworkConfig struct {
 		ServerAddress            string                 `json:"server_address,omitempty"`
 		Endpoints                []string               `json:"endpoints,omitempty"`
 		NetworkRetriesCount      *int                   `json:"network_retries_count,omitempty"`
@@ -196,14 +203,15 @@ type (
 		QueriesProtocol          NetworkQueriesProtocol `json:"queries_protocol,omitempty"`
 		FirstRempStatusTimeout   *int                   `json:"first_remp_status_timeout,omitempty"`
 		NextRempStatusTimeout    *int                   `json:"next_remp_status_timeout,omitempty"`
+		SignatureID              *int                   `json:"signature_id,omitempty"`
 		AccessKey                string                 `json:"access_key,omitempty"`
 	}
 
 	// Crypto ...
-	Crypto struct {
-		MnemonicDictionary  *int   `toml:"mnemonic_dictionary" json:"mnemonic_dictionary,omitempty"`
-		MnemonicWordCount   *int   `toml:"mnemonic_word_count" json:"mnemonic_word_count,omitempty"`
-		HdKeyDerivationPath string `toml:"hdkey_derivation_path" json:"hdkey_derivation_path,omitempty"`
+	CryptoConfig struct {
+		MnemonicDictionary  *MnemonicDictionary `toml:"mnemonic_dictionary" json:"mnemonic_dictionary,omitempty"`
+		MnemonicWordCount   *int                `toml:"mnemonic_word_count" json:"mnemonic_word_count,omitempty"`
+		HdKeyDerivationPath string              `toml:"hdkey_derivation_path" json:"hdkey_derivation_path,omitempty"`
 	}
 
 	// AbiConfig ...
@@ -226,8 +234,9 @@ type (
 
 // NewDefaultConfig create new config for connect client.
 func NewDefaultConfig(address string, endPoints []string, accessKey string) ClientConfig {
+	mdict := EnglishMnemonicDictionary
 	config := ClientConfig{
-		Network: &Network{
+		Network: &NetworkConfig{
 			ServerAddress:            address,
 			Endpoints:                endPoints,
 			MessageRetriesCount:      util.IntToPointerInt(5),
@@ -242,8 +251,8 @@ func NewDefaultConfig(address string, endPoints []string, accessKey string) Clie
 			NextRempStatusTimeout:    util.IntToPointerInt(5000),  //5 sec
 			AccessKey:                accessKey,
 		},
-		Crypto: &Crypto{
-			MnemonicDictionary:  util.IntToPointerInt(1),
+		Crypto: &CryptoConfig{
+			MnemonicDictionary:  &mdict,
 			MnemonicWordCount:   util.IntToPointerInt(12),
 			HdKeyDerivationPath: "",
 		},
@@ -258,21 +267,6 @@ func NewDefaultConfig(address string, endPoints []string, accessKey string) Clie
 // WordCountList list length mnemonic phrases
 func WordCountList() map[int]*int {
 	return map[int]*int{12: util.IntToPointerInt(12), 15: util.IntToPointerInt(15), 18: util.IntToPointerInt(18), 21: util.IntToPointerInt(21), 24: util.IntToPointerInt(24)}
-}
-
-// DictionaryList list dictionary mnemonic phrase
-func DictionaryList() map[string]*int {
-	return map[string]*int{
-		"EVER":                util.IntToPointerInt(0),
-		"ENGLISH":             util.IntToPointerInt(1),
-		"CHINESE_SIMPLIFIED":  util.IntToPointerInt(2),
-		"CHINESE_TRADITIONAL": util.IntToPointerInt(3),
-		"FRENCH":              util.IntToPointerInt(4),
-		"ITALIAN":             util.IntToPointerInt(5),
-		"JAPANESE":            util.IntToPointerInt(6),
-		"KOREAN":              util.IntToPointerInt(7),
-		"SPANISH":             util.IntToPointerInt(8),
-	}
 }
 
 // GetMainNetBaseUrls return endpoints main net.

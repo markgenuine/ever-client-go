@@ -247,6 +247,10 @@ type (
 		ResumeState json.RawMessage   `json:"resume_state,omitempty"`
 	}
 
+	ResultOfGetSignatureId struct {
+		SignatureID *int `json:"signature_id,omitempty"`
+	}
+
 	// NetUseCase ...
 	NetUseCase interface {
 		Query(*ParamsOfQuery) (*ResultOfQuery, error)
@@ -271,6 +275,7 @@ type (
 		ResumeTransactionIterator(*ParamsOfResumeTransactionIterator) (*RegisteredIterator, error)
 		IteratorNext(*ParamsOfIteratorNext) (*ResultOfIteratorNext, error)
 		RemoveIterator(*RegisteredIterator) error
+		GetSignatureID() (*ResultOfGetSignatureId, error)
 	}
 )
 
