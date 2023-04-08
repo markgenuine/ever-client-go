@@ -11,7 +11,6 @@ type processing struct {
 	client domain.ClientGateway
 }
 
-// NewProcessing ...
 func NewProcessing(
 	config domain.ClientConfig,
 	client domain.ClientGateway,
@@ -20,6 +19,60 @@ func NewProcessing(
 		config: config,
 		client: client,
 	}
+}
+
+// MonitorMessages - Starts monitoring for the processing results of the specified messages.
+//
+// Message monitor performs background monitoring for a message processing results for the specified set of messages.
+//
+// Message monitor can serve several isolated monitoring queues. Each monitor queue has a unique application defined identifier (or name) used to separate several queue's.
+//
+// There are two important lists inside of the monitoring queue:
+//
+// unresolved messages: contains messages requested by the application for monitoring and not yet resolved;
+//
+// resolved results: contains resolved processing results for monitored messages.
+//
+// Each monitoring queue tracks own unresolved and resolved lists. Application can add more messages to the monitoring queue at any time.
+//
+// Message monitor accumulates resolved results. Application should fetch this results with fetchNextMonitorResults function.
+//
+// When both unresolved and resolved lists becomes empty, monitor stops any background activity and frees all allocated internal memory.
+//
+// If monitoring queue with specified name already exists then messages will be added to the unresolved list.
+//
+// If monitoring queue with specified name does not exist then monitoring queue will be created with specified unresolved messages.
+func (p *processing) MonitorMessages(messages *domain.ParamsOfMonitorMessages) error {
+	_, err := p.client.GetResponse("processing.monitor_messages", messages)
+	return err
+}
+
+// GetMonitorInfo - Returns summary information about current state of the specified monitoring queue.
+func (p *processing) GetMonitorInfo(info *domain.ParamsOfGetMonitorInfo) (*domain.MonitoringQueueInfo, error) {
+	result := new(domain.MonitoringQueueInfo)
+	err := p.client.GetResult("processing.get_monitor_info", info, result)
+	return result, err
+}
+
+// FetchNextMonitorResults - Fetches next resolved results from the specified monitoring queue.
+// Results and waiting options are depends on the wait parameter. All returned results will be removed from the queue's resolved list.
+func (p *processing) FetchNextMonitorResults(results *domain.ParamsOfFetchNextMonitorResults) (*domain.ResultOfFetchNextMonitorResults, error) {
+	result := new(domain.ResultOfFetchNextMonitorResults)
+	err := p.client.GetResult("processing.fetch_next_monitor_results", results, result)
+	return result, err
+}
+
+// CancelMonitor - Cancels all background activity and releases all allocated system resources for the specified monitoring queue.
+func (p *processing) CancelMonitor(monitor *domain.ParamsOfCancelMonitor) error {
+	_, err := p.client.GetResponse("processing.cancel_monitor", monitor)
+	return err
+}
+
+// SendMessages - Sends specified messages to the blockchain.
+func (p *processing) SendMessages(messages *domain.ParamsOfSendMessages) (*domain.ResultOfSendMessages, error) {
+	result := new(domain.ResultOfSendMessages)
+	err := p.client.GetResult("processing.send_messages", messages, result)
+	return result, err
 }
 
 // SendMessage - Sends message to the network.

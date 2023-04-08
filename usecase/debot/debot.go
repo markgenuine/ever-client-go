@@ -12,7 +12,6 @@ type debot struct {
 	client domain.ClientGateway
 }
 
-// NewDebot ...
 func NewDebot(config domain.ClientConfig, client domain.ClientGateway) domain.DebotUseCase {
 	return &debot{
 		config: config,
@@ -52,7 +51,6 @@ func (d *debot) Init(pOI *domain.ParamsOfInit, app domain.AppDebotBrowser) (*dom
 	return result, nil
 }
 
-// appRequestDebotInit ...
 func (d *debot) appRequestDebotInit(payload []byte, app domain.AppDebotBrowser) {
 	var appRequest domain.ParamsOfAppRequest
 	var appParams domain.ParamsOfAppDebotBrowser
@@ -94,7 +92,6 @@ func (d *debot) appRequestDebotInit(payload []byte, app domain.AppDebotBrowser) 
 	panic(err)
 }
 
-// appNotifyDebotInit ...
 func (d *debot) appNotifyDebotInit(payload []byte, app domain.AppDebotBrowser) {
 	var appParams domain.ParamsOfAppDebotBrowser
 	err := json.Unmarshal(payload, &appParams)

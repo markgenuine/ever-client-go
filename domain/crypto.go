@@ -56,20 +56,13 @@ const (
 	CipherModeOFB CipherMode = "OFB"
 )
 
-// CryptoErrorCode ...
 var CryptoErrorCode map[string]int
 
 type (
-	// CryptoBoxHandle ...
-	CryptoBoxHandle int
-
-	// SigningBoxHandle ...
-	SigningBoxHandle int
-
-	// EncryptionBoxHandle ...
+	CryptoBoxHandle     int
+	SigningBoxHandle    int
 	EncryptionBoxHandle int
-
-	MnemonicDictionary int
+	MnemonicDictionary  int
 
 	// EncryptionBoxInfo - Encryption box information.
 	EncryptionBoxInfo struct {
@@ -79,103 +72,84 @@ type (
 		Public    json.RawMessage `json:"public,omitempty"`
 	}
 
-	// EncryptionAlgorithmAESVariant ...
 	EncryptionAlgorithmAESVariant struct {
 		Value AesParamsEB `json:"value"`
 	}
 
-	// EncryptionAlgorithmChaCha20Variant ...
 	EncryptionAlgorithmChaCha20Variant struct {
 		Value ChaCha20ParamsEB `json:"value"`
 	}
 
-	// EncryptionAlgorithmNaclBoxVariant ...
 	EncryptionAlgorithmNaclBoxVariant struct {
 		Value NaclBoxParamsEB `json:"value"`
 	}
 
-	// EncryptionAlgorithmNaclSecretBoxVariant ...
 	EncryptionAlgorithmNaclSecretBoxVariant struct {
 		Value NaclSecretBoxParamsEB `json:"value"`
 	}
 
-	// EncryptionAlgorithm ...
 	EncryptionAlgorithm struct {
 		ValueEnumType interface{}
 	}
 
-	// BoxEncryptionAlgorithmChaCha20Variant ...
 	BoxEncryptionAlgorithmChaCha20Variant struct {
 		Value ChaCha20ParamsCB `json:"value"`
 	}
 
-	// BoxEncryptionAlgorithmNaclBoxVariant ...
 	BoxEncryptionAlgorithmNaclBoxVariant struct {
 		Value NaclBoxParamsCB `json:"value"`
 	}
 
-	// BoxEncryptionAlgorithmNaclSecretBoxVariant ...
 	BoxEncryptionAlgorithmNaclSecretBoxVariant struct {
 		Value NaclSecretBoxParamsCB `json:"value"`
 	}
 
-	// BoxEncryptionAlgorithm ...
 	BoxEncryptionAlgorithm struct {
 		ValueEnumType interface{}
 	}
 
-	// CipherMode is type string
 	CipherMode string
 
-	// AesParamsEB ...
 	AesParamsEB struct {
 		Mode CipherMode `json:"mode"`
 		Key  string     `json:"key"`
 		IV   string     `json:"iv,omitempty"`
 	}
 
-	// AesInfo ...
 	AesInfo struct {
 		Mode CipherMode `json:"mode"`
 		IV   string     `json:"iv,omitempty"`
 	}
 
-	// ChaCha20ParamsEB ...
 	ChaCha20ParamsEB struct {
 		Key   string `json:"key"`
 		Nonce string `json:"nonce"`
 	}
 
-	// NaclBoxParamsEB ...
 	NaclBoxParamsEB struct {
 		TheirPublic string `json:"their_public"`
 		Secret      string `json:"secret"`
 		Nonce       string `json:"nonce"`
 	}
 
-	// NaclSecretBoxParamsEB ...
 	NaclSecretBoxParamsEB struct {
 		Key   string `json:"key"`
 		Nonce string `json:"nonce"`
 	}
 
-	// ChaCha20ParamsCB ...
 	ChaCha20ParamsCB struct {
 		Nonce string `json:"nonce"`
 	}
 
-	// NaclBoxParamsCB ...
 	NaclBoxParamsCB struct {
 		TheirPublic string `json:"their_public"`
 		Nonce       string `json:"nonce"`
 	}
 
-	// NaclSecretBoxParamsCB ...
 	NaclSecretBoxParamsCB struct {
 		Nonce string `json:"nonce"`
 	}
 
-	// CryptoBoxSecret ...
 	CryptoBoxSecret struct {
 		ValueEnumType interface{}
 	}
@@ -212,98 +186,80 @@ type (
 		EncryptedSecret string `json:"encrypted_secret"`
 	}
 
-	// ParamsOfFactorize ...
 	ParamsOfFactorize struct {
 		Composite string `json:"composite"`
 	}
 
-	// ResultOfFactorize ...
 	ResultOfFactorize struct {
 		Factors []string `json:"factors"`
 	}
 
-	// ParamsOfModularPower ...
 	ParamsOfModularPower struct {
 		Base     string `json:"base"`
 		Exponent string `json:"exponent"`
 		Modulus  string `json:"modulus"`
 	}
 
-	// ResultOfModularPower ...
 	ResultOfModularPower struct {
 		ModularPower string `json:"modular_power"`
 	}
 
-	// ParamsOfTonCrc16 ...
 	ParamsOfTonCrc16 struct {
 		Data string `json:"data"`
 	}
 
-	// ResultOfTonCrc16 ...
 	ResultOfTonCrc16 struct {
 		Crc int `json:"crc"`
 	}
 
-	// ParamsOfGenerateRandomBytes ...
 	ParamsOfGenerateRandomBytes struct {
 		Length int `json:"length"`
 	}
 
-	// ResultOfGenerateRandomBytes ...
 	ResultOfGenerateRandomBytes struct {
 		Bytes string `json:"bytes"`
 	}
 
-	// ParamsOfConvertPublicKeyToTonSafeFormat ...
 	ParamsOfConvertPublicKeyToTonSafeFormat struct {
 		PublicKey string `json:"public_key"`
 	}
 
-	// ResultOfConvertPublicKeyToTonSafeFormat ...
 	ResultOfConvertPublicKeyToTonSafeFormat struct {
 		TonPublicKey string `json:"ton_public_key"`
 	}
 
-	// KeyPair ...
 	KeyPair struct {
 		Public string `json:"public"`
 		Secret string `json:"secret"`
 	}
 
-	// ParamsOfSign ...
 	ParamsOfSign struct {
 		Unsigned string   `json:"unsigned"`
 		Keys     *KeyPair `json:"keys"`
 	}
 
-	// ResultOfSign ...
 	ResultOfSign struct {
 		Signed    string `json:"signed"`
 		Signature string `json:"signature"`
 	}
 
-	// ParamsOfVerifySignature ...
 	ParamsOfVerifySignature struct {
 		Signed string `json:"signed"`
 		Public string `json:"public"`
 	}
 
-	// ResultOfVerifySignature ...
 	ResultOfVerifySignature struct {
 		Unsigned string `json:"unsigned"`
 	}
 
-	// ParamsOfHash ...
 	ParamsOfHash struct {
 		Data string `json:"data"`
 	}
 
-	// ResultOfHash ...
 	ResultOfHash struct {
 		Hash string `json:"hash"`
 	}
 
-	// ParamsOfScrypt ...
 	ParamsOfScrypt struct {
 		Password string `json:"password"`
 		Salt     string `json:"salt"`
@@ -313,61 +269,50 @@ type (
 		DkLen    int    `json:"dk_len"`
 	}
 
-	// ResultOfScrypt ...
 	ResultOfScrypt struct {
 		Key string `json:"key"`
 	}
 
-	// ParamsOfNaclSignKeyPairFromSecret ...
 	ParamsOfNaclSignKeyPairFromSecret struct {
 		Secret string `json:"secret"`
 	}
 
-	// ParamsOfNaclSign ...
 	ParamsOfNaclSign struct {
 		Unsigned string `json:"unsigned"`
 		Secret   string `json:"secret"`
 	}
 
-	// ResultOfNaclSign ...
 	ResultOfNaclSign struct {
 		Signed string `json:"signed"`
 	}
 
-	// ParamsOfNaclSignOpen ...
 	ParamsOfNaclSignOpen struct {
 		Signed string `json:"signed"`
 		Public string `json:"public"`
 	}
 
-	// ResultOfNaclSignOpen ...
 	ResultOfNaclSignOpen struct {
 		Unsigned string `json:"unsigned"`
 	}
 
-	// ResultOfNaclSignDetached ...
 	ResultOfNaclSignDetached struct {
 		Signature string `json:"signature"`
 	}
 
-	// ParamsOfNaclSignDetachedVerify ...
 	ParamsOfNaclSignDetachedVerify struct {
 		Unsigned  string `json:"unsigned"`
 		Signature string `json:"signature"`
 		Public    string `json:"public"`
 	}
 
-	// ResultOfNaclSignDetachedVerify ...
 	ResultOfNaclSignDetachedVerify struct {
 		Succeeded bool `json:"succeeded"`
 	}
 
-	// ParamsOfNaclBoxKeyPairFromSecret ...
 	ParamsOfNaclBoxKeyPairFromSecret struct {
 		Secret string `json:"secret"`
 	}
 
-	// ParamsOfNaclBox ...
 	ParamsOfNaclBox struct {
 		Decrypted   string `json:"decrypted"`
 		Nonce       string `json:"nonce"`
@@ -375,12 +320,10 @@ type (
 		Secret      string `json:"secret"`
 	}
 
-	// ResultOfNaclBox ...
 	ResultOfNaclBox struct {
 		Encrypted string `json:"encrypted"`
 	}
 
-	// ParamsOfNaclBoxOpen ...
 	ParamsOfNaclBoxOpen struct {
 		Encrypted   string `json:"encrypted"`
 		Nonce       string `json:"nonce"`
@@ -388,71 +331,59 @@ type (
 		Secret      string `json:"secret"`
 	}
 
-	// ResultOfNaclBoxOpen ...
 	ResultOfNaclBoxOpen struct {
 		Decrypted string `json:"decrypted"`
 	}
 
-	// ParamsOfNaclSecretBox ...
 	ParamsOfNaclSecretBox struct {
 		Decrypted string `json:"decrypted"`
 		Nonce     string `json:"nonce"`
 		Key       string `json:"key"`
 	}
 
-	// ParamsOfNaclSecretBoxOpen ...
 	ParamsOfNaclSecretBoxOpen struct {
 		Encrypted string `json:"encrypted"`
 		Nonce     string `json:"nonce"`
 		Key       string `json:"key"`
 	}
 
-	// ParamsOfMnemonicWords ...
 	ParamsOfMnemonicWords struct {
 		Dictionary *MnemonicDictionary `json:"dictionary,omitempty"`
 	}
 
-	// ResultOfMnemonicWords ...
 	ResultOfMnemonicWords struct {
 		Words string `json:"words"`
 	}
 
-	// ParamsOfMnemonicFromRandom ...
 	ParamsOfMnemonicFromRandom struct {
 		Dictionary *MnemonicDictionary `json:"dictionary,omitempty"`
 		WordCount  *int                `json:"word_count,omitempty"`
 	}
 
-	// ResultOfMnemonicFromRandom ...
 	ResultOfMnemonicFromRandom struct {
 		Phrase string `json:"phrase"`
 	}
 
-	// ParamsOfMnemonicFromEntropy ...
 	ParamsOfMnemonicFromEntropy struct {
 		Entropy    string              `json:"entropy"`
 		Dictionary *MnemonicDictionary `json:"dictionary,omitempty"`
 		WordCount  *int                `json:"word_count,omitempty"`
 	}
 
-	// ResultOfMnemonicFromEntropy ...
 	ResultOfMnemonicFromEntropy struct {
 		Phrase string `json:"phrase"`
 	}
 
-	// ParamsOfMnemonicVerify ...
 	ParamsOfMnemonicVerify struct {
 		Phrase     string              `json:"phrase"`
 		Dictionary *MnemonicDictionary `json:"dictionary,omitempty"`
 		WordCount  *int                `json:"word_count,omitempty"`
 	}
 
-	// ResultOfMnemonicVerify ...
 	ResultOfMnemonicVerify struct {
 		Valid bool `json:"valid"`
 	}
 
-	// ParamsOfMnemonicDeriveSignKeys ...
 	ParamsOfMnemonicDeriveSignKeys struct {
 		Phrase     string              `json:"phrase"`
 		Path       string              `json:"path,omitempty"`
@@ -460,97 +391,80 @@ type (
 		WordCount  *int                `json:"word_count,omitempty"`
 	}
 
-	// ParamsOfHDKeyXPrvFromMnemonic ...
 	ParamsOfHDKeyXPrvFromMnemonic struct {
 		Phrase     string              `json:"phrase"`
 		Dictionary *MnemonicDictionary `json:"dictionary,omitempty"`
 		WordCount  *int                `json:"word_count,omitempty"`
 	}
 
-	// ResultOfHDKeyXPrvFromMnemonic ...
 	ResultOfHDKeyXPrvFromMnemonic struct {
 		Xprv string `json:"xprv"`
 	}
 
-	// ParamsOfHDKeyDeriveFromXPrv ...
 	ParamsOfHDKeyDeriveFromXPrv struct {
 		Xprv       string `json:"xprv"`
 		ChildIndex int    `json:"child_index"`
 		Hardened   bool   `json:"hardened"`
 	}
 
-	// ResultOfHDKeyDeriveFromXPrv ...
 	ResultOfHDKeyDeriveFromXPrv struct {
 		Xprv string `json:"xprv"`
 	}
 
-	// ParamsOfHDKeyDeriveFromXPrvPath ...
 	ParamsOfHDKeyDeriveFromXPrvPath struct {
 		Xprv string `json:"xprv"`
 		Path string `json:"path"`
 	}
 
-	// ResultOfHDKeyDeriveFromXPrvPath ...
 	ResultOfHDKeyDeriveFromXPrvPath struct {
 		Xprv string `json:"xprv"`
 	}
 
-	// ParamsOfHDKeySecretFromXPrv ...
 	ParamsOfHDKeySecretFromXPrv struct {
 		Xprv string `json:"xprv"`
 	}
 
-	// ResultOfHDKeySecretFromXPrv ...
 	ResultOfHDKeySecretFromXPrv struct {
 		Secret string `json:"secret"`
 	}
 
-	// ParamsOfHDKeyPublicFromXPrv ...
 	ParamsOfHDKeyPublicFromXPrv struct {
 		Xprv string `json:"xprv"`
 	}
 
-	// ResultOfHDKeyPublicFromXPrv ...
 	ResultOfHDKeyPublicFromXPrv struct {
 		Public string `json:"public"`
 	}
 
-	// ParamsOfChaCha20 ...
 	ParamsOfChaCha20 struct {
 		Data  string `json:"data"`
 		Key   string `json:"key"`
 		Nonce string `json:"nonce"`
 	}
 
-	// ResultOfChaCha20 ...
 	ResultOfChaCha20 struct {
 		Data string `json:"data"`
 	}
 
-	// ParamsOfCreateCryptoBox ...
 	ParamsOfCreateCryptoBox struct {
 		SecretEncryptionSalt string          `json:"secret_encryption_salt"`
 		Secret               CryptoBoxSecret `json:"secret"`
 	}
 
-	// RegisteredCryptoBox ...
 	RegisteredCryptoBox struct {
 		Handle CryptoBoxHandle `json:"handle"`
 	}
 
-	// ResultOfGetCryptoBoxInfo ...
 	ResultOfGetCryptoBoxInfo struct {
 		EncryptedSecret string `json:"encrypted_secret"`
 	}
 
-	// ResultOfGetCryptoBoxSeedPhrase ...
 	ResultOfGetCryptoBoxSeedPhrase struct {
 		Phrase     string             `json:"phrase"`
 		Dictionary MnemonicDictionary `json:"dictionary"`
 		Wordcount  int                `json:"wordcount"`
 	}
 
-	// ParamsOfGetSigningBoxFromCryptoBox ...
 	ParamsOfGetSigningBoxFromCryptoBox struct {
 		Handle         int    `json:"handle"`
 		HdPath         string `json:"hdpath,omitempty"`
@@ -564,77 +478,62 @@ type (
 		SecretLifetime int                     `json:"secret_lifetime,omitempty"`
 	}
 
-	// RegisteredSigningBox ...
 	RegisteredSigningBox struct {
 		Handle SigningBoxHandle `json:"handle"`
 	}
 
-	// ParamsOfAppSigningBox ...
 	ParamsOfAppSigningBox struct {
 		ValueEnumType interface{}
 	}
 
-	// ParamsOfAppSigningBoxGetPublicKey ...
 	ParamsOfAppSigningBoxGetPublicKey struct{}
 
-	// ParamsOfAppSigningBoxSign ...
 	ParamsOfAppSigningBoxSign struct {
 		Unsigned string `json:"unsigned"`
 	}
 
-	// ParamsOfAppPasswordProvider ...
 	ParamsOfAppPasswordProvider struct {
 		ValueEnumType interface{}
 	}
 
-	// ParamsOfAppPasswordProviderGetPassword ...
 	ParamsOfAppPasswordProviderGetPassword struct {
 		EncryptionPublicKey string `json:"encryption_public_key"`
 	}
 
-	// ResultOfAppPasswordProvider ...
 	ResultOfAppPasswordProvider struct {
 		ValueEnumType interface{}
 	}
 
-	// ResultOfAppPasswordProviderGetPassword ...
 	ResultOfAppPasswordProviderGetPassword struct {
 		EncryptedPassword   string `json:"encrypted_password"`
 		AppEncryptionPubkey string `json:"app_encryption_pubkey"`
 	}
 
-	// ResultOfAppSigningBox ...
 	ResultOfAppSigningBox struct {
 		ValueEnumType interface{}
 	}
 
-	// ResultOfAppSigningBoxGetPublicKey ...
 	ResultOfAppSigningBoxGetPublicKey struct {
 		PublicKey string `json:"public_key"`
 	}
 
-	// ResultOfAppSigningBoxSign ...
 	ResultOfAppSigningBoxSign struct {
 		Signature string `json:"signature"`
 	}
 
-	// ResultOfSigningBoxGetPublicKey ...
 	ResultOfSigningBoxGetPublicKey struct {
 		PubKey string `json:"PubKey"`
 	}
 
-	// ParamsOfSigningBoxSign ...
 	ParamsOfSigningBoxSign struct {
 		SigningBox SigningBoxHandle `json:"signing_box"`
 		Unsigned   string           `json:"unsigned"`
 	}
 
-	// ResultOfSigningBoxSign ...
 	ResultOfSigningBoxSign struct {
 		Signature string `json:"signature"`
 	}
 
-	// RegisteredEncryptionBox ...
 	RegisteredEncryptionBox struct {
 		Handle EncryptionBoxHandle `json:"handle"`
 	}
@@ -644,15 +543,12 @@ type (
 		ValueEnumType interface{}
 	}
 
-	// ParamsOfAppEncryptionBoxGetInfo ...
 	ParamsOfAppEncryptionBoxGetInfo struct{}
 
-	// ParamsOfAppEncryptionBoxEncrypt ...
 	ParamsOfAppEncryptionBoxEncrypt struct {
 		Data string `json:"data"`
 	}
 
-	// ParamsOfAppEncryptionBoxDecrypt ...
 	ParamsOfAppEncryptionBoxDecrypt struct {
 		Data string `json:"data"`
 	}
@@ -662,59 +558,48 @@ type (
 		ValueEnumType interface{}
 	}
 
-	// ResultOfAppEncryptionBoxGetInfo ...
 	ResultOfAppEncryptionBoxGetInfo struct {
 		Info EncryptionBoxInfo `json:"info"`
 	}
 
-	// ResultOfAppEncryptionBoxEncrypt ...
 	ResultOfAppEncryptionBoxEncrypt struct {
 		Data string `json:"data"`
 	}
 
-	// ResultOfAppEncryptionBoxDecrypt ...
 	ResultOfAppEncryptionBoxDecrypt struct {
 		Data string `json:"data"`
 	}
 
-	// ParamsOfEncryptionBoxGetInfo ...
 	ParamsOfEncryptionBoxGetInfo struct {
 		EncryptionBox EncryptionBoxHandle `json:"encryption_box"`
 	}
 
-	// ResultOfEncryptionBoxGetInfo ...
 	ResultOfEncryptionBoxGetInfo struct {
 		Info EncryptionBoxInfo `json:"info"`
 	}
 
-	// ParamsOfEncryptionBoxEncrypt ...
 	ParamsOfEncryptionBoxEncrypt struct {
 		EncryptionBox EncryptionBoxHandle `json:"encryption_box"`
 		Data          string              `json:"data"`
 	}
 
-	// ResultOfEncryptionBoxEncrypt ...
 	ResultOfEncryptionBoxEncrypt struct {
 		Data string `json:"data"`
 	}
 
-	// ParamsOfEncryptionBoxDecrypt ...
 	ParamsOfEncryptionBoxDecrypt struct {
 		EncryptionBox EncryptionBoxHandle `json:"encryption_box"`
 		Data          string              `json:"data"`
 	}
 
-	// ResultOfEncryptionBoxDecrypt ...
 	ResultOfEncryptionBoxDecrypt struct {
 		Data string `json:"data"`
 	}
 
-	// ParamsOfCreateEncryptionBox ...
 	ParamsOfCreateEncryptionBox struct {
 		Algorithm EncryptionAlgorithm `json:"algorithm"`
 	}
 
-	// CryptoUseCase ...
 	CryptoUseCase interface {
 		Factorize(*ParamsOfFactorize) (*ResultOfFactorize, error)
 		ModularPower(*ParamsOfModularPower) (*ResultOfModularPower, error)
@@ -808,37 +693,31 @@ func init() {
 	}
 }
 
-// NewDefaultParamsOfMnemonicWords ...
 func NewDefaultParamsOfMnemonicWords() *ParamsOfMnemonicWords {
 	dict := MnemonicDictionary(DefaultDictionary)
 	return &ParamsOfMnemonicWords{Dictionary: &dict}
 }
 
-// NewDefaultParamsOfMnemonicFromRandom ...
 func NewDefaultParamsOfMnemonicFromRandom() *ParamsOfMnemonicFromRandom {
 	dict := MnemonicDictionary(DefaultDictionary)
 	return &ParamsOfMnemonicFromRandom{Dictionary: &dict, WordCount: util.IntToPointerInt(DefaultWordCount)}
 }
 
-// NewDefaultParamsOfMnemonicFromEntropy ...
 func NewDefaultParamsOfMnemonicFromEntropy() *ParamsOfMnemonicFromEntropy {
 	dict := MnemonicDictionary(DefaultDictionary)
 	return &ParamsOfMnemonicFromEntropy{Entropy: "", Dictionary: &dict, WordCount: util.IntToPointerInt(DefaultWordCount)}
 }
 
-// NewDefaultParamsOfMnemonicVerify ...
 func NewDefaultParamsOfMnemonicVerify() *ParamsOfMnemonicVerify {
 	dict := MnemonicDictionary(DefaultDictionary)
 	return &ParamsOfMnemonicVerify{Phrase: "", Dictionary: &dict, WordCount: util.IntToPointerInt(DefaultWordCount)}
 }
 
-// NewDefaultParamsOfMnemonicDeriveSignKeys ...
 func NewDefaultParamsOfMnemonicDeriveSignKeys() *ParamsOfMnemonicDeriveSignKeys {
 	dict := MnemonicDictionary(DefaultDictionary)
 	return &ParamsOfMnemonicDeriveSignKeys{Phrase: "", Dictionary: &dict, WordCount: util.IntToPointerInt(DefaultWordCount)}
 }
 
-// NewDefaultParamsOfHDKeyXPrvFromMnemonic ...
 func NewDefaultParamsOfHDKeyXPrvFromMnemonic() *ParamsOfHDKeyXPrvFromMnemonic {
 	dict := MnemonicDictionary(DefaultDictionary)
 	return &ParamsOfHDKeyXPrvFromMnemonic{Phrase: "", Dictionary: &dict, WordCount: util.IntToPointerInt(DefaultWordCount)}
@@ -1124,7 +1003,6 @@ func (pOASB *ParamsOfAppSigningBox) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// NewParamsOfAppSigningBox ...
 func NewParamsOfAppSigningBox(value interface{}) *ParamsOfAppSigningBox {
 	return &ParamsOfAppSigningBox{ValueEnumType: value}
 }
@@ -1171,7 +1049,6 @@ func (rOASB *ResultOfAppSigningBox) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// NewResultOfAppSigningBox ...
 func NewResultOfAppSigningBox(value interface{}) *ResultOfAppSigningBox {
 	return &ResultOfAppSigningBox{ValueEnumType: value}
 }
@@ -1285,7 +1162,6 @@ func (pOASB *ResultOfAppEncryptionBox) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// NewResultOfAppEncryptionBox ...
 func NewResultOfAppEncryptionBox(value interface{}) *ResultOfAppEncryptionBox {
 	return &ResultOfAppEncryptionBox{ValueEnumType: value}
 }

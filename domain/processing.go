@@ -6,29 +6,34 @@ import (
 	"math/big"
 )
 
-// ProcessingErrorCode ...
+const (
+	AtLeastOne MonitorFetchWaitMode = "AtLeastOne"
+	All        MonitorFetchWaitMode = "All"
+	NoWait     MonitorFetchWaitMode = "NoWait"
+
+	Finalized MessageMonitoringStatus = "Finalized"
+	Timeout   MessageMonitoringStatus = "Timeout"
+	Reserved  MessageMonitoringStatus = "Reserved"
+)
+
 var ProcessingErrorCode map[string]int
 
 type (
-	// ProcessingEvent ...
 	ProcessingEvent struct {
 		ValueEnumType interface{}
 	}
 
-	// ProcessingEventWillFetchFirstBlock ...
 	ProcessingEventWillFetchFirstBlock struct {
 		MessageID  string `json:"message_id"`
 		MessageDst string `json:"message_dst"`
 	}
 
-	// ProcessingEventFetchFirstBlockFailed ...
 	ProcessingEventFetchFirstBlockFailed struct {
 		Error      ClientError `json:"error"`
 		MessageID  string      `json:"message_id"`
 		MessageDst string      `json:"message_dst"`
 	}
 
-	// ProcessingEventWillSend ...
 	ProcessingEventWillSend struct {
 		ShardBlockID string `json:"shard_block_id"`
 		MessageID    string `json:"message_id"`
@@ -36,7 +41,6 @@ type (
 		Message      string `json:"message"`
 	}
 
-	// ProcessingEventDidSend ...
 	ProcessingEventDidSend struct {
 		ShardBlockID string `json:"shard_block_id"`
 		MessageID    string `json:"message_id"`
@@ -44,7 +48,6 @@ type (
 		Message      string `json:"message"`
 	}
 
-	// ProcessingEventSendFailed ...
 	ProcessingEventSendFailed struct {
 		ShardBlockID string      `json:"shard_block_id"`
 		MessageID    string      `json:"message_id"`
@@ -53,7 +56,6 @@ type (
 		Error        ClientError `json:"error"`
 	}
 
-	// ProcessingEventWillFetchNextBlock ...
 	ProcessingEventWillFetchNextBlock struct {
 		ShardBlockID string `json:"shard_block_id"`
 		MessageID    string `json:"message_id"`
@@ -61,7 +63,6 @@ type (
 		Message      string `json:"message"`
 	}
 
-	// ProcessingEventFetchNextBlockFailed ...
 	ProcessingEventFetchNextBlockFailed struct {
 		ShardBlockID string      `json:"shard_block_id"`
 		MessageID    string      `json:"message_id"`
@@ -70,7 +71,6 @@ type (
 		Error        ClientError `json:"error"`
 	}
 
-	// ProcessingEventMessageExpired ...
 	ProcessingEventMessageExpired struct {
 		MessageID  string      `json:"message_id"`
 		MessageDst string      `json:"message_dst"`
@@ -78,7 +78,6 @@ type (
 		Error      ClientError `json:"error"`
 	}
 
-	// ProcessingRempSentToValidators ...
 	ProcessingRempSentToValidators struct {
 		MessageID  string          `json:"message_id"`
 		MessageDst string          `json:"message_dst"`
@@ -86,7 +85,6 @@ type (
 		JSON       json.RawMessage `json:"json"`
 	}
 
-	// ProcessingRempIncludedIntoBlock ...
 	ProcessingRempIncludedIntoBlock struct {
 		MessageID  string          `json:"message_id"`
 		MessageDst string          `json:"message_dst"`
@@ -94,7 +92,6 @@ type (
 		JSON       json.RawMessage `json:"json"`
 	}
 
-	// ProcessingRempIncludedIntoAcceptedBlock ...
 	ProcessingRempIncludedIntoAcceptedBlock struct {
 		MessageID  string          `json:"message_id"`
 		MessageDst string          `json:"message_dst"`
@@ -102,7 +99,6 @@ type (
 		JSON       json.RawMessage `json:"json"`
 	}
 
-	// ProcessingRempOther ...
 	ProcessingRempOther struct {
 		MessageID  string          `json:"message_id"`
 		MessageDst string          `json:"message_dst"`
@@ -110,27 +106,59 @@ type (
 		JSON       json.RawMessage `json:"json"`
 	}
 
-	// ProcessingRempError ...
 	ProcessingRempError struct {
 		MessageID  string      `json:"message_id"`
 		MessageDst string      `json:"message_dst"`
 		Error      ClientError `json:"error"`
 	}
 
-	// ParamsOfSendMessage ...
+	ParamsOfMonitorMessages struct {
+		Queue    string                     `json:"queue"`
+		Messages []*MessageMonitoringParams `json:"messages"`
+	}
+
+	ParamsOfGetMonitorInfo struct {
+		Queue string `json:"queue"`
+	}
+
+	MonitoringQueueInfo struct {
+		Unresolved int `json:"unresolved"`
+		Resolved   int `json:"resolved"`
+	}
+
+	ParamsOfFetchNextMonitorResults struct {
+		Queue    string                `json:"queue"`
+		WaitMode *MonitorFetchWaitMode `json:"wait_mode,omitempty"`
+	}
+
+	ResultOfFetchNextMonitorResults struct {
+		Results []*MessageMonitoringResult `json:"results"`
+	}
+
+	ParamsOfCancelMonitor struct {
+		Queue string `json:"queue"`
+	}
+
+	ParamsOfSendMessages struct {
+		Messages     []*MessageSendingParams `json:"messages"`
+		MonitorQueue string                  `json:"monitor_queue,omitempty"`
+	}
+
+	ResultOfSendMessages struct {
+		Messages []*MessageMonitoringParams `json:"messages"`
+	}
+
 	ParamsOfSendMessage struct {
 		Message    string `json:"message"`
 		Abi        *Abi   `json:"abi,omitempty"`
 		SendEvents bool   `json:"send_events"`
 	}
 
-	// ResultOfSendMessage ...
 	ResultOfSendMessage struct {
 		ShardBlockID     string   `json:"shard_block_id"`
 		SendingEndpoints []string `json:"sending_endpoints"`
 	}
 
-	// ParamsOfWaitForTransaction ...
 	ParamsOfWaitForTransaction struct {
 		Abi              *Abi     `json:"abi,omitempty"`
 		Message          string   `json:"message"`
@@ -139,7 +167,6 @@ type (
 		SendingEndpoints []string `json:"sending_endpoints,omitempty"`
 	}
 
-	// ResultOfProcessMessage ...
 	ResultOfProcessMessage struct {
 		Transaction json.RawMessage  `json:"transaction"`
 		OutMessages []string         `json:"out_messages"`
@@ -147,23 +174,72 @@ type (
 		Fees        *TransactionFees `json:"fees"`
 	}
 
-	// DecodedOutput ...
 	DecodedOutput struct {
 		OutMessages []*DecodedMessageBody `json:"out_messages"`
 		Output      json.RawMessage       `json:"output,omitempty"`
 	}
 
-	// ParamsOfProcessMessage ...
+	MessageMonitoringTransactionCompute struct {
+		ExitCode int `json:"exit_code"`
+	}
+
+	MessageMonitoringTransaction struct {
+		Hash    string                               `json:"hash,omitempty"`
+		Aborted bool                                 `json:"aborted"`
+		Compute *MessageMonitoringTransactionCompute `json:"compute"`
+	}
+
+	MessageMonitoringParams struct {
+		Message   *MonitoredMessage `json:"message"`
+		WaitUntil int               `json:"wait_until"`
+		UserData  *json.RawMessage  `json:"user_data,omitempty"`
+	}
+
+	MessageMonitoringResult struct {
+		Hash        string                        `json:"hash,omitempty"`
+		Status      *MessageMonitoringStatus      `json:"status"`
+		Transaction *MessageMonitoringTransaction `json:"transaction,omitempty"`
+		Error       string                        `json:"error,omitempty"`
+		UserData    *json.RawMessage              `json:"user_data,omitempty"`
+	}
+
+	MonitorFetchWaitMode string
+
+	// MonitoredMessageBocVariant - BOC of the message.
+	MonitoredMessageBocVariant struct {
+		Boc string `json:"boc"`
+	}
+	// MonitoredMessageHashAddressVariant - Message's hash and destination address.
+	MonitoredMessageHashAddressVariant struct {
+		Hash    string `json:"hash"`
+		Address string `json:"address"`
+	}
+
+	MonitoredMessage struct {
+		ValueEnumType interface{}
+	}
+
+	MessageMonitoringStatus string
+
+	MessageSendingParams struct {
+		Boc       string           `json:"boc"`
+		WaitUntil int              `json:"wait_until"`
+		UserData  *json.RawMessage `json:"user_data,omitempty"`
+	}
+
 	ParamsOfProcessMessage struct {
 		MessageEncodeParams *ParamsOfEncodeMessage `json:"message_encode_params"`
 		SendEvents          bool                   `json:"send_events"`
 	}
 
-	// EventCallback
 	EventCallback func(event *ProcessingEvent)
 
-	// ProcessingUseCase ...
 	ProcessingUseCase interface {
+		MonitorMessages(*ParamsOfMonitorMessages) error
+		GetMonitorInfo(*ParamsOfGetMonitorInfo) (*MonitoringQueueInfo, error)
+		FetchNextMonitorResults(*ParamsOfFetchNextMonitorResults) (*ResultOfFetchNextMonitorResults, error)
+		CancelMonitor(monitor *ParamsOfCancelMonitor) error
+		SendMessages(messages *ParamsOfSendMessages) (*ResultOfSendMessages, error)
 		SendMessage(*ParamsOfSendMessage, EventCallback) (*ResultOfSendMessage, error)
 		WaitForTransaction(*ParamsOfWaitForTransaction, EventCallback) (*ResultOfProcessMessage, error)
 		ProcessMessage(*ParamsOfProcessMessage, EventCallback) (*ResultOfProcessMessage, error)
@@ -172,23 +248,66 @@ type (
 
 func init() {
 	ProcessingErrorCode = map[string]int{
-		"MessageAlreadyExpired          ": 501,
+		"MessageAlreadyExpired":           501,
 		"MessageHasNotDestinationAddress": 502,
-		"CanNotBuildMessageCell         ": 503,
-		"FetchBlockFailed               ": 504,
-		"SendMessageFailed              ": 505,
-		"InvalidMessageBoc              ": 506,
-		"MessageExpired                 ": 507,
-		"TransactionWaitTimeout         ": 508,
-		"InvalidBlockReceived           ": 509,
-		"CanNotCheckBlockShard          ": 510,
-		"BlockNotFound                  ": 511,
-		"InvalidData                    ": 512,
-		"ExternalSignerMustNotBeUsed    ": 513,
-		"MessageRejected				":             514,
-		"InvalidRempStatus				":           515,
-		"NextRempStatusTimeout			":        516,
+		"CanNotBuildMessageCell":          503,
+		"FetchBlockFailed":                504,
+		"SendMessageFailed":               505,
+		"InvalidMessageBoc":               506,
+		"MessageExpired":                  507,
+		"TransactionWaitTimeout":          508,
+		"InvalidBlockReceived":            509,
+		"CanNotCheckBlockShard":           510,
+		"BlockNotFound":                   511,
+		"InvalidData":                     512,
+		"ExternalSignerMustNotBeUsed":     513,
+		"MessageRejected":                 514,
+		"InvalidRempStatus":               515,
+		"NextRempStatusTimeout":           516,
 	}
+}
+
+func (mm *MonitoredMessage) MarshalJSON() ([]byte, error) {
+	switch value := (mm.ValueEnumType).(type) {
+	case MonitoredMessageBocVariant:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			MonitoredMessageBocVariant
+		}{"Boc", value})
+	case MonitoredMessageHashAddressVariant:
+		return json.Marshal(struct {
+			Type string `json:"type"`
+			MonitoredMessageHashAddressVariant
+		}{"HashAddress", value})
+	default:
+		return nil, fmt.Errorf("unsupported type for MonitoredMessage %v", mm.ValueEnumType)
+	}
+}
+
+func (mm *MonitoredMessage) UnmarshalJSON(b []byte) error {
+	var typeD EnumType
+	if err := json.Unmarshal(b, &typeD); err != nil {
+		return err
+	}
+
+	switch typeD.Type {
+	case "Boc":
+		var valueEnum MonitoredMessageBocVariant
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		mm.ValueEnumType = valueEnum
+	case "HashAddress":
+		var valueEnum MonitoredMessageHashAddressVariant
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		mm.ValueEnumType = valueEnum
+	default:
+		return fmt.Errorf("unsupported type for MonitoredMessage %v", typeD.Type)
+	}
+	return nil
+
 }
 
 func (pE *ProcessingEvent) MarshalJSON() ([]byte, error) {

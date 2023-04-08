@@ -12,7 +12,6 @@ type crypto struct {
 	client domain.ClientGateway
 }
 
-// NewCrypto ...
 func NewCrypto(config domain.ClientConfig, client domain.ClientGateway) domain.CryptoUseCase {
 	return &crypto{
 		config: config,
@@ -114,7 +113,7 @@ func (c *crypto) NaclSign(pONS *domain.ParamsOfNaclSign) (*domain.ResultOfNaclSi
 
 // NaclSignOpen - Verifies the signature and returns the unsigned message.
 // Verifies the signature in signed using the signer's public key public and returns the message unsigned.
-//If the signature fails verification, crypto_sign_open raises an exception.
+// If the signature fails verification, crypto_sign_open raises an exception.
 func (c *crypto) NaclSignOpen(pONSO *domain.ParamsOfNaclSignOpen) (*domain.ResultOfNaclSignOpen, error) {
 	result := new(domain.ResultOfNaclSignOpen)
 	err := c.client.GetResult("crypto.nacl_sign_open", pONSO, result)
@@ -122,7 +121,7 @@ func (c *crypto) NaclSignOpen(pONSO *domain.ParamsOfNaclSignOpen) (*domain.Resul
 }
 
 // NaclSignDetached - Signs the message using the secret key and returns a signature.
-//Signs the message unsigned using the secret key secret and returns a signature signature.
+// Signs the message unsigned using the secret key secret and returns a signature signature.
 func (c *crypto) NaclSignDetached(pONS *domain.ParamsOfNaclSign) (*domain.ResultOfNaclSignDetached, error) {
 	result := new(domain.ResultOfNaclSignDetached)
 	err := c.client.GetResult("crypto.nacl_sign_detached", pONS, result)

@@ -7,7 +7,6 @@ type utils struct {
 	client domain.ClientGateway
 }
 
-// NewUtils ...
 func NewUtils(
 	config domain.ClientConfig,
 	client domain.ClientGateway,

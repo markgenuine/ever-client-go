@@ -6,11 +6,9 @@ import (
 	"math/big"
 )
 
-// TVMErrorCode ...
 var TVMErrorCode map[string]int
 
 type (
-	// ExecutionOptions ...
 	ExecutionOptions struct {
 		BlockchainConfig    string   `json:"blockchain_config,omitempty"`
 		BlockTime           *int     `json:"block_time,omitempty"`
@@ -20,24 +18,19 @@ type (
 		SignatureID         *int     `json:"signature_id,omitempty"`
 	}
 
-	// AccountForExecutor ...
 	AccountForExecutor struct {
 		ValueEnumType interface{}
 	}
 
-	// AccountForExecutorNone ...
 	AccountForExecutorNone struct{}
 
-	// AccountForExecutorUninit ...
 	AccountForExecutorUninit struct{}
 
-	// AccountForExecutorAccount ...
 	AccountForExecutorAccount struct {
 		Boc              string `json:"boc"`
 		UnlimitedBalance *bool  `json:"unlimited_balance,omitempty"`
 	}
 
-	// ParamsOfRunExecutor ...
 	ParamsOfRunExecutor struct {
 		Message              string             `json:"message"`
 		Account              AccountForExecutor `json:"account"`
@@ -48,7 +41,6 @@ type (
 		ReturnUpdatedAccount *bool              `json:"return_updated_account,omitempty"`
 	}
 
-	// ResultOfRunExecuteMessage ...
 	ResultOfRunExecuteMessage struct {
 		Transaction json.RawMessage  `json:"transaction,omitempty"`
 		OutMessages []string         `json:"out_messages"`
@@ -57,7 +49,6 @@ type (
 		Fees        *TransactionFees `json:"fees"`
 	}
 
-	// ParamsOfRunTvm ...
 	ParamsOfRunTvm struct {
 		Message              string            `json:"message"`
 		Account              string            `json:"account"`
@@ -67,14 +58,12 @@ type (
 		ReturnUpdatedAccount *bool             `json:"return_updated_account,omitempty"`
 	}
 
-	// ResultOfRunTvm ...
 	ResultOfRunTvm struct {
 		OutMessages []string       `json:"out_messages"`
 		Decoded     *DecodedOutput `json:"decoded,omitempty"`
 		Account     string         `json:"account"`
 	}
 
-	// ParamsOfRunGet ...
 	ParamsOfRunGet struct {
 		Account          string            `json:"account"`
 		FunctionName     string            `json:"function_name"`
@@ -83,12 +72,10 @@ type (
 		TupleListAsArray *bool             `json:"tuple_list_as_array,omitempty"`
 	}
 
-	// ResultOfRunGet ...
 	ResultOfRunGet struct {
 		Output json.RawMessage `json:"output"`
 	}
 
-	// TransactionFees ...
 	TransactionFees struct {
 		InMsgFwdFee      *big.Int `json:"in_msg_fwd_fee"`
 		StorageFee       *big.Int `json:"storage_fee"`
@@ -101,7 +88,6 @@ type (
 		AccountFees      *big.Int `json:"account_fees"`
 	}
 
-	// TvmUseCase ...
 	TvmUseCase interface {
 		RunExecutor(*ParamsOfRunExecutor) (*ResultOfRunExecuteMessage, error)
 		RunTvm(*ParamsOfRunTvm) (*ResultOfRunTvm, error)

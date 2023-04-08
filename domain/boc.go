@@ -5,17 +5,13 @@ import (
 	"fmt"
 )
 
-// BocErrorCode ...
 var BocErrorCode map[string]int
 
 type (
-
-	// BocCacheType ...
 	BocCacheType struct {
 		ValueEnumType interface{}
 	}
 
-	// BocCacheTypePinned ...
 	BocCacheTypePinned struct {
 		Pin string `json:"pin"`
 	}
@@ -24,85 +20,69 @@ type (
 	// limited size regulated by LRU (least recently used) cache lifecycle.
 	BocCacheTypeUnpinned struct{}
 
-	// ParamsOfParse ...
 	ParamsOfParse struct {
 		Boc string `json:"boc"`
 	}
 
-	// ResultOfParse ...
 	ResultOfParse struct {
 		Parsed json.RawMessage `json:"parsed"`
 	}
 
-	// ParamsOfParseShardstate ...
 	ParamsOfParseShardstate struct {
 		Boc         string `json:"boc"`
 		ID          string `json:"id"`
 		WorkchainID int    `json:"workchain_id"`
 	}
 
-	// ParamsOfGetBlockchainConfig ...
 	ParamsOfGetBlockchainConfig struct {
 		BlockBoc string `json:"block_boc"`
 	}
 
-	// ResultOfGetBlockchainConfig ...
 	ResultOfGetBlockchainConfig struct {
 		ConfigBoc string `json:"config_boc"`
 	}
 
-	// ParamsOfGetBocHash ...
 	ParamsOfGetBocHash struct {
 		Boc string `json:"boc"`
 	}
 
-	// ResultOfGetBocHash ...
 	ResultOfGetBocHash struct {
 		Hash string `json:"hash"`
 	}
 
-	// ParamsOfGetBocDepth ...
 	ParamsOfGetBocDepth struct {
 		Boc string `json:"boc"`
 	}
 
-	// ResultOfGetBocDepth ...
 	ResultOfGetBocDepth struct {
 		Depth int `json:"depth"`
 	}
 
-	//ParamsOfGetCodeFromTvc ...
 	ParamsOfGetCodeFromTvc struct {
 		Tvc string `json:"tvc"`
 	}
 
-	//ResultOfGetCodeFromTvc ...
 	ResultOfGetCodeFromTvc struct {
 		Code string `json:"code"`
 	}
 
-	// ParamsOfBocCacheGet ...
 	ParamsOfBocCacheGet struct {
 		BocRef string `json:"boc_ref"`
 	}
 
-	// ResultOfBocCacheGet ...
 	ResultOfBocCacheGet struct {
 		Boc string `json:"boc,omitempty"`
 	}
 
-	// ParamsOfBocCacheSet ...
 	ParamsOfBocCacheSet struct {
 		Boc       string        `json:"boc"`
 		CacheType *BocCacheType `json:"cache_type"`
 	}
 
-	// ResultOfBocCacheSet ...
 	ResultOfBocCacheSet struct {
 		BocRef string `json:"boc_ref"`
 	}
 
-	// ParamsOfBocCacheUnpin ...
 	ParamsOfBocCacheUnpin struct {
 		Pin    string `json:"pin"`
 		BocRef string `json:"boc_ref,omitempty"`
@@ -113,73 +93,60 @@ type (
 		ValueEnumType interface{}
 	}
 
-	// BuilderOpInteger ...
 	BuilderOpInteger struct {
 		Size  int         `json:"size"`
 		Value interface{} `json:"value"`
 	}
 
-	// BuilderOpBitString ...
 	BuilderOpBitString struct {
 		Value string `json:"value"`
 	}
 
-	// BuilderOpCell ...
 	BuilderOpCell struct {
 		Builder []*BuilderOp `json:"builder"`
 	}
 
-	// BuilderOpCellBoc ...
 	BuilderOpCellBoc struct {
 		Boc string `json:"boc"`
 	}
 
-	// BuilderOpAddress ..
 	BuilderOpAddress struct {
 		Address string `json:"address"`
 	}
 
-	// ParamsOfEncodeBoc ...
 	ParamsOfEncodeBoc struct {
 		Builder  []*BuilderOp  `json:"builder"`
 		BocCache *BocCacheType `json:"boc_cache,omitempty"`
 	}
 
-	// ResultOfEncodeBoc ...
 	ResultOfEncodeBoc struct {
 		Boc string
 	}
 
-	// ParamsOfGetCodeSalt ...
 	ParamsOfGetCodeSalt struct {
 		Code     string        `json:"code"`
 		BocCache *BocCacheType `json:"boc_cache,omitempty"`
 	}
 
-	// ResultOfGetCodeSalt ...
 	ResultOfGetCodeSalt struct {
 		Salt string `json:"salt,omitempty"`
 	}
 
-	// ParamsOfSetCodeSalt ...
 	ParamsOfSetCodeSalt struct {
 		Code     string        `json:"code"`
 		Salt     string        `json:"salt"`
 		BocCache *BocCacheType `json:"boc_cache,omitempty"`
 	}
 
-	// ResultOfSetCodeSalt ...
 	ResultOfSetCodeSalt struct {
 		Code string `json:"code"`
 	}
 
-	// ParamsOfDecodeTvc ...
 	ParamsOfDecodeTvc struct {
 		Tvc      string        `json:"tvc"`
 		BocCache *BocCacheType `json:"boc_cache,omitempty"`
 	}
 
-	// ResultOfDecodeTvc ...
 	ResultOfDecodeTvc struct {
 		Code            string `json:"code,omitempty"`
 		CodeHash        string `json:"code_hash,omitempty"`
@@ -194,7 +161,6 @@ type (
 		CompilerVersion string `json:"compiler_version,omitempty"`
 	}
 
-	// ParamsOfEncodeTvc ...
 	ParamsOfEncodeTvc struct {
 		Code       string        `json:"code,omitempty"`
 		Data       string        `json:"data,omitempty"`
@@ -205,22 +171,18 @@ type (
 		BocCache   *BocCacheType `json:"boc_cache,omitempty"`
 	}
 
-	// ResultOfEncodeTvc ...
 	ResultOfEncodeTvc struct {
 		Tvc string `json:"tvc"`
 	}
 
-	// ParamsOfGetCompilerVersion ...
 	ParamsOfGetCompilerVersion struct {
 		Code string `json:"code"`
 	}
 
-	// ResultOfGetCompilerVersion ...
 	ResultOfGetCompilerVersion struct {
 		Version string `json:"version,omitempty"`
 	}
 
-	// ParamsOfEncodeExternalInMessage ...
 	ParamsOfEncodeExternalInMessage struct {
 		Src      string        `json:"src,omitempty"`
 		Dst      string        `json:"dst"`
@@ -228,13 +190,12 @@ type (
 		Body     string        `json:"body"`
 		BocCache *BocCacheType `json:"boc_cache,omitempty"`
 	}
-	// ResultOfEncodeExternalInMessage ...
+
 	ResultOfEncodeExternalInMessage struct {
-		message   string `json:"message"`
+		Message   string `json:"message"`
 		MessageID string `json:"message_id"`
 	}
 
-	//BocUseCase ...
 	BocUseCase interface {
 		ParseMessage(*ParamsOfParse) (*ResultOfParse, error)
 		ParseTransaction(*ParamsOfParse) (*ResultOfParse, error)
@@ -392,7 +353,6 @@ func (bO *BuilderOp) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// NewBuilderOp ...
 func NewBuilderOp(value interface{}) *BuilderOp {
 	return &BuilderOp{ValueEnumType: value}
 }

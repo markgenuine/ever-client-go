@@ -9,7 +9,6 @@ type abi struct {
 	client domain.ClientGateway
 }
 
-// NewAbi ...
 func NewAbi(
 	config domain.ClientConfig,
 	client domain.ClientGateway,

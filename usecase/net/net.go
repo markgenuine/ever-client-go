@@ -10,7 +10,6 @@ type net struct {
 	client domain.ClientGateway
 }
 
-// NewNet ...
 func NewNet(
 	config domain.ClientConfig,
 	client domain.ClientGateway,
