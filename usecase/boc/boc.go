@@ -7,7 +7,6 @@ type boc struct {
 	client domain.ClientGateway
 }
 
-// NewBoc ...
 func NewBoc(
 	config domain.ClientConfig,
 	client domain.ClientGateway,

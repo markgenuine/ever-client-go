@@ -9,7 +9,6 @@ type proofs struct {
 	client domain.ClientGateway
 }
 
-// NewProofs ...
 func NewProofs(
 	config domain.ClientConfig,
 	client domain.ClientGateway,

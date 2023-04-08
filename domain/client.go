@@ -15,51 +15,41 @@ const (
 	NetworkQueriesProtocolWS NetworkQueriesProtocol = "WS"
 )
 
-// ClientErrorCode ...
 var ClientErrorCode map[string]int
 
 type (
-
-	// ClientError ...
 	ClientError struct {
 		Code    int             `json:"code"`
 		Message string          `json:"message"`
 		Data    json.RawMessage `json:"data"`
 	}
 
-	// ClientResponse ...
 	ClientResponse struct {
 		Data  []byte
 		Code  uint32
 		Error error
 	}
 
-	// AppRequestResult ...
 	AppRequestResult struct {
 		ValueEnumType interface{}
 	}
 
-	// AppRequestResultError ...
 	AppRequestResultError struct {
 		Text string `json:"text"`
 	}
 
-	// AppRequestResultOk ...
 	AppRequestResultOk struct {
 		Result json.RawMessage `json:"result"`
 	}
 
-	// ResultOfVersion ...
 	ResultOfVersion struct {
 		Version string `json:"version"`
 	}
 
-	// ResultOfGetAPIReference ...
 	ResultOfGetAPIReference struct {
 		API *API `json:"api"`
 	}
 
-	// API ...
 	API struct {
 		Modules []struct {
 			Description string `json:"description"`
@@ -90,36 +80,30 @@ type (
 		Version string `json:"version"`
 	}
 
-	// ResultOfBuildInfo ...
 	ResultOfBuildInfo struct {
 		BuildNumber  int                    `json:"build_number"`
 		Dependencies []*BuildInfoDependency `json:"dependencies"`
 	}
 
-	// BuildInfoDependency ...
 	BuildInfoDependency struct {
 		Name      string `json:"name"`
 		GitCommit string `json:"git_commit"`
 	}
 
-	// ParamsOfResolveAppRequest ...
 	ParamsOfResolveAppRequest struct {
 		AppRequestID int               `json:"app_request_id"`
 		Result       *AppRequestResult `json:"result"`
 	}
 
-	// ParamsOfAppRequest ...
 	ParamsOfAppRequest struct {
 		AppRequestID int             `json:"app_request_id"`
 		RequestData  json.RawMessage `json:"request_data"`
 	}
 
-	// EnumType ...
 	EnumType struct {
 		Type string `json:"type"`
 	}
 
-	// ClientGateway ...
 	ClientGateway interface {
 		Destroy()
 		GetResult(string, interface{}, interface{}) error
@@ -132,25 +116,21 @@ type (
 		ResolveAppRequest(*ParamsOfResolveAppRequest) error
 	}
 
-	// AppPasswordProvider ...
 	AppPasswordProvider interface {
 		GetPassword(ParamsOfAppPasswordProviderGetPassword) (ResultOfAppPasswordProviderGetPassword, error)
 	}
 
-	// AppSigningBox ...
 	AppSigningBox interface {
 		GetPublicKey() (ResultOfAppSigningBoxGetPublicKey, error)
 		Sign(ParamsOfAppSigningBoxSign) (ResultOfAppSigningBoxSign, error)
 	}
 
-	// AppEncryptionBox ...
 	AppEncryptionBox interface {
 		GetInfo() (ResultOfAppEncryptionBoxGetInfo, error)
 		Encrypt(ParamsOfAppEncryptionBoxEncrypt) (ResultOfAppEncryptionBoxEncrypt, error)
 		Decrypt(ParamsOfAppEncryptionBoxDecrypt) (ResultOfAppEncryptionBoxDecrypt, error)
 	}
 
-	//AppDebotBrowser ...
 	AppDebotBrowser interface {
 		Log(ParamsOfAppDebotBrowserLog) error
 		Switch(ParamsOfAppDebotBrowserSwitch) error
@@ -168,7 +148,6 @@ type (
 	// NetworkQueriesProtocol - Network protocol used to perform GraphQL queries.
 	NetworkQueriesProtocol string
 
-	// ClientConfig ...
 	ClientConfig struct {
 		Binding          *BindingConfig `json:"binding,omitempty"`
 		Network          *NetworkConfig `json:"network,omitempty"`
@@ -185,7 +164,6 @@ type (
 		Version string `json:"version,omitempty"`
 	}
 
-	// Network - Network config.
 	NetworkConfig struct {
 		ServerAddress            string                 `json:"server_address,omitempty"`
 		Endpoints                []string               `json:"endpoints,omitempty"`
@@ -207,7 +185,6 @@ type (
 		AccessKey                string                 `json:"access_key,omitempty"`
 	}
 
-	// Crypto ...
 	CryptoConfig struct {
 		MnemonicDictionary  *MnemonicDictionary `toml:"mnemonic_dictionary" json:"mnemonic_dictionary,omitempty"`
 		MnemonicWordCount   *int                `toml:"mnemonic_word_count" json:"mnemonic_word_count,omitempty"`
@@ -326,7 +303,6 @@ func init() {
 	}
 }
 
-// DynBufferForResponses ...
 func DynBufferForResponses(in <-chan *ClientResponse) <-chan *ClientResponse {
 	out := make(chan *ClientResponse, 1)
 	var storage []*ClientResponse
@@ -365,7 +341,6 @@ func DynBufferForResponses(in <-chan *ClientResponse) <-chan *ClientResponse {
 	return out
 }
 
-// HandleEvents ...
 func HandleEvents(responses <-chan *ClientResponse, callback EventCallback, result interface{}) error {
 	for r := range responses {
 		switch r.Code {
@@ -433,7 +408,6 @@ func (aRR *AppRequestResult) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// NewAppRequestResult ...
 func NewAppRequestResult(value interface{}) *AppRequestResult {
 	return &AppRequestResult{ValueEnumType: value}
 }

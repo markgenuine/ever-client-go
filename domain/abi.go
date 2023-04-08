@@ -7,22 +7,12 @@ import (
 )
 
 const (
-	// ContractAbiType ...
-	ContractAbiType AbiType = "Contract"
-
-	// JSONAbiType ...
-	JSONAbiType AbiType = "Json"
-
-	// HandleAbiType ...
-	HandleAbiType AbiType = "Handle"
-
-	// SerializedAbiType ...
+	ContractAbiType   AbiType = "Contract"
+	JSONAbiType       AbiType = "Json"
+	HandleAbiType     AbiType = "Handle"
 	SerializedAbiType AbiType = "Serialized"
 
-	// DataLayoutInput ..
-	InputDataLayout DataLayoutType = "Input"
-
-	// DataLayoutOutput ..
+	InputDataLayout  DataLayoutType = "Input"
 	OutputDataLayout DataLayoutType = "Output"
 
 	// MessageBodyTypeInput - Message contains the input of the ABI function.
@@ -39,61 +29,51 @@ const (
 	MessageBodyTypeEvent MessageBodyType = "Event"
 )
 
-// AbiErrorCode ...
 var AbiErrorCode map[string]int
 
 type (
-
-	// AbiHandle ...
-	AbiHandle int
-
-	// AbiType ...
-	AbiType string
-
-	// DataLayoutType
+	AbiHandle      int
+	AbiType        string
 	DataLayoutType string
 
-	// AbiContractVariant ...
 	AbiContractVariant struct {
 		Value AbiContract `json:"value"`
 	}
 
-	// AbiJsonVariant ...
 	AbiJsonVariant struct {
 		Value string `json:"value"`
 	}
 
-	// AbiHandleVariant ...
 	AbiHandleVariant struct {
 		Value AbiHandle `json:"value"`
 	}
 
-	// AbiSerializedVariant ...
 	AbiSerializedVariant struct {
 		Value AbiContract `json:"value"`
 	}
 
-	// Abi ...
 	Abi struct {
 		Type  AbiType     `json:"type"`
 		Value interface{} `json:"value"`
 	}
 
-	// FunctionHeader ...
+	// FunctionHeader - The ABI function header.
+	// Includes several hidden function parameters that contract uses for security, message delivery monitoring and
+	// replay protection reasons.
+	//The actual set of header fields depends on the contract's ABI. If a contract's ABI does not include some
+	// headers, then they are not filled.
 	FunctionHeader struct {
 		Expire *int     `json:"expire,omitempty"`
 		Time   *big.Int `json:"time,omitempty"`
 		PubKey string   `json:"pubkey,omitempty"`
 	}
 
-	// CallSet ...
 	CallSet struct {
 		FunctionName string          `json:"function_name"`
 		Header       *FunctionHeader `json:"header,omitempty"`
 		Input        interface{}     `json:"input,omitempty"`
 	}
 
-	// DeploySet ...
 	DeploySet struct {
 		Tvc           string      `json:"tvc"`
 		WorkchainID   *int        `json:"workchain_id,omitempty"`
@@ -101,45 +81,43 @@ type (
 		InitialPubKey string      `json:"initial_pubkey,omitempty"`
 	}
 
-	// SignerNone No keys are provided. Creates an unsigned message.
+	// SignerNone - No keys are provided. Creates an unsigned message.
 	SignerNone struct{}
 
-	// SignerExternal Only public key is provided to generate unsigned message and data_to_sign which can be signed later.
+	// SignerExternal - Only public key is provided to generate unsigned message and data_to_sign which can be signed later.
 	SignerExternal struct {
 		PublicKey string `json:"public_key"`
 	}
 
-	// SignerKeys Key pair is provided for signing
+	// SignerKeys - Key pair is provided for signing
 	SignerKeys struct {
 		Keys *KeyPair `json:"keys"`
 	}
 
-	// SignerSigningBox Signing Box interface is provided for signing, allows Dapps to sign messages using external APIs, such as HSM, cold wallet, etc.
+	// SignerSigningBox - Signing Box interface is provided for signing, allows Dapps to sign messages using external APIs, such as HSM, cold wallet, etc.
 	SignerSigningBox struct {
 		Handle SigningBoxHandle `json:"handle"`
 	}
 
-	// Signer ...
 	Signer struct {
 		ValueEnumType interface{}
 	}
 
-	// MessageBodyType ...
 	MessageBodyType string
 
-	// StateInitSourceMessage Deploy message.
+	// StateInitSourceMessage - Deploy message.
 	StateInitSourceMessage struct {
 		Source *MessageSource `json:"source"`
 	}
 
-	// StateInitSourceStateInit State init data
+	// StateInitSourceStateInit - State init data
 	StateInitSourceStateInit struct {
 		Code    string `json:"code"`
 		Data    string `json:"data"`
 		Library string `json:"library,omitempty"`
 	}
 
-	// StateInitSourceTvc Content of the TVC file. Encoded in base64.
+	// StateInitSourceTvc - Content of the TVC file. Encoded in base64.
 	StateInitSourceTvc struct {
 		Tvc        string           `json:"tvc"`
 		PublicKey  string           `json:"public_key,omitempty"`
@@ -150,43 +128,36 @@ type (
 		ValueEnumType interface{}
 	}
 
-	// StateInitParams ...
 	StateInitParams struct {
 		Abi   Abi         `json:"abi"`
 		Value interface{} `json:"value"`
 	}
 
-	// MessageSourceEncoded ...
 	MessageSourceEncoded struct {
 		Message string `json:"message"`
 		Abi     *Abi   `json:"abi,omitempty"`
 	}
 
-	// MessageSourceEncodingParams ...
 	MessageSourceEncodingParams struct {
 		*ParamsOfEncodeMessage
 	}
 
-	// MessageSource ...
 	MessageSource struct {
 		ValueEnumType interface{}
 	}
 
-	// AbiParam ...
 	AbiParam struct {
 		Name       string      `json:"name"`
 		Type       string      `json:"type"`
 		Components []*AbiParam `json:"components,omitempty"`
 	}
 
-	// AbiEvent ...
 	AbiEvent struct {
 		Name   string      `json:"name"`
 		Inputs []*AbiParam `json:"inputs"`
 		ID     string      `json:"id,omitempty"`
 	}
 
-	// AbiData ...
 	AbiData struct {
 		Key        int         `json:"key"`
 		Name       string      `json:"name"`
@@ -194,7 +165,6 @@ type (
 		Components []*AbiParam `json:"components,omitempty"`
 	}
 
-	// AbiFunctions ...
 	AbiFunctions struct {
 		Name    string      `json:"name"`
 		Inputs  []*AbiParam `json:"inputs"`
@@ -202,7 +172,6 @@ type (
 		ID      string      `json:"id,omitempty"`
 	}
 
-	// AbiContract ...
 	AbiContract struct {
 		Abi_Version *int            `json:"ABI version,omitempty"`
 		AbiVersion  *int            `json:"abi_version,omitempty"`
@@ -214,7 +183,6 @@ type (
 		Fields      []*AbiParam     `json:"fields,omitempty"`
 	}
 
-	// ParamsOfEncodeMessageBody ...
 	ParamsOfEncodeMessageBody struct {
 		Abi                *Abi     `json:"abi"`
 		CallSet            *CallSet `json:"call_set"`
@@ -225,13 +193,11 @@ type (
 		SignatureID        *int     `json:"signature_id,omitempty"`
 	}
 
-	// ResultOfEncodeMessageBody ...
 	ResultOfEncodeMessageBody struct {
 		Body       string `json:"body"`
 		DataToSign string `json:"data_to_sign,omitempty"`
 	}
 
-	// ParamsOfAttachSignatureToMessageBody ...
 	ParamsOfAttachSignatureToMessageBody struct {
 		Abi       *Abi   `json:"abi"`
 		PublicKey string `json:"public_key"`
@@ -239,12 +205,10 @@ type (
 		Signature string `json:"signature"`
 	}
 
-	// ResultOfAttachSignatureToMessageBody ...
 	ResultOfAttachSignatureToMessageBody struct {
 		Body string `json:"body"`
 	}
 
-	// ParamsOfEncodeMessage ...
 	ParamsOfEncodeMessage struct {
 		Abi                *Abi       `json:"abi"`
 		Address            string     `json:"address,omitempty"`
@@ -255,7 +219,6 @@ type (
 		SignatureID        *int       `json:"signature_id,omitempty"`
 	}
 
-	// ResultOfEncodeMessage ...
 	ResultOfEncodeMessage struct {
 		Message    string `json:"message"`
 		DataToSign string `json:"data_to_sign,omitempty"`
@@ -263,7 +226,6 @@ type (
 		MessageID  string `json:"message_id"`
 	}
 
-	// ParamsOfEncodeInternalMessage ...
 	ParamsOfEncodeInternalMessage struct {
 		Abi        *Abi       `json:"abi,omitempty"`
 		Address    string     `json:"address,omitempty"`
@@ -275,14 +237,12 @@ type (
 		EnableIhr  *bool      `json:"enable_ihr,omitempty"`
 	}
 
-	// ResultOfEncodeInternalMessage ...
 	ResultOfEncodeInternalMessage struct {
 		Message   string `json:"message"`
 		Address   string `json:"address"`
 		MessageID string `json:"message_id"`
 	}
 
-	// ParamsOfAttachSignature ...
 	ParamsOfAttachSignature struct {
 		Abi       *Abi   `json:"abi"`
 		PublicKey string `json:"public_key"`
@@ -290,13 +250,11 @@ type (
 		Signature string `json:"signature"`
 	}
 
-	// ResultOfAttachSignature ...
 	ResultOfAttachSignature struct {
 		Message   string `json:"message"`
 		MessageID string `json:"message_id"`
 	}
 
-	// ParamsOfDecodeMessage ...
 	ParamsOfDecodeMessage struct {
 		Abi          *Abi            `json:"abi"`
 		Message      string          `json:"message"`
@@ -305,7 +263,6 @@ type (
 		DataLayout   *DataLayoutType `json:"data_layout,omitempty"`
 	}
 
-	// DecodedMessageBody ...
 	DecodedMessageBody struct {
 		BodyType MessageBodyType `json:"body_type"`
 		Name     string          `json:"name"`
@@ -313,7 +270,6 @@ type (
 		Header   *FunctionHeader `json:"header,omitempty"`
 	}
 
-	// ParamsOfDecodeMessageBody ...
 	ParamsOfDecodeMessageBody struct {
 		Abi          *Abi            `json:"abi"`
 		Body         string          `json:"body"`
@@ -323,7 +279,6 @@ type (
 		DataLayout   *DataLayoutType `json:"data_layout,omitempty"`
 	}
 
-	// ParamsOfEncodeAccount ...
 	ParamsOfEncodeAccount struct {
 		StateInit   *StateInitSource `json:"state_init"`
 		Balance     *big.Int         `json:"balance,omitempty"`
@@ -332,25 +287,21 @@ type (
 		BocCache    *BocCacheType    `json:"boc_cache,omitempty"`
 	}
 
-	// ResultOfEncodeAccount ...
 	ResultOfEncodeAccount struct {
 		Account string `json:"account"`
 		ID      string `json:"id"`
 	}
 
-	// ParamsOfDecodeAccountData ...
 	ParamsOfDecodeAccountData struct {
 		Abi          *Abi   `json:"abi"`
 		Data         string `json:"data"`
 		AllowPartial *bool  `json:"allow_partial,omitempty"`
 	}
 
-	// ResultOfDecodeData ...
 	ResultOfDecodeData struct {
 		Data json.RawMessage `json:"data"`
 	}
 
-	// ParamsOfUpdateInitialData ...
 	ParamsOfUpdateInitialData struct {
 		Abi           *Abi          `json:"abi,omitempty"`
 		Data          string        `json:"data"`
@@ -359,12 +310,10 @@ type (
 		BocCache      *BocCacheType `json:"boc_cache,omitempty"`
 	}
 
-	// ResultOfUpdateInitialData ...
 	ResultOfUpdateInitialData struct {
 		Data string `json:"data"`
 	}
 
-	// ParamsOfEncodeInitialData ...
 	ParamsOfEncodeInitialData struct {
 		Abi           *Abi          `json:"abi,omitempty"`
 		InitialData   interface{}   `json:"initial_data,omitempty"`
@@ -372,74 +321,62 @@ type (
 		BocCache      *BocCacheType `json:"boc_cache,omitempty"`
 	}
 
-	// ResultOfEncodeInitialData ...
 	ResultOfEncodeInitialData struct {
 		Data string `json:"data"`
 	}
 
-	// ParamsOfDecodeInitialData ...
 	ParamsOfDecodeInitialData struct {
 		Abi          *Abi   `json:"abi,omitempty"`
 		Data         string `json:"data"`
 		AllowPartial *bool  `json:"allow_partial,omitempty"`
 	}
 
-	// ResultOfDecodeInitialData ...
 	ResultOfDecodeInitialData struct {
 		InitialData   interface{} `json:"initial_data,omitempty"`
 		InitialPubKey string      `json:"initial_pubkey,omitempty"`
 	}
 
-	// ParamsOfDecodeBoc ...
 	ParamsOfDecodeBoc struct {
 		Params       []*AbiParam `json:"params"`
 		Boc          string      `json:"boc"`
 		AllowPartial bool        `json:"allow_partial"`
 	}
 
-	// ResultOfDecodeBoc ...
 	ResultOfDecodeBoc struct {
 		Data json.RawMessage `json:"data"`
 	}
 
-	// ParamsOfAbiEncodeBoc ...
 	ParamsOfAbiEncodeBoc struct {
 		Params   []*AbiParam     `json:"params"`
 		Data     json.RawMessage `json:"data"`
 		BocCache *BocCacheType   `json:"boc_cache,omitempty"`
 	}
 
-	// ResultOfAbiEncodeBoc ...
 	ResultOfAbiEncodeBoc struct {
 		Boc string `json:"boc"`
 	}
 
-	// ParamsOfCalcFunctionId ...
 	ParamsOfCalcFunctionId struct {
 		Abi          Abi    `json:"abi"`
 		FunctionName string `json:"function_name"`
 		Output       *bool  `json:"output,omitempty"`
 	}
 
-	// ResultOfCalcFunctionId ...
 	ResultOfCalcFunctionId struct {
 		FunctionID int `json:"function_id"`
 	}
 
-	// ParamsOfGetSignatureData ...
 	ParamsOfGetSignatureData struct {
 		Abi         Abi    `json:"abi"`
 		Message     string `json:"message"`
 		SignatureID *int   `json:"signature_id,omitempty"`
 	}
 
-	// ResultOfGetSignatureData ...
 	ResultOfGetSignatureData struct {
 		Signature string `json:"signature"`
 		Unsigned  string `json:"unsigned"`
 	}
 
-	//AbiUseCase ...
 	AbiUseCase interface {
 		EncodeMessageBody(*ParamsOfEncodeMessageBody) (*ResultOfEncodeMessageBody, error)
 		AttachSignatureToMessageBody(*ParamsOfAttachSignatureToMessageBody) (*ResultOfAttachSignatureToMessageBody, error)
@@ -560,7 +497,6 @@ func (s *Signer) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// NewSigner ...
 func NewSigner(value interface{}) *Signer {
 	return &Signer{ValueEnumType: value}
 }
@@ -618,7 +554,6 @@ func (s *StateInitSource) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// NewStateInitSource ...
 func NewStateInitSource(value interface{}) *StateInitSource {
 	return &StateInitSource{ValueEnumType: value}
 }
@@ -665,7 +600,6 @@ func (ms *MessageSource) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// NewMessageSource ...
 func NewMessageSource(value interface{}) *MessageSource {
 	return &MessageSource{ValueEnumType: value}
 }

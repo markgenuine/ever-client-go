@@ -6,7 +6,6 @@ import (
 	"github.com/move-ton/ever-client-go/domain"
 )
 
-// Manager ...
 type Manager interface {
 	SetChannels(chan<- *domain.ClientResponse, <-chan struct{}) uint32
 	DeleteRequestID(uint32)
@@ -19,7 +18,6 @@ type multiplexer struct {
 	callbacks        map[uint32]manageChan
 }
 
-// NewStore ...
 func NewStore() Manager {
 	return &multiplexer{
 		Locker:    &sync.Mutex{},
@@ -32,7 +30,6 @@ type manageChan struct {
 	close       <-chan struct{}
 }
 
-// GetChannels ...
 func (m *multiplexer) GetChannels(requestID uint32, toDelete bool) (chan<- *domain.ClientResponse, <-chan struct{}, bool) {
 	m.Lock()
 	defer m.Unlock()
@@ -44,7 +41,6 @@ func (m *multiplexer) GetChannels(requestID uint32, toDelete bool) (chan<- *doma
 	return pair.responsChan, pair.close, isFound
 }
 
-//SetChannels ...
 func (m *multiplexer) SetChannels(responses chan<- *domain.ClientResponse, close <-chan struct{}) uint32 {
 	m.Lock()
 	defer m.Unlock()
@@ -58,7 +54,6 @@ func (m *multiplexer) SetChannels(responses chan<- *domain.ClientResponse, close
 	return requestID
 }
 
-// DeleteRequestID ...
 func (m *multiplexer) DeleteRequestID(requestID uint32) {
 	m.Lock()
 	defer m.Unlock()

@@ -2,7 +2,6 @@ package domain
 
 import "math/big"
 
-// DebotErrorCode ...
 var DebotErrorCode map[string]int
 
 type (
@@ -39,7 +38,6 @@ type (
 		ValueEnumType interface{}
 	}
 
-	// DebotActivityTransaction ...
 	DebotActivityTransaction struct {
 		Msg              string     `json:"msg"`
 		Dst              string     `json:"dst"`
@@ -78,44 +76,35 @@ type (
 		ValueEnumType interface{}
 	}
 
-	// ParamsOfAppDebotBrowserLog ...
 	ParamsOfAppDebotBrowserLog struct {
 		Msg string `json:"msg"`
 	}
 
-	// ParamsOfAppDebotBrowserSwitch ...
 	ParamsOfAppDebotBrowserSwitch struct {
 		ContextID int `json:"context_id"`
 	}
 
-	// ParamsOfAppDebotBrowserSwitchCompleted ...
 	ParamsOfAppDebotBrowserSwitchCompleted struct{}
 
-	// ParamsOfAppDebotBrowserShowAction ...
 	ParamsOfAppDebotBrowserShowAction struct {
 		Action *DebotAction `json:"action"`
 	}
 
-	// ParamsOfAppDebotBrowserInput ...
 	ParamsOfAppDebotBrowserInput struct {
 		Prompt string `json:"prompt"`
 	}
 
-	// ParamsOfAppDebotBrowserGetSigningBox ...
 	ParamsOfAppDebotBrowserGetSigningBox struct{}
 
-	// ParamsOfAppDebotBrowserInvokeDebot ...
 	ParamsOfAppDebotBrowserInvokeDebot struct {
 		DebotAddr string       `json:"debot_addr"`
 		Action    *DebotAction `json:"action"`
 	}
 
-	// ParamsOfAppDebotBrowserSend ...
 	ParamsOfAppDebotBrowserSend struct {
 		Message string `json:"message"`
 	}
 
-	// ParamsOfAppDebotBrowserApprove ...
 	ParamsOfAppDebotBrowserApprove struct {
 		Activity *DebotActivity `json:"activity"`
 	}
@@ -125,20 +114,16 @@ type (
 		ValueEnumType interface{}
 	}
 
-	// ResultOfAppDebotBrowserInput ...
 	ResultOfAppDebotBrowserInput struct {
 		Value string `json:"value"`
 	}
 
-	// ResultOfAppDebotBrowserGetSigningBox ...
 	ResultOfAppDebotBrowserGetSigningBox struct {
 		SigningBox SigningBoxHandle `json:"signing_box"`
 	}
 
-	// ResultOfAppDebotBrowserInvokeDebot ...
 	ResultOfAppDebotBrowserInvokeDebot struct{}
 
-	// ResultOfAppDebotBrowserApprove ...
 	ResultOfAppDebotBrowserApprove struct {
 		Approved bool `json:"approved"`
 	}
@@ -148,7 +133,6 @@ type (
 		Address string `json:"address"`
 	}
 
-	// ResultOfFetch ...
 	ResultOfFetch struct {
 		Info *DebotInfo `json:"info"`
 	}
@@ -165,12 +149,10 @@ type (
 		Message     string      `json:"message"`
 	}
 
-	// ParamsOfRemove ...
 	ParamsOfRemove struct {
 		DebotHandle DebotHandle `json:"debot_handle"`
 	}
 
-	// DebotUseCase ...
 	DebotUseCase interface {
 		Init(*ParamsOfInit, AppDebotBrowser) (*RegisteredDebot, error)
 		Start(*ParamsOfStart) error

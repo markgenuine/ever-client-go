@@ -25,7 +25,7 @@ func FromHex(value string) []byte {
 	return dst[:n]
 }
 
-//ToHex ...
+// ToHex ...
 func ToHex(value interface{}) []byte {
 	switch date := value.(type) {
 	case string:

@@ -9,7 +9,6 @@ type tvm struct {
 	client domain.ClientGateway
 }
 
-// NewTvm ...
 func NewTvm(
 	config domain.ClientConfig,
 	client domain.ClientGateway,

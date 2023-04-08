@@ -12,82 +12,65 @@ const (
 )
 
 type (
-
-	// AccountAddressType ...
 	AccountAddressType string
 
-	// AddressStringFormatAccountID ...
 	AddressStringFormatAccountID struct{}
 
-	// AddressStringFormatHex ...
 	AddressStringFormatHex struct{}
 
-	// AddressStringFormatBase64 ...
 	AddressStringFormatBase64 struct {
 		URL    bool `json:"url"`
 		Test   bool `json:"test"`
 		Bounce bool `json:"bounce"`
 	}
 
-	// AddressStringFormat ...
 	AddressStringFormat struct {
 		ValueEnumType interface{}
 	}
 
-	// ParamsOfConvertAddress ...
 	ParamsOfConvertAddress struct {
 		Address      string               `json:"address"`
 		OutputFormat *AddressStringFormat `json:"output_format"`
 	}
 
-	// ResultOfConvertAddress ...
 	ResultOfConvertAddress struct {
 		Address string `json:"address"`
 	}
 
-	// ParamsOfGetAddressType ...
 	ParamsOfGetAddressType struct {
 		Address string `json:"address"`
 	}
 
-	// ResultOfGetAddressType ...
 	ResultOfGetAddressType struct {
 		AddressType AccountAddressType `json:"address_type"`
 	}
 
-	// ParamsOfCalcStorageFee ...
 	ParamsOfCalcStorageFee struct {
 		Account string `json:"account"`
 		Period  int    `json:"period"`
 	}
 
-	// ResultOfCalcStorageFee ...
 	ResultOfCalcStorageFee struct {
 		Fee string `json:"fee"`
 	}
 
-	// ParamsOfCompressZstd ...
 	ParamsOfCompressZstd struct {
 		Uncompressed string `json:"uncompressed"`
 		Level        *int   `json:"level,omitempty"`
 	}
 
-	// ResultOfCompressZstd ...
 	ResultOfCompressZstd struct {
 		Compressed string `json:"compressed"`
 	}
 
-	// ParamsOfDecompressZstd ...
 	ParamsOfDecompressZstd struct {
 		Compressed string `json:"compressed"`
 	}
 
-	//ResultOfDecompressZstd ...
 	ResultOfDecompressZstd struct {
 		Decompressed string `json:"decompressed"`
 	}
 
-	//UtilsUseCase ...
 	UtilsUseCase interface {
 		ConvertAddress(*ParamsOfConvertAddress) (*ResultOfConvertAddress, error)
 		GetAddressType(*ParamsOfGetAddressType) (*ResultOfGetAddressType, error)
@@ -150,7 +133,6 @@ func (a *AddressStringFormat) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// NewAddressStringFormat ...
 func NewAddressStringFormat(value interface{}) *AddressStringFormat {
 	return &AddressStringFormat{ValueEnumType: value}
 }
