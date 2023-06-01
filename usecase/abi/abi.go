@@ -135,20 +135,20 @@ func (a *abi) DecodeBoc(boc *domain.ParamsOfDecodeBoc) (*domain.ResultOfDecodeBo
 // EncodeBoc - Encodes given parameters in JSON into a BOC using param types from ABI.
 func (a *abi) EncodeBoc(boc *domain.ParamsOfAbiEncodeBoc) (*domain.ResultOfAbiEncodeBoc, error) {
 	result := new(domain.ResultOfAbiEncodeBoc)
-	err := a.client.GetResult("encode_bocs", boc, result)
+	err := a.client.GetResult("abi.encode_boc", boc, result)
 	return result, err
 }
 
 // CalcFunctionID - Calculates contract function ID by contract ABI
 func (a *abi) CalcFunctionID(functionID *domain.ParamsOfCalcFunctionId) (*domain.ResultOfCalcFunctionId, error) {
 	result := new(domain.ResultOfCalcFunctionId)
-	err := a.client.GetResult("calc_function_id", functionID, result)
+	err := a.client.GetResult("abi.calc_function_id", functionID, result)
 	return result, err
 }
 
 // GetSignatureData -Extracts signature from message body and calculates hash to verify the signature
 func (a *abi) GetSignatureData(data *domain.ParamsOfGetSignatureData) (*domain.ResultOfGetSignatureData, error) {
 	result := new(domain.ResultOfGetSignatureData)
-	err := a.client.GetResult("get_signature_data", data, result)
+	err := a.client.GetResult("abi.get_signature_data", data, result)
 	return result, err
 }
