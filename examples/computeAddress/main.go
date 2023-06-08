@@ -4,14 +4,14 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"github.com/move-ton/ever-client-go/domain"
-	"github.com/move-ton/ever-client-go/util"
+	"github.com/markgenuine/ever-client-go/domain"
+	"github.com/markgenuine/ever-client-go/util"
 	"io/ioutil"
 	"log"
 	"math/big"
 	"os"
 
-	goever "github.com/move-ton/ever-client-go"
+	goever "github.com/markgenuine/ever-client-go"
 )
 
 func main() {

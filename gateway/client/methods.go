@@ -1,7 +1,7 @@
 package client
 
 import (
-	"github.com/move-ton/ever-client-go/domain"
+	"github.com/markgenuine/ever-client-go/domain"
 )
 
 // GetAPIReference - Returns Core Library API reference.

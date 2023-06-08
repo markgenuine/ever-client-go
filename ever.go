@@ -1,17 +1,17 @@
 package goever
 
 import (
-	"github.com/move-ton/ever-client-go/domain"
-	clientgw "github.com/move-ton/ever-client-go/gateway/client"
-	"github.com/move-ton/ever-client-go/usecase/abi"
-	"github.com/move-ton/ever-client-go/usecase/boc"
-	"github.com/move-ton/ever-client-go/usecase/crypto"
-	"github.com/move-ton/ever-client-go/usecase/debot"
-	"github.com/move-ton/ever-client-go/usecase/net"
-	"github.com/move-ton/ever-client-go/usecase/processing"
-	"github.com/move-ton/ever-client-go/usecase/proofs"
-	"github.com/move-ton/ever-client-go/usecase/tvm"
-	"github.com/move-ton/ever-client-go/usecase/utils"
+	"github.com/markgenuine/ever-client-go/domain"
+	clientgw "github.com/markgenuine/ever-client-go/gateway/client"
+	"github.com/markgenuine/ever-client-go/usecase/abi"
+	"github.com/markgenuine/ever-client-go/usecase/boc"
+	"github.com/markgenuine/ever-client-go/usecase/crypto"
+	"github.com/markgenuine/ever-client-go/usecase/debot"
+	"github.com/markgenuine/ever-client-go/usecase/net"
+	"github.com/markgenuine/ever-client-go/usecase/processing"
+	"github.com/markgenuine/ever-client-go/usecase/proofs"
+	"github.com/markgenuine/ever-client-go/usecase/tvm"
+	"github.com/markgenuine/ever-client-go/usecase/utils"
 )
 
 // Ever Obj ...

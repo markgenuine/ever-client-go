@@ -1,10 +1,10 @@
 package client
 
 import (
-	"github.com/move-ton/ever-client-go/util"
+	"github.com/markgenuine/ever-client-go/util"
 	"testing"
 
-	"github.com/move-ton/ever-client-go/domain"
+	"github.com/markgenuine/ever-client-go/domain"
 	"github.com/stretchr/testify/assert"
 )
 
