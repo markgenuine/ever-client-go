@@ -1,6 +1,6 @@
 package utils
 
-import "github.com/move-ton/ever-client-go/domain"
+import "github.com/markgenuine/ever-client-go/domain"
 
 type utils struct {
 	config domain.ClientConfig

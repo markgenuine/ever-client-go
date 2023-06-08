@@ -3,9 +3,9 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/move-ton/ever-client-go/domain"
-	"github.com/move-ton/ever-client-go/gateway/client"
-	everNet "github.com/move-ton/ever-client-go/usecase/net"
+	"github.com/markgenuine/ever-client-go/domain"
+	"github.com/markgenuine/ever-client-go/gateway/client"
+	everNet "github.com/markgenuine/ever-client-go/usecase/net"
 	"log"
 	"time"
 )

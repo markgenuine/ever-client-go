@@ -3,7 +3,7 @@ package domain
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/move-ton/ever-client-go/util"
+	"github.com/markgenuine/ever-client-go/util"
 )
 
 const (

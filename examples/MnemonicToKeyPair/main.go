@@ -1,21 +1,10 @@
 package main
 
 import (
-	goever "github.com/move-ton/ever-client-go"
-	"github.com/move-ton/ever-client-go/domain"
-	"github.com/move-ton/ever-client-go/util"
+	"github.com/markgenuine/ever-client-go/domain"
 	"log"
-)
 
-package main
-
-import (
-"fmt"
-"github.com/move-ton/ever-client-go/domain"
-"github.com/move-ton/ever-client-go/util"
-"log"
-
-goever "github.com/move-ton/ever-client-go"
+	goever "github.com/markgenuine/ever-client-go"
 )
 
 func main() {
@@ -28,10 +17,8 @@ func main() {
 
 	HDPATH := "m/44'/396'/0'/0/0"
 	params := &domain.ParamsOfMnemonicDeriveSignKeys{
-		Phrase:     "action inject penalty envelope rabbit element slim tornado dinner pizza off blood",
-		Path:       HDPATH,
-		WordCount:  util.IntToPointerInt(12),
-		Dictionary: util.IntToPointerInt(1),
+		Phrase: "action inject penalty envelope rabbit element slim tornado dinner pizza off blood",
+		Path:   HDPATH,
 	}
 	keyPair, err := ever.Crypto.MnemonicDeriveSignKeys(params)
 	if err != nil {
