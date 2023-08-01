@@ -111,6 +111,7 @@ func init() {
 		"InvalidAccountBoc          ": 412,
 		"InvalidMessageType         ": 413,
 		"ContractExecutionError     ": 414,
+		"AccountIsSuspended			":       415,
 	}
 }
 

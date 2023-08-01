@@ -20,6 +20,27 @@ type (
 	// limited size regulated by LRU (least recently used) cache lifecycle.
 	BocCacheTypeUnpinned struct{}
 
+	ParamsOfDecodeTvc struct {
+		Tvc string `json:"tvc"`
+	}
+
+	ResultOfDecodeTvc struct {
+		Tvc *Tvc `json:"tvc"'`
+	}
+
+	TvcV1 struct {
+		Code        string `json:"code,omitempty"`
+		Description string `json:"description,omitempty"`
+	}
+
+	V1Tvc struct {
+		Value TvcV1 `json:"value"`
+	}
+
+	Tvc struct {
+		ValueEnumType interface{}
+	}
+
 	ParamsOfParse struct {
 		Boc string `json:"boc"`
 	}
@@ -142,12 +163,12 @@ type (
 		Code string `json:"code"`
 	}
 
-	ParamsOfDecodeTvc struct {
-		Tvc      string        `json:"tvc"`
-		BocCache *BocCacheType `json:"boc_cache,omitempty"`
+	ParamsOfDecodeStateInit struct {
+		StateInit string        `json:"state_init"`
+		BocCache  *BocCacheType `json:"boc_cache,omitempty"`
 	}
 
-	ResultOfDecodeTvc struct {
+	ResultOfDecodeStateInit struct {
 		Code            string `json:"code,omitempty"`
 		CodeHash        string `json:"code_hash,omitempty"`
 		CodeDepth       *int   `json:"code_depth,omitempty"`
@@ -161,7 +182,7 @@ type (
 		CompilerVersion string `json:"compiler_version,omitempty"`
 	}
 
-	ParamsOfEncodeTvc struct {
+	ParamsOfEncodeStateInit struct {
 		Code       string        `json:"code,omitempty"`
 		Data       string        `json:"data,omitempty"`
 		Library    string        `json:"library,omitempty"`
@@ -171,16 +192,8 @@ type (
 		BocCache   *BocCacheType `json:"boc_cache,omitempty"`
 	}
 
-	ResultOfEncodeTvc struct {
-		Tvc string `json:"tvc"`
-	}
-
-	ParamsOfGetCompilerVersion struct {
-		Code string `json:"code"`
-	}
-
-	ResultOfGetCompilerVersion struct {
-		Version string `json:"version,omitempty"`
+	ResultOfEncodeStateInit struct {
+		StateInit string `json:"state_init"`
 	}
 
 	ParamsOfEncodeExternalInMessage struct {
@@ -196,7 +209,16 @@ type (
 		MessageID string `json:"message_id"`
 	}
 
+	ParamsOfGetCompilerVersion struct {
+		Code string `json:"code"`
+	}
+
+	ResultOfGetCompilerVersion struct {
+		Version string `json:"version,omitempty"`
+	}
+
 	BocUseCase interface {
+		DecodeTvc(*ParamsOfDecodeTvc) (*ResultOfDecodeTvc, error)
 		ParseMessage(*ParamsOfParse) (*ResultOfParse, error)
 		ParseTransaction(*ParamsOfParse) (*ResultOfParse, error)
 		ParseAccount(*ParamsOfParse) (*ResultOfParse, error)
@@ -212,8 +234,8 @@ type (
 		EncodeBoc(*ParamsOfEncodeBoc) (*ResultOfEncodeBoc, error)
 		GetCodeSalt(*ParamsOfGetCodeSalt) (*ResultOfGetCodeSalt, error)
 		SetCodeSalt(*ParamsOfSetCodeSalt) (*ResultOfSetCodeSalt, error)
-		DecodeTvc(*ParamsOfDecodeTvc) (*ResultOfDecodeTvc, error)
-		EncodeTvc(*ParamsOfEncodeTvc) (*ResultOfEncodeTvc, error)
+		DecodeStateInit(*ParamsOfDecodeStateInit) (*ResultOfDecodeStateInit, error)
+		EncodeStateInit(*ParamsOfEncodeStateInit) (*ResultOfEncodeStateInit, error)
 		EncodeExternalInMessage(*ParamsOfEncodeExternalInMessage) (*ResultOfEncodeExternalInMessage, error)
 		GetCompilerVersion(version *ParamsOfGetCompilerVersion) (*ResultOfGetCompilerVersion, error)
 	}
@@ -229,6 +251,40 @@ func init() {
 		"BocRefNotFound":        206,
 		"InvalidBocRef":         207,
 	}
+}
+
+func (pT *Tvc) MarshalJSON() ([]byte, error) {
+	switch value := (pT.ValueEnumType).(type) {
+	case V1Tvc:
+		return json.Marshal(struct {
+			V1Tvc
+			Type string `json:"type"`
+		}{
+			value,
+			"V1",
+		})
+	default:
+		return nil, fmt.Errorf("unsupported type for Tvc %v", pT.ValueEnumType)
+	}
+}
+
+func (pT *Tvc) UnmarshalJSON(b []byte) error {
+	var typeD EnumType
+	if err := json.Unmarshal(b, &typeD); err != nil {
+		return err
+	}
+	switch typeD.Type {
+	case "V1":
+		var valueEnum V1Tvc
+		if err := json.Unmarshal(b, &valueEnum); err != nil {
+			return err
+		}
+		pT.ValueEnumType = valueEnum
+	default:
+		return fmt.Errorf("unsupported type for Tvc %v", typeD.Type)
+	}
+
+	return nil
 }
 
 func (bCT *BocCacheType) MarshalJSON() ([]byte, error) {

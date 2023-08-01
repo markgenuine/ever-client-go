@@ -17,7 +17,15 @@ func NewBoc(
 	}
 }
 
+// DecodeTvc - Decodes tvc into code, data, libraries and special options.
+func (b *boc) DecodeTvc(pODT *domain.ParamsOfDecodeTvc) (*domain.ResultOfDecodeTvc, error) {
+	result := new(domain.ResultOfDecodeTvc)
+	err := b.client.GetResult("boc.decode_tvc", pODT, result)
+	return result, err
+}
+
 // ParseMessage - Parses message boc into a JSON.
+// JSON structure is compatible with GraphQL API message object
 func (b *boc) ParseMessage(pOP *domain.ParamsOfParse) (*domain.ResultOfParse, error) {
 	result := new(domain.ResultOfParse)
 	err := b.client.GetResult("boc.parse_message", pOP, result)
@@ -25,6 +33,7 @@ func (b *boc) ParseMessage(pOP *domain.ParamsOfParse) (*domain.ResultOfParse, er
 }
 
 // ParseTransaction - Parses transaction boc into a JSON.
+// JSON structure is compatible with GraphQL API transaction object
 func (b *boc) ParseTransaction(pOP *domain.ParamsOfParse) (*domain.ResultOfParse, error) {
 	result := new(domain.ResultOfParse)
 	err := b.client.GetResult("boc.parse_transaction", pOP, result)
@@ -32,6 +41,7 @@ func (b *boc) ParseTransaction(pOP *domain.ParamsOfParse) (*domain.ResultOfParse
 }
 
 // ParseAccount - Parses account boc into a JSON.
+// JSON structure is compatible with GraphQL API transaction object
 func (b *boc) ParseAccount(pOP *domain.ParamsOfParse) (*domain.ResultOfParse, error) {
 	result := new(domain.ResultOfParse)
 	err := b.client.GetResult("boc.parse_account", pOP, result)
@@ -39,6 +49,7 @@ func (b *boc) ParseAccount(pOP *domain.ParamsOfParse) (*domain.ResultOfParse, er
 }
 
 // ParseBlock - Parses block boc into a JSON.
+// JSON structure is compatible with GraphQL API transaction object
 func (b *boc) ParseBlock(pOP *domain.ParamsOfParse) (*domain.ResultOfParse, error) {
 	result := new(domain.ResultOfParse)
 	err := b.client.GetResult("boc.parse_block", pOP, result)
@@ -46,6 +57,7 @@ func (b *boc) ParseBlock(pOP *domain.ParamsOfParse) (*domain.ResultOfParse, erro
 }
 
 // ParseShardstate - Parses shardstate boc into a JSON.
+// JSON structure is compatible with GraphQL API transaction object
 func (b *boc) ParseShardstate(pOPS *domain.ParamsOfParseShardstate) (*domain.ResultOfParse, error) {
 	result := new(domain.ResultOfParse)
 	err := b.client.GetResult("boc.parse_shardstate", pOPS, result)
@@ -103,7 +115,8 @@ func (b *boc) CacheUnpin(pOBCU *domain.ParamsOfBocCacheUnpin) error {
 	return err
 }
 
-// EncodeBoc - Encodes BOC from builder operations.
+// EncodeBoc - Encodes bag of cells (BOC) with builder operations. This method provides the same functionality
+// as Solidity TvmBuilder. Resulting BOC of this method can be passed into Solidity and C++ contracts as TvmCell type.
 func (b *boc) EncodeBoc(pOEB *domain.ParamsOfEncodeBoc) (*domain.ResultOfEncodeBoc, error) {
 	result := new(domain.ResultOfEncodeBoc)
 	err := b.client.GetResult("boc.encode_boc", pOEB, result)
@@ -125,17 +138,17 @@ func (b *boc) SetCodeSalt(pOSCS *domain.ParamsOfSetCodeSalt) (*domain.ResultOfSe
 	return result, err
 }
 
-// DecodeTvc - Decodes tvc into code, data, libraries and special options.
-func (b *boc) DecodeTvc(pODT *domain.ParamsOfDecodeTvc) (*domain.ResultOfDecodeTvc, error) {
-	result := new(domain.ResultOfDecodeTvc)
-	err := b.client.GetResult("boc.decode_tvc", pODT, result)
+// DecodeStateInit - Decodes tvc into code, data, libraries and special options.
+func (b *boc) DecodeStateInit(pODT *domain.ParamsOfDecodeStateInit) (*domain.ResultOfDecodeStateInit, error) {
+	result := new(domain.ResultOfDecodeStateInit)
+	err := b.client.GetResult("boc.decode_state_init", pODT, result)
 	return result, err
 }
 
-// EncodeTvc - Encodes tvc from code, data, libraries ans special options (see input params).
-func (b *boc) EncodeTvc(pOET *domain.ParamsOfEncodeTvc) (*domain.ResultOfEncodeTvc, error) {
-	result := new(domain.ResultOfEncodeTvc)
-	err := b.client.GetResult("boc.encode_tvc", pOET, result)
+// EncodeStateInit - Encodes tvc from code, data, libraries ans special options (see input params).
+func (b *boc) EncodeStateInit(pOET *domain.ParamsOfEncodeStateInit) (*domain.ResultOfEncodeStateInit, error) {
+	result := new(domain.ResultOfEncodeStateInit)
+	err := b.client.GetResult("boc.encode_state_init", pOET, result)
 	return result, err
 }
 

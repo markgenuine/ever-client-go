@@ -173,7 +173,7 @@ type (
 		MessageRetriesCount      *int                   `json:"message_retries_count,omitempty"`
 		MessageProcessingTimeout *int                   `json:"message_processing_timeout,omitempty"`
 		WaitForTimeout           *int                   `json:"wait_for_timeout,omitempty"`
-		OutOfSyncThreshold       *int                   `json:"out_of_sync_threshold,omitempty"`
+		OutOfSyncThreshold       *int                   `json:"out_of_sync_threshold,omitempty"` //DEPRECATED
 		SendingEndpointCount     *int                   `json:"sending_endpoint_count,omitempty"`
 		LatencyDetectionInterval *int                   `json:"latency_detection_interval,omitempty"`
 		MaxLatency               *int                   `json:"max_latency,omitempty"`
