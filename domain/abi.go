@@ -75,7 +75,9 @@ type (
 	}
 
 	DeploySet struct {
-		Tvc           string      `json:"tvc"`
+		Tvc           string      `json:"tvc,omitempty"`
+		Code          string      `json:"code,omitempty"`
+		StateInit     string      `json:"state_init,omitempty"`
 		WorkchainID   *int        `json:"workchain_id,omitempty"`
 		InitialData   interface{} `json:"initial_data,omitempty"`
 		InitialPubKey string      `json:"initial_pubkey,omitempty"`
