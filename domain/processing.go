@@ -207,16 +207,12 @@ type (
 
 	// MonitoredMessageBocVariant - BOC of the message.
 	MonitoredMessageBocVariant struct {
-		value struct {
-			Boc string `json:"boc"`
-		}
+		Boc string `json:"boc"`
 	}
 	// MonitoredMessageHashAddressVariant - Message's hash and destination address.
 	MonitoredMessageHashAddressVariant struct {
-		value struct {
-			Hash    string `json:"hash"`
-			Address string `json:"address"`
-		}
+		Hash    string `json:"hash"`
+		Address string `json:"address"`
 	}
 
 	MonitoredMessage struct {

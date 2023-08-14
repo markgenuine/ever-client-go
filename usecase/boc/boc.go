@@ -17,7 +17,7 @@ func NewBoc(
 	}
 }
 
-// DecodeTvc - Decodes tvc into code, data, libraries and special options.
+// DecodeTvc - Decodes contract's initial state into code, data, libraries and special options.
 func (b *boc) DecodeTvc(pODT *domain.ParamsOfDecodeTvc) (*domain.ResultOfDecodeTvc, error) {
 	result := new(domain.ResultOfDecodeTvc)
 	err := b.client.GetResult("boc.decode_tvc", pODT, result)
@@ -145,7 +145,7 @@ func (b *boc) DecodeStateInit(pODT *domain.ParamsOfDecodeStateInit) (*domain.Res
 	return result, err
 }
 
-// EncodeStateInit - Encodes tvc from code, data, libraries ans special options (see input params).
+// EncodeStateInit - Encodes initial contract state from code, data, libraries ans special options (see input params).
 func (b *boc) EncodeStateInit(pOET *domain.ParamsOfEncodeStateInit) (*domain.ResultOfEncodeStateInit, error) {
 	result := new(domain.ResultOfEncodeStateInit)
 	err := b.client.GetResult("boc.encode_state_init", pOET, result)
