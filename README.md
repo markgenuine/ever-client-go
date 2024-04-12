@@ -1,4 +1,4 @@
-# Client for DApp development in TVM blockchains (Everscale, Gosh, TON, Venom Blockchain, etc).
+# Client for TVM blockchains (Everscale, Gosh, TON, Venom Blockchain, etc).
 Everscale SDK Client library Golang bindings based itself on [Ever SDK](https://github.com/tonlabs/ever-sdk).
 
 [![version](https://img.shields.io/github/v/tag/move-ton/ton-client-go.svg)](https://github.com/markgenuine/ever-client-go/releases/latest)
