@@ -23,4 +23,4 @@ add_darwin_arm64:
 
 lib_install:
 	go build -o ./tools/downloadLibs ./tools/downloadLibs.go
-	./tools/downloadLibs 1.44.4
+	./tools/downloadLibs 1.45.1
