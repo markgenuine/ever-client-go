@@ -107,51 +107,11 @@ type (
 
 	MessageBodyType string
 
-	// StateInitSourceMessage - Deploy message.
-	StateInitSourceMessage struct {
-		Source *MessageSource `json:"source"`
-	}
-
-	// StateInitSourceStateInit - State init data
-	StateInitSourceStateInit struct {
-		Code    string `json:"code"`
-		Data    string `json:"data"`
-		Library string `json:"library,omitempty"`
-	}
-
-	// StateInitSourceTvc - Content of the TVC file. Encoded in base64.
-	StateInitSourceTvc struct {
-		Tvc        string           `json:"tvc"`
-		PublicKey  string           `json:"public_key,omitempty"`
-		InitParams *StateInitParams `json:"init_params,omitempty"`
-	}
-
-	StateInitSource struct {
-		ValueEnumType interface{}
-	}
-
-	StateInitParams struct {
-		Abi   Abi         `json:"abi"`
-		Value interface{} `json:"value"`
-	}
-
-	MessageSourceEncoded struct {
-		Message string `json:"message"`
-		Abi     *Abi   `json:"abi,omitempty"`
-	}
-
-	MessageSourceEncodingParams struct {
-		*ParamsOfEncodeMessage
-	}
-
-	MessageSource struct {
-		ValueEnumType interface{}
-	}
-
 	AbiParam struct {
 		Name       string      `json:"name"`
 		Type       string      `json:"type"`
 		Components []*AbiParam `json:"components,omitempty"`
+		Init bool `json:"init,omitempty`
 	}
 
 	AbiEvent struct {
@@ -282,7 +242,7 @@ type (
 	}
 
 	ParamsOfEncodeAccount struct {
-		StateInit   *StateInitSource `json:"state_init"`
+		StateInit   string `json:"state_init"`
 		Balance     *big.Int         `json:"balance,omitempty"`
 		LastTransLt *big.Int         `json:"last_trans_lt,omitempty"`
 		LastPaid    *int             `json:"last_paid,omitempty"`
@@ -305,7 +265,7 @@ type (
 	}
 
 	ParamsOfUpdateInitialData struct {
-		Abi           *Abi          `json:"abi,omitempty"`
+		Abi           *Abi          `json:"abi"`
 		Data          string        `json:"data"`
 		InitialData   interface{}   `json:"initial_data,omitempty"`
 		InitialPubKey string        `json:"initial_pubkey,omitempty"`
@@ -317,7 +277,7 @@ type (
 	}
 
 	ParamsOfEncodeInitialData struct {
-		Abi           *Abi          `json:"abi,omitempty"`
+		Abi           *Abi          `json:"abi"`
 		InitialData   interface{}   `json:"initial_data,omitempty"`
 		InitialPubKey string        `json:"initial_pubkey,omitempty"`
 		BocCache      *BocCacheType `json:"boc_cache,omitempty"`
@@ -328,13 +288,13 @@ type (
 	}
 
 	ParamsOfDecodeInitialData struct {
-		Abi          *Abi   `json:"abi,omitempty"`
+		Abi          *Abi   `json:"abi"`
 		Data         string `json:"data"`
 		AllowPartial *bool  `json:"allow_partial,omitempty"`
 	}
 
 	ResultOfDecodeInitialData struct {
-		InitialData   interface{} `json:"initial_data,omitempty"`
+		InitialData   interface{} `json:"initial_data"`
 		InitialPubKey string      `json:"initial_pubkey,omitempty"`
 	}
 
@@ -416,6 +376,7 @@ func init() {
 		"InvalidData":                               313,
 		"EncodeInitialDataFailed":                   314,
 		"InvalidFunctionName":                       315,
+		"PubKeyNotSupported":                        316,
 	}
 }
 
