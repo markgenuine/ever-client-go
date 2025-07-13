@@ -21,4 +21,6 @@ add_darwin_arm64:
 	install_name_tool -id gateway/client/lib/darwin/arm64/libton_client.dylib gateway/client/lib/darwin/arm64/libton_client.dylib
 	export CGO_LDFLAGS="-Lgateway/client/lib/darwin/arm64 -lton_client"
 
-
+lib_install:
+	go build -o ./tools/downloadLibs ./tools/downloadLibs.go
+	./tools/downloadLibs 1.44.4

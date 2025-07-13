@@ -15,16 +15,16 @@ const (
 	linkLib = "https://binaries.tonlabs.io/"
 
 	nameFileMac = "tonclient_%s_darwin.gz"
-	wayFileMac  = "../gateway/client/lib/darwin/amd64/libton_client.dylib"
+	wayFileMac  = "./gateway/client/lib/darwin/amd64/libton_client.dylib"
 
 	nameFileMacArm = "tonclient_%s_darwin_arm64.gz"
-	wayFileMacArm  = "../gateway/client/lib/darwin/arm64/libton_client.dylib"
+	wayFileMacArm  = "./gateway/client/lib/darwin/arm64/libton_client.dylib"
 
 	nameFileLinux = "tonclient_%s_linux.gz"
-	wayFileLinux  = "../gateway/client/lib/linux/libton_client.so"
+	wayFileLinux  = "./gateway/client/lib/linux/libton_client.so"
 
 	nameFileWinDll = "tonclient_%s_win32_dll.gz"
-	wayFileWinDll  = "../gateway/client/lib/windows/libton_client.dll"
+	wayFileWinDll  = "./gateway/client/lib/windows/libton_client.dll"
 )
 
 var version string
